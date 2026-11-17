@@ -7,8 +7,9 @@ import {
 } from '@expo-google-fonts/nunito';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { LaunchAnimation } from '../components/LaunchAnimation';
 import { LibraryProvider } from '../lib/LibraryContext';
 import { useTheme } from '../lib/theme';
 
@@ -23,6 +24,7 @@ export default function RootLayout() {
     Nunito_700Bold,
     Nunito_800ExtraBold,
   });
+  const [opening, setOpening] = useState(true);
   const ready = loaded || !!error; // if the font can't load, carry on with the system one
   useEffect(() => {
     if (ready) SplashScreen.hideAsync().catch(() => {});
@@ -60,6 +62,7 @@ export default function RootLayout() {
         <Stack.Screen name="help/[id]" options={{ title: '' }} />
         <Stack.Screen name="show/[id]" options={{ headerShown: false }} />
       </Stack>
+      {opening && <LaunchAnimation onDone={() => setOpening(false)} />}
     </LibraryProvider>
   );
 }
