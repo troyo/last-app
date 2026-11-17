@@ -194,8 +194,13 @@ export async function downloadPack(
 
     try {
       const task = File.createDownloadTask(d.url, partial, {
-        onProgress: ({ bytesWritten, totalBytes }) =>
-          report(label, bytesWritten, totalBytes > 0 ? totalBytes : d.bytes),
+        onProgress: ({ bytesWritten, totalBytes }) => {
+          try {
+            report(label, bytesWritten, totalBytes > 0 ? totalBytes : d.bytes);
+          } catch {
+            // a progress hiccup must never stop the download
+          }
+        },
       });
       onTask?.(task);
       const result = await task.downloadAsync();

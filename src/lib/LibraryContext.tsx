@@ -60,18 +60,31 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
       setLastFailed([]);
       setState({ pack, complete: false });
       activateKeepAwakeAsync('download').catch(() => {});
+      let lastDraw = 0;
+      let lastDone = -1;
       try {
         const res = await downloadPack(
           pack,
           (p) => {
+            // Byte-by-byte updates arrive very fast. Redraw at most ~4 times a
+            // second, and only refresh the guide lists when a file finishes.
+            const now = Date.now();
+            const fileFinished = p.doneItems !== lastDone;
+            if (!fileFinished && now - lastDraw < 250) return;
+            lastDraw = now;
+            lastDone = p.doneItems;
             setProgress(p);
-            setVersion((v) => v + 1);
+            if (fileFinished) setVersion((v) => v + 1);
           },
           () => stopRef.current,
           (t) => (taskRef.current = t),
         );
         setLastFailed(res.failed);
         setState({ pack, complete: res.finished });
+      } catch {
+        // Never let a download problem take the app down. What's saved stays
+        // saved, and tapping download again picks up where it stopped.
+        setLastFailed(['The download stopped unexpectedly. Tap to try again.']);
       } finally {
         deactivateKeepAwake('download').catch(() => {});
         setDownloading(false);
