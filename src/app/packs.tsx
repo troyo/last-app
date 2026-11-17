@@ -4,6 +4,15 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { formatBytes, getCatalog, itemsForPack, packBytes, PackId } from '../lib/catalog';
 import { freeSpaceBytes, remainingBytes } from '../lib/library';
 import { useLibrary } from '../lib/LibraryContext';
+import {
+  needsUnlock,
+  PRICE_LABEL,
+  purchase,
+  resetForTesting,
+  restore,
+  TEST_MODE,
+  useUnlocked,
+} from '../lib/purchases';
 import { useTheme } from '../lib/theme';
 
 // Leave some room so the phone itself keeps working after the download.
@@ -17,6 +26,19 @@ export default function Packs() {
   const free = useMemo(() => freeSpaceBytes(), [version]);
 
   const catalog = getCatalog();
+  const unlocked = useUnlocked();
+
+  const buy = async () => {
+    try {
+      await purchase();
+    } catch {
+      Alert.alert('Purchase not completed', 'You were not charged. Please try again.');
+    }
+  };
+  const restorePurchase = async () => {
+    const ok = await restore().catch(() => false);
+    if (!ok) Alert.alert('Nothing to restore', 'No earlier purchase was found on this account.');
+  };
 
   const choose = (pack: PackId) => {
     const need = remainingBytes(pack);
@@ -57,7 +79,10 @@ export default function Packs() {
               { backgroundColor: t.card, borderColor: isCurrent ? t.accent : t.border },
             ]}>
             <View style={s.cardHead}>
-              <Text style={[s.title, { color: t.text }]}>{p.title}</Text>
+              <Text style={[s.title, { color: t.text }]}>
+                {p.title}
+                {p.id === 'small' ? '  · Free' : unlocked ? '' : '  🔒'}
+              </Text>
               <Text style={{ color: t.muted, fontWeight: '600' }}>
                 ~{formatBytes(packBytes(p.id))}
               </Text>
@@ -90,6 +115,8 @@ export default function Packs() {
                 onPress={() => choose(p.id)}
                 t={t}
               />
+            ) : needsUnlock(p.id) ? (
+              <Btn label={`Unlock all packs · ${PRICE_LABEL}`} onPress={buy} t={t} />
             ) : (
               <Btn
                 label={state.pack ? `Switch to ${p.title}` : `Download ${p.title}`}
@@ -101,6 +128,22 @@ export default function Packs() {
           </View>
         );
       })}
+
+      {!unlocked && (
+        <Text style={{ color: t.muted, fontSize: 14 }}>
+          Small is free forever. One payment of {PRICE_LABEL} unlocks Medium and Large, including
+          future updates. No subscription.
+        </Text>
+      )}
+      {!unlocked && <Btn label="Restore purchase" onPress={restorePurchase} t={t} secondary />}
+      {TEST_MODE && (
+        <Text
+          style={{ color: t.warn, fontSize: 12 }}
+          onPress={unlocked ? resetForTesting : undefined}>
+          Test mode: unlocking is free and nobody is charged.
+          {unlocked ? ' Tap here to lock the packs again.' : ''}
+        </Text>
+      )}
 
       {lastFailed.length > 0 && !downloading && (
         <Text style={{ color: t.bad }}>

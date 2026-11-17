@@ -12,6 +12,7 @@ import {
   useState,
 } from 'react';
 import { PackId } from './catalog';
+import { needsUnlock } from './purchases';
 import {
   downloadPack,
   LibraryState,
@@ -51,7 +52,7 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
 
   const start = useCallback(
     async (pack: PackId) => {
-      if (downloading) return;
+      if (downloading || needsUnlock(pack)) return; // paid packs need the unlock
       // Switching to a smaller pack? Free up the space right away.
       removeExtras(pack);
       stopRef.current = false;

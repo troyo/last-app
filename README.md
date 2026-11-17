@@ -49,6 +49,13 @@ Design choices worth knowing:
 - Every download has a `sha256` checksum, so damaged downloads are caught.
 - Links between saved guides work offline.
 
+## Free and paid
+
+Small is free. One purchase (`all_packs_unlock`, planned at $19.99) unlocks Medium and Large.
+All of that lives in `src/lib/purchases.ts`. **It is currently in test mode: "Unlock" charges
+nobody.** Before release, wire `purchase()` and `restore()` to real App Store / Google Play
+purchases (for example with RevenueCat) and set `TEST_MODE` to false.
+
 ## Content packs
 
 All content is free to share: US government guides (public domain) and
@@ -94,4 +101,6 @@ public domain or openly licensed for redistribution. If you're unsure, set
 - All of Wikipedia (needs a reader for its offline dump format)
 - Videos (need sources that allow redistribution)
 - Full-text search inside articles (right now search matches titles)
+- Real store purchases (needs Apple + Google developer accounts)
+- Move paid packs to hosting that checks the purchase (they're public downloads right now)
 - App icon, name, store listings
