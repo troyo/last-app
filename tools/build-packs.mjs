@@ -48,22 +48,34 @@ const slug = (s) =>
     .replace(/^-|-$/g, '')
     .slice(0, 80);
 
-async function fetchWithRetry(url, { tries = 4, binary = false } = {}) {
+// When a site says "slow down" (HTTP 429), every request to that site waits.
+const pausedUntil = new Map();
+
+async function fetchWithRetry(url, { tries = 7, binary = false } = {}) {
   let lastErr;
+  const host = new URL(url).host;
   for (let i = 0; i < tries; i++) {
+    const wait = (pausedUntil.get(host) || 0) - Date.now();
+    if (wait > 0) await sleep(wait + Math.random() * 1000);
     try {
       const res = await fetch(url, {
         headers: { 'User-Agent': USER_AGENT, 'Api-User-Agent': USER_AGENT },
         redirect: 'follow',
         signal: AbortSignal.timeout(120_000),
       });
-      if (res.status === 429 || res.status >= 500) throw new Error(`HTTP ${res.status}`);
+      if (res.status === 429) {
+        const asked = Number(res.headers.get('retry-after')) || 0;
+        const pause = Math.min(Math.max(asked, 5 * 2 ** i), 120) * 1000;
+        pausedUntil.set(host, Math.max(pausedUntil.get(host) || 0, Date.now() + pause));
+        throw new Error('HTTP 429');
+      }
+      if (res.status >= 500) throw new Error(`HTTP ${res.status}`);
       if (!res.ok) return { ok: false, status: res.status };
       const body = binary ? Buffer.from(await res.arrayBuffer()) : await res.text();
       return { ok: true, body, type: res.headers.get('content-type') || '' };
     } catch (e) {
       lastErr = e;
-      await sleep(1000 * 2 ** i);
+      if (String(e).indexOf('429') < 0) await sleep(1000 * 2 ** i);
     }
   }
   return { ok: false, error: String(lastErr) };
@@ -202,7 +214,7 @@ async function embedImages(html, maxImages) {
     if (kept < maxImages && COMMONS.test(src) && width >= 120) {
       const r = await fetchWithRetry(src.startsWith('//') ? `https:${src}` : src, {
         binary: true,
-        tries: 2,
+        tries: 4,
       });
       const type = r.ok ? r.type.split(';')[0].trim() : '';
       if (r.ok && /^image\/(jpeg|png|gif|webp)$/.test(type) && r.body.length <= IMG_MAX_BYTES) {

@@ -37,7 +37,7 @@ jobs:
       - name: Pick a release name and mode
         id: tag
         run: |
-          echo "tag=packs-$(date -u +%Y%m%d-%H%M)" >> "$GITHUB_OUTPUT"
+          echo "tag=packs-$(date -u +%Y%m%d-%H%M)-${{ github.run_number }}" >> "$GITHUB_OUTPUT"
           if [ "${{ inputs.quick }}" = "true" ] || { [ "${{ github.event_name }}" = "push" ] && grep -qi quick packs/build-mode.txt; }; then
             echo "quick=true" >> "$GITHUB_OUTPUT"
           else
