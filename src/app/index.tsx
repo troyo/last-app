@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { catalog, Item, itemsForPack, Topic } from '../lib/catalog';
-import { isDownloaded } from '../lib/library';
+import { getCatalog, Item, itemsForPack, Topic } from '../lib/catalog';
+import { isDownloaded, remainingBytes } from '../lib/library';
 import { useLibrary } from '../lib/LibraryContext';
 import { useTheme } from '../lib/theme';
 
@@ -40,6 +40,8 @@ export default function Home() {
   const q = query.trim().toLowerCase();
   const results = q ? onPhone.filter((i) => i.title.toLowerCase().includes(q)) : [];
   const total = itemsForPack(state.pack).length;
+  const ready = state.complete && remainingBytes(state.pack) === 0;
+  const hasUpdate = state.complete && !ready;
 
   return (
     <FlatList
@@ -54,12 +56,14 @@ export default function Home() {
               {state.pack[0].toUpperCase() + state.pack.slice(1)} pack · {onPhone.length}/{total}{' '}
               saved
             </Text>
-            <Text style={{ color: downloading ? t.warn : state.complete ? t.good : t.warn }}>
+            <Text style={{ color: !downloading && ready ? t.good : t.warn }}>
               {downloading
                 ? `Downloading${progress?.currentTitle ? `: ${progress.currentTitle}` : '…'}`
-                : state.complete
+                : ready
                   ? '✓ Ready offline'
-                  : 'Not finished. Tap to resume'}
+                  : hasUpdate
+                    ? 'New guides available. Tap to update'
+                    : 'Not finished. Tap to resume'}
             </Text>
           </Pressable>
           <TextInput
@@ -72,7 +76,7 @@ export default function Home() {
           />
         </View>
       }
-      data={(q ? results : catalog.topics) as (Item | Topic)[]}
+      data={(q ? results : getCatalog().topics) as (Item | Topic)[]}
       keyExtractor={(x) => x.id}
       ListEmptyComponent={
         <Text style={{ color: t.muted, padding: 16 }}>Nothing saved matches "{query}".</Text>

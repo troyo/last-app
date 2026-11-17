@@ -1,0 +1,55 @@
+# Builds the Small / Medium / Large content packs and publishes them as a
+# GitHub Release. The app downloads from the newest release.
+#
+# Run it from the repo's Actions tab: "Build content packs" -> "Run workflow".
+name: Build content packs
+
+on:
+  workflow_dispatch:
+    inputs:
+      quick:
+        description: 'Quick test run (a few guides only, not published as latest)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pick a release name
+        id: tag
+        run: echo "tag=packs-$(date -u +%Y%m%d-%H%M)" >> "$GITHUB_OUTPUT"
+
+      - name: Build packs
+        env:
+          PACKS_BASE_URL: https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/
+          PACKS_USER_AGENT: LastAppPackBuilder/1.0 (https://github.com/${{ github.repository }})
+        run: node tools/build-packs.mjs ${{ inputs.quick && '--quick' || '' }}
+
+      - name: Keep the report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pack-report
+          path: dist/REPORT.md
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Release notes = the summary part of the report (the full list is attached).
+          sed '/^## Included/,$d' dist/REPORT.md > notes.md
+          gh release create "${{ steps.tag.outputs.tag }}" \
+            dist/catalog.json dist/REPORT.md dist/files/* \
+            --title "Content packs ${{ steps.tag.outputs.tag }}" \
+            --notes-file notes.md \
+            ${{ inputs.quick && '--prerelease' || '--latest' }}

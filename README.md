@@ -26,7 +26,10 @@ then `npx expo start --web` (browser storage is in-memory only, it's just for lo
 
 | File | What it does |
 | --- | --- |
-| `src/lib/demo-catalog.json` | The list of every guide, which topic it's in and which pack it belongs to |
+| `src/lib/demo-catalog.json` | A tiny built-in catalog so the app works before the real packs are published |
+| `src/lib/config.ts` | Where the app looks for the published catalog |
+| `tools/build-packs.mjs` | Builds the real packs from `packs/sources.json` |
+| `.github/workflows/build-packs.yml` | Runs the builder on GitHub and publishes the packs |
 | `src/lib/catalog.ts` | Reads the catalog. Packs stack up: Medium = Small + more, Large = Medium + more |
 | `src/lib/library.ts` | Downloads each file to the phone, checks it, and tracks what's saved |
 | `src/lib/LibraryContext.tsx` | Shares download progress with every screen, keeps the screen awake while downloading |
@@ -34,26 +37,58 @@ then `npx expo start --web` (browser storage is in-memory only, it's just for lo
 | `src/app/packs.tsx` | Pick / switch / pause / delete packs, with a free-space check |
 | `src/app/topic/[id].tsx` | List of guides in a topic |
 | `src/app/item/[id].tsx` | Reader: articles, videos (built-in player) and PDFs (phone's own viewer) |
+| `src/app/sources.tsx` | Sources & licenses (credits every source) |
 
 Design choices worth knowing:
 
-- **Each guide is its own file**, not one giant zip. A dropped connection only costs the file you
-  were on, and you never need double the space to unzip.
+- **Small downloads, not one giant zip.** Articles come in ~20 MB bundles and PDFs one by one, so a
+  dropped connection only costs the file you were on, and you never need double the space to unzip.
 - **Nothing is fetched while reading.** Articles are cleaned on download (scripts, styles, remote
   images removed) and shown with network requests blocked.
 - **Switching to a smaller pack frees the space immediately.**
-- Items can carry a `sha256` so damaged downloads are caught.
+- Every download has a `sha256` checksum, so damaged downloads are caught.
+- Links between saved guides work offline.
 
-## Demo content
+## Content packs
 
-The demo packs use ~44 Wikipedia articles (CC BY-SA 4.0) as stand-ins so you can test the full
-flow. Real packs (PDFs, videos, maps) plug into the same catalog format: add items with
-`"type": "pdf"` or `"type": "video"` and a URL you're allowed to distribute.
+All content is free to share: US government guides (public domain) and
+Wikipedia / MDWiki articles (CC BY-SA 4.0). The list lives in
+[`packs/sources.json`](packs/sources.json), with the license for every source.
+
+| Pack | What's in it | Rough size |
+| --- | --- | --- |
+| Small | ~46 core guides (first aid, water, fire, shelter, kit) + FEMA "Are You Ready?" + Army First Aid TC 4-02.1 | ~20-40 MB |
+| Medium | Small + ~90 more guides + Army/Marine survival manuals, FEMA CERT manual, Army FM 4-25.11, USDA canning guide | ~100-200 MB |
+| Large | Medium + ~75 more guides + all of MDWiki (offline medical encyclopedia) + Air Force/DoD SERE manuals | ~400-600 MB |
+
+Sizes are estimates until the first real build. `REPORT.md` on each release has the exact numbers.
+
+### Building the packs
+
+GitHub builds and hosts them, so nobody needs a server:
+
+1. Repo **Actions** tab, **Build content packs**, **Run workflow**.
+   Tick "Quick test run" the first time (takes a couple of minutes).
+2. The workflow downloads every source, checks it's really a PDF / article, cleans
+   articles so they work offline, and publishes a **Release** with the files plus
+   `catalog.json` and `REPORT.md` (what worked, what failed).
+3. The app fetches `releases/latest/download/catalog.json`, so a new full run
+   updates every phone's pack list with no app update.
+
+The repo must be **public** so phones can download release files without logging in.
+
+To run it on your own computer instead: `node tools/build-packs.mjs` (Node 20+).
+
+### Adding a source
+
+Add it to `packs/sources.json` with its license. Only add things that are
+public domain or openly licensed for redistribution. If you're unsure, set
+`"needsReview": true` and it'll be skipped until someone checks.
 
 ## Not done yet
 
-- Real content packs + somewhere to host them
 - Background downloads (keep going when the app is closed)
 - Offline maps
+- Videos (need sources that allow redistribution)
 - Full-text search inside articles (right now search matches titles)
 - App icon, name, store listings

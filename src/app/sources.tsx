@@ -1,0 +1,47 @@
+import { useMemo } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { getCatalog } from '../lib/catalog';
+import { useLibrary } from '../lib/LibraryContext';
+import { useTheme } from '../lib/theme';
+
+// Credits every source, as the licenses require (CC BY-SA asks for attribution).
+export default function Sources() {
+  const t = useTheme();
+  const { version } = useLibrary();
+  const groups = useMemo(() => {
+    const m = new Map<string, { source: string; license: string; count: number }>();
+    for (const i of getCatalog().items) {
+      const key = `${i.source}|${i.license}`;
+      const g = m.get(key) ?? { source: i.source, license: i.license, count: 0 };
+      g.count++;
+      m.set(key, g);
+    }
+    return [...m.values()].sort((a, b) => b.count - a.count);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
+
+  return (
+    <ScrollView style={{ backgroundColor: t.bg }} contentContainerStyle={s.wrap}>
+      <Text style={{ color: t.text, fontSize: 16, lineHeight: 22 }}>
+        Everything in this app is public domain or shared under an open license. Each guide also
+        shows its source at the bottom of the page. This is general information, not medical advice.
+        If you can reach emergency services, call them.
+      </Text>
+      {groups.map((g) => (
+        <View
+          key={g.source + g.license}
+          style={[s.card, { backgroundColor: t.card, borderColor: t.border }]}>
+          <Text style={{ color: t.text, fontWeight: '600', fontSize: 16 }}>{g.source}</Text>
+          <Text style={{ color: t.muted }}>
+            {g.license} · {g.count.toLocaleString()} {g.count === 1 ? 'item' : 'items'}
+          </Text>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+
+const s = StyleSheet.create({
+  wrap: { padding: 16, gap: 10 },
+  card: { padding: 14, borderRadius: 12, borderWidth: 1, gap: 4 },
+});

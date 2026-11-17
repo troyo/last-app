@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
@@ -56,7 +56,7 @@ function Article({ item }: { item: Item }) {
 <style>
   body{font:18px/1.55 -apple-system,Roboto,sans-serif;margin:0;padding:16px 18px 48px;
        background:${t.bg};color:${t.text};}
-  a{color:${t.accent};text-decoration:none;pointer-events:none}
+  a{color:${t.accent};text-decoration:underline}
   h1,h2,h3{line-height:1.25} table{border-collapse:collapse;font-size:15px;display:block;overflow-x:auto}
   td,th{border:1px solid ${t.border};padding:4px 6px}
   .mw-ref,.reference,.mw-editsection,.navbox,.hatnote,.ambox,.metadata,.reflist,.mw-references-wrap{display:none}
@@ -65,7 +65,17 @@ function Article({ item }: { item: Item }) {
 <p class="credit">Source: ${escapeHtml(item.source)} · ${escapeHtml(item.license)}.
 Not medical advice. In an emergency, contact emergency services if you can.</p></body></html>`;
 
-  return <HtmlView html={page} background={t.bg} dark={dark} />;
+  return (
+    <HtmlView
+      html={page}
+      background={t.bg}
+      dark={dark}
+      onOpenItem={(id) => {
+        const target = findItem(id);
+        if (target && fileFor(target).exists) router.push(`/item/${id}`);
+      }}
+    />
+  );
 }
 
 function Video({ item }: { item: Item }) {

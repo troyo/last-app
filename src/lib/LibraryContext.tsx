@@ -2,11 +2,21 @@
 
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import type { DownloadTask } from './fs';
-import { createContext, ReactNode, useCallback, useContext, useRef, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { PackId } from './catalog';
 import {
   downloadPack,
   LibraryState,
+  loadSavedCatalog,
+  refreshCatalog,
   Progress,
   readState,
   removeExtras,
@@ -21,8 +31,12 @@ type Ctx = {
   start: (pack: PackId) => void;
   pause: () => void;
   removeAll: () => void;
-  version: number; // bumps when files change, so lists re-check what's on disk
+  version: number; // bumps when files or the catalog change, so screens re-check
+  checkForUpdates: () => Promise<boolean>;
 };
+
+// Load the catalog saved on the phone before any screen renders.
+loadSavedCatalog();
 
 const LibraryContext = createContext<Ctx | null>(null);
 
@@ -67,6 +81,16 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
     [downloading],
   );
 
+  // When there's internet, quietly fetch the newest catalog.
+  const checkForUpdates = useCallback(async () => {
+    const changed = await refreshCatalog();
+    if (changed) setVersion((v) => v + 1);
+    return changed;
+  }, []);
+  useEffect(() => {
+    checkForUpdates();
+  }, [checkForUpdates]);
+
   const pause = useCallback(() => {
     stopRef.current = true;
     taskRef.current?.cancel();
@@ -82,7 +106,17 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
 
   return (
     <LibraryContext.Provider
-      value={{ state, downloading, progress, lastFailed, start, pause, removeAll, version }}>
+      value={{
+        state,
+        downloading,
+        progress,
+        lastFailed,
+        start,
+        pause,
+        removeAll,
+        version,
+        checkForUpdates,
+      }}>
       {children}
     </LibraryContext.Provider>
   );

@@ -1,6 +1,7 @@
+import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { catalog, formatBytes, itemsForPack, packBytes, PackId } from '../lib/catalog';
+import { formatBytes, getCatalog, itemsForPack, packBytes, PackId } from '../lib/catalog';
 import { freeSpaceBytes, remainingBytes } from '../lib/library';
 import { useLibrary } from '../lib/LibraryContext';
 import { useTheme } from '../lib/theme';
@@ -14,6 +15,8 @@ export default function Packs() {
     useLibrary();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const free = useMemo(() => freeSpaceBytes(), [version]);
+
+  const catalog = getCatalog();
 
   const choose = (pack: PackId) => {
     const need = remainingBytes(pack);
@@ -60,7 +63,7 @@ export default function Packs() {
               </Text>
             </View>
             <Text style={{ color: t.muted, fontSize: 15 }}>{p.summary}</Text>
-            <Text style={{ color: t.muted, fontSize: 13 }}>{count} guides</Text>
+            <Text style={{ color: t.muted, fontSize: 13 }}>{count.toLocaleString()} guides</Text>
 
             {isCurrent && downloading && progress ? (
               <View style={{ gap: 8 }}>
@@ -73,12 +76,20 @@ export default function Packs() {
                 </Text>
                 <Btn label="Pause" onPress={pause} t={t} secondary />
               </View>
-            ) : isCurrent && state.complete ? (
+            ) : isCurrent && state.complete && remainingBytes(p.id) === 0 ? (
               <Text style={{ color: t.good, fontWeight: '600' }}>
                 ✓ On your phone, ready offline
               </Text>
             ) : isCurrent ? (
-              <Btn label="Resume download" onPress={() => choose(p.id)} t={t} />
+              <Btn
+                label={
+                  state.complete
+                    ? `Download update (${formatBytes(remainingBytes(p.id))})`
+                    : 'Resume download'
+                }
+                onPress={() => choose(p.id)}
+                t={t}
+              />
             ) : (
               <Btn
                 label={state.pack ? `Switch to ${p.title}` : `Download ${p.title}`}
@@ -112,6 +123,7 @@ export default function Packs() {
       )}
 
       {catalog.note && <Text style={{ color: t.muted, fontSize: 12 }}>{catalog.note}</Text>}
+      <Btn label="Sources & licenses" onPress={() => router.push('/sources')} t={t} secondary />
     </ScrollView>
   );
 }

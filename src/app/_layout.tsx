@@ -17,6 +17,7 @@ export default function RootLayout() {
         }}>
         <Stack.Screen name="index" options={{ title: 'Last App' }} />
         <Stack.Screen name="packs" options={{ title: 'Download packs' }} />
+        <Stack.Screen name="sources" options={{ title: 'Sources & licenses' }} />
         <Stack.Screen name="topic/[id]" options={{ title: '' }} />
         <Stack.Screen name="item/[id]" options={{ title: '' }} />
       </Stack>

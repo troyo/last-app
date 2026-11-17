@@ -4,6 +4,7 @@
 // Phones use the real file system via fs.ts.
 
 const mem = new Map<string, string>();
+const hashes = new Map<string, string>(); // sha256 of downloaded bytes
 const LS_PREFIX = 'lastapp-fs:';
 
 function load(uri: string): string | undefined {
@@ -91,10 +92,11 @@ export class File {
   }
   move(dest: File) {
     save(dest.uri, this.textSync());
+    hashes.delete(this.uri);
     drop(this.uri);
   }
   async digest(_alg: string) {
-    return '';
+    return hashes.get(this.uri) ?? '';
   }
   async preview(_opts?: unknown) {}
 
@@ -109,7 +111,13 @@ export class File {
         try {
           const res = await fetch(url, { signal: ctrl.signal });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const body = await res.text();
+          const raw = await res.arrayBuffer();
+          const hash = await crypto.subtle.digest('SHA-256', raw);
+          hashes.set(
+            dest.uri,
+            [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, '0')).join('')
+          );
+          const body = new TextDecoder().decode(raw);
           opts?.onProgress?.({ bytesWritten: body.length, totalBytes: body.length });
           save(dest.uri, body);
           return dest;

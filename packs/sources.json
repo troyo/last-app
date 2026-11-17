@@ -1,0 +1,544 @@
+{
+  "version": 1,
+  "about": "Every source here must be free to redistribute. Add a source only with its license. Items with needsReview=true are skipped unless --include-review is passed.",
+  "packs": [
+    {
+      "id": "small",
+      "title": "Small",
+      "summary": "The essentials: first aid, safe water, fire, shelter and a basic kit. Fits on any phone."
+    },
+    {
+      "id": "medium",
+      "title": "Medium",
+      "summary": "Small, plus Army and Marine survival manuals, FEMA CERT training, USDA canning, and 100+ more guides."
+    },
+    {
+      "id": "large",
+      "title": "Large",
+      "summary": "Everything: a full offline medical encyclopedia (MDWiki), more field manuals, gardening, power, radio and navigation."
+    }
+  ],
+  "topics": [
+    {
+      "id": "first-aid",
+      "title": "First aid & health",
+      "icon": "🩹"
+    },
+    {
+      "id": "water",
+      "title": "Safe water",
+      "icon": "💧"
+    },
+    {
+      "id": "food",
+      "title": "Food",
+      "icon": "🥫"
+    },
+    {
+      "id": "shelter",
+      "title": "Shelter & warmth",
+      "icon": "🔥"
+    },
+    {
+      "id": "power",
+      "title": "Power & repairs",
+      "icon": "🔋"
+    },
+    {
+      "id": "prep",
+      "title": "Preparedness & comms",
+      "icon": "📻"
+    },
+    {
+      "id": "manuals",
+      "title": "Field manuals",
+      "icon": "📘"
+    },
+    {
+      "id": "medical",
+      "title": "Medical encyclopedia",
+      "icon": "🩺"
+    }
+  ],
+  "wikis": {
+    "wikipedia": {
+      "api": "https://en.wikipedia.org/w/api.php",
+      "pageBase": "https://en.wikipedia.org/wiki/",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0"
+    },
+    "mdwiki": {
+      "api": "https://mdwiki.org/w/api.php",
+      "pageBase": "https://mdwiki.org/wiki/",
+      "source": "MDWiki contributors (Wiki Project Med)",
+      "license": "CC BY-SA 4.0"
+    }
+  },
+  "articles": [
+    {
+      "wiki": "wikipedia",
+      "tier": "small",
+      "topic": "first-aid",
+      "titles": [
+        "First_aid",
+        "Cardiopulmonary_resuscitation",
+        "Recovery_position",
+        "Bleeding",
+        "Tourniquet",
+        "Pressure_bandage",
+        "Wound",
+        "Burn",
+        "Bone_fracture",
+        "Splint_(medicine)",
+        "Choking",
+        "Abdominal_thrust",
+        "Shock_(circulatory)",
+        "Hypothermia",
+        "Frostbite",
+        "Heat_stroke",
+        "Heat_exhaustion",
+        "Dehydration",
+        "Oral_rehydration_therapy",
+        "Anaphylaxis",
+        "Epinephrine_autoinjector",
+        "Drowning",
+        "Concussion",
+        "Sprain",
+        "Snakebite"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "small",
+      "topic": "water",
+      "titles": [
+        "Water_purification",
+        "Portable_water_purification",
+        "Boiling",
+        "Water_chlorination",
+        "Solar_water_disinfection",
+        "Water_filter",
+        "Waterborne_diseases"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "small",
+      "topic": "food",
+      "titles": [
+        "Food_preservation",
+        "Food_storage",
+        "Foodborne_illness",
+        "Botulism"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "small",
+      "topic": "shelter",
+      "titles": [
+        "Fire_making",
+        "Emergency_blanket",
+        "Bivouac_shelter",
+        "Debris_hut",
+        "Carbon_monoxide_poisoning"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "small",
+      "topic": "prep",
+      "titles": [
+        "Survival_kit",
+        "Bug-out_bag",
+        "Emergency_population_warning",
+        "NOAA_Weather_Radio",
+        "Rule_of_threes_(survival)"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "first-aid",
+      "titles": [
+        "Wound_healing",
+        "Infection",
+        "Cellulitis",
+        "Sepsis",
+        "Antiseptic",
+        "Laceration",
+        "Suture_(medicine)",
+        "Dislocation",
+        "Head_injury",
+        "Spinal_cord_injury",
+        "Asthma",
+        "Diabetic_ketoacidosis",
+        "Hypoglycemia",
+        "Heart_attack",
+        "Stroke",
+        "Seizure",
+        "Childbirth",
+        "Cholera",
+        "Diarrhea",
+        "Insect_bites_and_stings",
+        "Spider_bite",
+        "Rabies",
+        "Tetanus",
+        "Lyme_disease",
+        "Altitude_sickness",
+        "Trench_foot",
+        "Sunburn",
+        "Smoke_inhalation",
+        "Radiation_sickness",
+        "Triage"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "water",
+      "titles": [
+        "Rainwater_harvesting",
+        "Well",
+        "Slow_sand_filter",
+        "Ceramic_water_filter",
+        "Distillation",
+        "Water_disinfection"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "food",
+      "titles": [
+        "Home_canning",
+        "Pressure_canning",
+        "Smoking_(cooking)",
+        "Drying_(food)",
+        "Pickling",
+        "Fermentation_in_food_processing",
+        "Salt-cured_meat",
+        "Pemmican",
+        "Hardtack",
+        "Root_cellar",
+        "Solar_cooker",
+        "Rocket_stove",
+        "Foraging",
+        "Edible_plants",
+        "Hunting",
+        "Fishing",
+        "Trapping"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "shelter",
+      "titles": [
+        "Emergency_shelter",
+        "Quinzhee",
+        "Snow_cave",
+        "Tarp_tent",
+        "Insulation_(thermal)",
+        "Layered_clothing",
+        "Fire_triangle",
+        "Firewood"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "power",
+      "titles": [
+        "Automotive_battery",
+        "Lead–acid_battery",
+        "Power_inverter",
+        "Engine-generator",
+        "Solar_panel",
+        "Solar_charger",
+        "Off-the-grid",
+        "Jump_start_(vehicle)",
+        "Portable_stove",
+        "Kerosene_lamp"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "prep",
+      "titles": [
+        "Earthquake_preparedness",
+        "Emergency_management",
+        "Evacuation",
+        "Shelter_in_place",
+        "Hurricane_preparedness",
+        "Tornado_preparedness",
+        "Flood",
+        "Wildfire",
+        "Pandemic",
+        "Fallout_shelter",
+        "Nuclear_fallout",
+        "Potassium_iodide",
+        "Power_outage",
+        "Amateur_radio_emergency_communications",
+        "Citizens_band_radio",
+        "Family_Radio_Service",
+        "Signal_mirror",
+        "International_distress_signals"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "first-aid",
+      "titles": [
+        "Wilderness_medical_emergency",
+        "Wilderness_first_aid",
+        "Combat_medic",
+        "Field_hospital",
+        "Disinfectant",
+        "Antibiotic",
+        "Dental_emergency",
+        "Eye_injury",
+        "Hyperthermia",
+        "Heat_illness",
+        "Electrical_injury",
+        "Crush_syndrome",
+        "Compartment_syndrome",
+        "Pneumothorax",
+        "Hemostatic_agent",
+        "Malaria",
+        "Typhoid_fever",
+        "Dysentery",
+        "Scurvy",
+        "Malnutrition"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "water",
+      "titles": [
+        "Sanitation",
+        "Composting_toilet",
+        "Pit_latrine",
+        "Greywater",
+        "Hand_washing",
+        "Soap"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "food",
+      "titles": [
+        "Gardening",
+        "Seed_saving",
+        "Crop_rotation",
+        "Composting",
+        "Square_foot_gardening",
+        "Raised-bed_gardening",
+        "Permaculture",
+        "Chicken",
+        "Beekeeping",
+        "Butchering",
+        "Grain_mill",
+        "Bread",
+        "Sourdough",
+        "Tanning_(leather)"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "shelter",
+      "titles": [
+        "Knot",
+        "List_of_knots",
+        "Lashing_(ropework)",
+        "Cordage",
+        "Axe",
+        "Bushcraft",
+        "Log_cabin",
+        "Cob_(material)",
+        "Adobe",
+        "Wood_stove"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "power",
+      "titles": [
+        "Small_wind_turbine",
+        "Micro_hydro",
+        "Charge_controller",
+        "Deep-cycle_battery",
+        "Bicycle_dynamo",
+        "Biogas",
+        "Wood_gas_generator",
+        "Welding",
+        "Soldering",
+        "Small_engine",
+        "Bicycle_maintenance"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "prep",
+      "titles": [
+        "Navigation",
+        "Orienteering",
+        "Compass",
+        "Map",
+        "Topographic_map",
+        "Celestial_navigation",
+        "Dead_reckoning",
+        "Morse_code",
+        "Ham_radio",
+        "Shortwave_radio",
+        "Crystal_radio",
+        "Tracking_(hunting)",
+        "Barter",
+        "Community_emergency_response_team"
+      ]
+    }
+  ],
+  "allPagesOf": [
+    {
+      "wiki": "mdwiki",
+      "tier": "large",
+      "topic": "medical",
+      "limit": 5000
+    }
+  ],
+  "pdfs": [
+    {
+      "id": "fema-are-you-ready",
+      "title": "Are You Ready? A Guide to Citizen Preparedness (FEMA)",
+      "topic": "prep",
+      "tier": "small",
+      "license": "Public domain (US federal government work)",
+      "source": "FEMA",
+      "urls": [
+        "https://www.nj.gov/njoem/pdf/areyouready.pdf",
+        "https://bready.sd.gov/bReady/areyouready_full.pdf"
+      ]
+    },
+    {
+      "id": "army-tc-4-02-1-first-aid",
+      "title": "First Aid, TC 4-02.1 (US Army)",
+      "topic": "first-aid",
+      "tier": "small",
+      "license": "Public domain (US federal government work; approved for public release)",
+      "source": "US Army",
+      "urls": [
+        "https://ciehub.info/ref/TC/4-02x1_2018.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-4-25-11-first-aid",
+      "title": "First Aid, FM 4-25.11 (US Army, 2002)",
+      "topic": "first-aid",
+      "tier": "medium",
+      "license": "Public domain (US federal government work; approved for public release)",
+      "source": "US Army",
+      "urls": [
+        "https://irp.fas.org/doddir/milmed/first.pdf"
+      ]
+    },
+    {
+      "id": "army-atp-3-50-21-survival",
+      "title": "Survival, ATP 3-50.21 (US Army)",
+      "topic": "manuals",
+      "tier": "medium",
+      "license": "Public domain (US federal government work; approved for public release)",
+      "source": "US Army",
+      "urls": [
+        "https://irp.fas.org/doddir/army/atp3-50-21.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-21-76-survival",
+      "title": "Survival, FM 21-76 (US Army)",
+      "topic": "manuals",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://www.sjsu.edu/people/michelle.hager/docs/fm_21-76_us_army_survival_manual_2006.pdf"
+      ]
+    },
+    {
+      "id": "usmc-mcrp-3-02f-survival",
+      "title": "Survival, MCRP 3-02F (US Marine Corps)",
+      "topic": "manuals",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Marine Corps",
+      "urls": [
+        "https://archive.org/download/MManuals/UsMarineCorps-Survival-Mcrp3-02f.pdf"
+      ]
+    },
+    {
+      "id": "fema-cert-participant-manual",
+      "title": "CERT Basic Training Participant Manual (FEMA)",
+      "topic": "prep",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "FEMA",
+      "urls": [
+        "https://em.uci.edu/training/_pdf/cert-participant-manual-english.pdf",
+        "https://uit.stanford.edu/sites/default/files/2023/03/24/CERT%20-%20Participant%20Manual.pdf"
+      ]
+    },
+    {
+      "id": "usda-home-canning",
+      "title": "Complete Guide to Home Canning (USDA, 2015)",
+      "topic": "food",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA",
+      "urls": [
+        "https://agri.nv.gov/uploadedFiles/agrinvgov/Content/Food/Craft_Foods/Complete%20Guide%20to%20Home%20Canning.pdf",
+        "https://www.growables.com/information/documents/CanningUSDA.pdf"
+      ]
+    },
+    {
+      "id": "usaf-afh-10-644-sere",
+      "title": "Survival, Evasion, Resistance, Escape, AFH 10-644 (US Air Force)",
+      "topic": "manuals",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Air Force",
+      "urls": [
+        "https://irp.fas.org/doddir/usaf/afh10-644.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-3-50-3-sere",
+      "title": "Survival, Evasion and Recovery, FM 3-50.3 (multi-service)",
+      "topic": "manuals",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense",
+      "urls": [
+        "https://irp.fas.org/doddir/army/fm3-50-3.pdf"
+      ]
+    },
+    {
+      "id": "nuclear-war-survival-skills",
+      "title": "Nuclear War Survival Skills (Cresson Kearny)",
+      "topic": "prep",
+      "tier": "large",
+      "license": "NEEDS REVIEW: original ORNL-5037 is a US government report; 1987 edition terms not yet confirmed",
+      "source": "Oak Ridge National Laboratory / Cresson Kearny",
+      "needsReview": true,
+      "urls": [
+        "https://archive.org/download/MManuals/nuclear_war_survival_skills.pdf",
+        "https://ia600501.us.archive.org/35/items/NuclearWarSurvivalSkills_201405/nwss.pdf"
+      ]
+    }
+  ]
+}
