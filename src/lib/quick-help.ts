@@ -407,6 +407,41 @@ export const QUICK_HELP: QuickHelp[] = [
       'White, hard or numb fingers, toes, nose or ears',
     ],
   },
+  {
+    id: 'snake-bite',
+    icon: 'snake',
+    hue: 'green',
+    title: 'Snake bite',
+    when: 'Someone was bitten and you can’t be sure the snake was harmless.',
+    steps: [
+      'Move away from the snake. Don’t try to catch or kill it.',
+      'Keep them calm and still. Sit or lay them down. Moving spreads venom faster.',
+      'Take off rings, watches, shoes and tight clothes near the bite before it swells.',
+      'Keep the bitten arm or leg still, at about the level of the heart. Splint it loosely like a broken bone.',
+      'Wash the bite gently with clean water and cover it with a clean, dry cloth.',
+      'Mark the edge of the swelling on the skin with a pen and write the time. Mark it again every 30 minutes.',
+      'Get them to medical care if there is any way to. Carry them or bring a vehicle to them rather than have them walk.',
+    ],
+    next: [
+      'Give small sips of water. Watch their breathing.',
+      'Remember what the snake looked like: color, pattern, head shape. Don’t go back for it.',
+      'Many bites inject little or no venom. Stay still and keep watching for 24 hours anyway.',
+      'If they stop breathing, start CPR.',
+    ],
+    dont: [
+      'Don’t cut the bite or try to suck out venom.',
+      'Don’t tie a tight band or tourniquet.',
+      'Don’t put ice on it.',
+      'Don’t give alcohol, coffee or painkillers like aspirin or ibuprofen.',
+    ],
+    danger: [
+      'Swelling that keeps spreading past your pen marks',
+      'Trouble breathing, swallowing or speaking',
+      'Drooping eyelids, blurred vision or weakness',
+      'Bleeding from the gums or nose, or dark urine',
+      'Fainting, vomiting or strong belly pain',
+    ],
+  },
 ];
 
 export const findQuickHelp = (id: string) => QUICK_HELP.find((h) => h.id === id);

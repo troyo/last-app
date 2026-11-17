@@ -53,7 +53,7 @@ function hits(words: string[], text: string): number {
 }
 
 const DO_HEADING =
-  /\b(treat|treatment|treating|first aid|management|managing|what to do|how to|steps|care|caring|procedure|method|instructions|prevention|preventing|remedy|remedies|emergency|response|making|building|preparation|preparing|use|using)\b/i;
+  /\b(treat|treatment|treating|first aid|management|managing|what to do|how to|steps|care|caring|procedure|method|instructions|remedy|remedies|emergency|response|making|building|preparation|preparing|use|using)\b/i;
 const ABOUT_HEADING =
   /\b(cause|causes|classification|types|signs|symptoms|diagnosis|epidemiology|prognosis|pathophysiology|etymology|society|culture|research|statistics|overview|background|definition|terminology|mechanism|risk factors|in animals)\b/i;
 

@@ -289,7 +289,6 @@ const s = StyleSheet.create({
     minWidth: 0,
     fontSize: 17,
     paddingVertical: 0,
-    fontFamily: 'Nunito_400Regular',
   },
   findBtn: {
     width: 42,

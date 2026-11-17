@@ -24,7 +24,7 @@ export default function TabsLayout() {
           paddingBottom: Math.max(insets.bottom, 6),
         },
         tabBarAllowFontScaling: false,
-        tabBarLabelStyle: { fontSize: 12.5, lineHeight: 16, fontFamily: 'Nunito_700Bold' },
+        tabBarLabelStyle: { fontSize: 12.5, lineHeight: 16, fontWeight: '600' },
         sceneStyle: { backgroundColor: t.bg },
       }}
     >

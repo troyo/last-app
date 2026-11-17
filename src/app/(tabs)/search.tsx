@@ -153,7 +153,9 @@ export default function Search() {
                     <Text style={{ color: t.text, fontSize: 15 }} numberOfLines={1}>
                       {savedCount[topic.id]
                         ? `${savedCount[topic.id].toLocaleString()} ${savedCount[topic.id] === 1 ? 'guide' : 'guides'} on this phone`
-                        : 'In the bigger packs'}
+                        : Object.keys(savedCount).length === 0
+                          ? 'Not saved yet'
+                          : 'In the bigger packs'}
                     </Text>
                   </View>
                   <Ionicons name="chevron-forward" size={18} color={t.text} />
@@ -284,7 +286,7 @@ const s = StyleSheet.create({
     borderWidth: 1,
     height: 50,
   },
-  input: { flex: 1, fontSize: 16, paddingVertical: 0, fontFamily: 'Nunito_400Regular' },
+  input: { flex: 1, fontSize: 16, paddingVertical: 0 },
   idle: { padding: 18, gap: 10, paddingBottom: 32 },
   label: { fontSize: 15, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },

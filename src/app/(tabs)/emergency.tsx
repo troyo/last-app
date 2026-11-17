@@ -139,7 +139,7 @@ const s = StyleSheet.create({
     borderWidth: 1,
     height: 50,
   },
-  input: { flex: 1, fontSize: 17, paddingVertical: 0, fontFamily: 'Nunito_400Regular' },
+  input: { flex: 1, fontSize: 17, paddingVertical: 0 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   tile: {
     flexBasis: '47%',

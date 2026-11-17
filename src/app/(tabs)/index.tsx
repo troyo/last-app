@@ -14,7 +14,7 @@ import { useLibrary } from '../../lib/LibraryContext';
 import { CLIMATES, getProfile, placeAsked } from '../../lib/place';
 import { packOffered } from '../../lib/first-pack';
 import { QUICK_HELP } from '../../lib/quick-help';
-import { HUES, useTheme } from '../../lib/theme';
+import { HUES, useHues, useTheme } from '../../lib/theme';
 import { hasSeenWelcome } from '../../lib/welcome';
 
 // Short names so six cards fit in two tidy rows.
@@ -39,6 +39,7 @@ function greeting() {
 //   Learn      -> every topic in the library
 export default function Home() {
   const t = useTheme();
+  const hues = useHues();
   const insets = useSafeAreaInsets();
   // Tapping the Home tab again jumps back to the top.
   const scroller = useRef<React.ComponentRef<typeof ScrollView>>(null);
@@ -174,17 +175,17 @@ export default function Home() {
                   onPress={() => router.push(`/help/${h.id}`)}
                   style={({ pressed }) => [
                     s.helpChip,
-                    { backgroundColor: HUES[h.hue].tint },
+                    { backgroundColor: hues[h.hue].tint },
                     pressed && { opacity: 0.8 },
                   ]}
                 >
                   <MaterialCommunityIcons
                     name={h.icon as IconName}
                     size={24}
-                    color={HUES[h.hue].color}
+                    color={hues[h.hue].color}
                   />
                   <Text
-                    style={s.chipTitle}
+                    style={[s.chipTitle, { color: t.text }]}
                     numberOfLines={1}
                     adjustsFontSizeToFit
                     minimumFontScale={0.85}
@@ -223,17 +224,17 @@ export default function Home() {
                       onPress={() => router.push(`/hazard/${h.id}`)}
                       style={({ pressed }) => [
                         s.hazard,
-                        { backgroundColor: HUES[h.hue].tint },
+                        { backgroundColor: hues[h.hue].tint },
                         pressed && { opacity: 0.8 },
                       ]}
                     >
                       <IconTile
                         name={h.icon as IconName}
-                        color={HUES[h.hue].color}
+                        color={hues[h.hue].color}
                         tint={t.card}
                         size={42}
                       />
-                      <Text style={s.hazardTitle} numberOfLines={2}>
+                      <Text style={[s.hazardTitle, { color: t.text }]} numberOfLines={2}>
                         {h.title.replace(' and deep cold', '')}
                       </Text>
                     </Pressable>
@@ -272,12 +273,12 @@ export default function Home() {
                 >
                   {/* A little jar that fills up as you tick things off. */}
                   <View
-                    style={[s.jar, { backgroundColor: t.soft, borderColor: HUES[list.hue].color }]}
+                    style={[s.jar, { backgroundColor: t.soft, borderColor: hues[list.hue].color }]}
                   >
                     <View
                       style={[
                         s.jarFill,
-                        { height: `${pct * 100}%`, backgroundColor: HUES[list.hue].tint },
+                        { height: `${pct * 100}%`, backgroundColor: hues[list.hue].tint },
                       ]}
                     />
                     <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>
@@ -305,11 +306,7 @@ export default function Home() {
                 Browse all guides
               </Text>
               <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
-                {topics
-                  .map((x) => x.title.split(' ')[0])
-                  .slice(0, 4)
-                  .join(', ')}{' '}
-                and more
+                Every guide on this phone, sorted by topic.
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={t.text} />
@@ -393,7 +390,7 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
   },
-  chipTitle: { fontSize: 15, fontWeight: '800', color: '#0E2A21', textAlign: 'center' },
+  chipTitle: { fontSize: 15, fontWeight: '800', textAlign: 'center' },
   hazard: {
     height: 70,
     borderRadius: 20,
@@ -402,7 +399,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  hazardTitle: { flex: 1, fontSize: 17, fontWeight: '800', color: '#0E2A21', lineHeight: 21 },
+  hazardTitle: { flex: 1, fontSize: 17, fontWeight: '800', lineHeight: 21 },
   tip: {
     flexDirection: 'row',
     alignItems: 'flex-start',

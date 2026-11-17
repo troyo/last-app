@@ -212,7 +212,7 @@ const s = StyleSheet.create({
     borderRadius: 999,
     borderWidth: 1,
   },
-  input: { flex: 1, fontSize: 16, paddingVertical: 0, fontFamily: 'Nunito_400Regular' },
+  input: { flex: 1, fontSize: 16, paddingVertical: 0 },
   pick: {
     height: 44,
     paddingHorizontal: 16,

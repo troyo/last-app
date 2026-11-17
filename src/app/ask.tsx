@@ -326,7 +326,6 @@ const s = StyleSheet.create({
     borderRadius: 24,
     paddingHorizontal: 18,
     fontSize: 17,
-    fontFamily: 'Nunito_400Regular',
   },
   send: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
   fine: {

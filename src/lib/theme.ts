@@ -1,42 +1,45 @@
 import { useColorScheme } from 'react-native';
 
-// Calm and warm, like a friend who has your back. Cream paper, deep green,
-// a little sunshine. Nothing alarming: red is saved for real problems.
+// Clean and calm: a bright, neutral page, crisp near-black text and one confident green.
+// Every text color here passes the strictest contrast test (AAA) on its background,
+// so nothing is faint. Red is saved for real problems.
 const light = {
-  bg: '#F8F5EE', // warm cream
+  bg: '#F4F6F5', // soft neutral, so white cards stand out
   card: '#FFFFFF',
-  soft: '#EAF3EC', // pale sage, for gentle highlights
-  text: '#0E2A21', // deep green-black
+  soft: '#E6F2EC', // pale green, for gentle highlights
+  text: '#0B1A15', // near-black
   // Secondary text. Dark on purpose: nothing in this app should be faint or hard to read.
-  muted: '#35483F',
-  border: '#E6E0D2',
-  accent: '#1F5C4A', // deep green: buttons and links
+  muted: '#33443D',
+  border: '#DDE4E0',
+  accent: '#0B6B4F', // green: buttons and links
   accentText: '#FFFFFF',
-  header: '#1F5C4A', // the green band at the top of home
-  dangerTint: '#FBE9E4', // soft red behind "needs more than home care"
+  header: '#0B5A43', // the green band at the top of home
+  dangerTint: '#FDECE8', // soft red behind "needs more than home care"
   sun: '#F6B93B', // highlights
   coral: '#F08A6B',
-  good: '#1F7A55',
-  warn: '#A8690A',
-  bad: '#B4412F',
+  good: '#0B6B4F',
+  warn: '#8A5300',
+  bad: '#B3311F',
 };
 
+// Follows the phone: when it is set to dark, so is the app. True dark, easy on the eyes
+// at night and kind to the battery, with text that is bright but not glaring.
 const dark: typeof light = {
-  bg: '#12241E', // deep forest, not black
-  card: '#1B3129',
-  soft: '#223B32',
-  text: '#F4EFE3',
-  muted: '#D2DED7',
-  border: '#2B4439',
-  accent: '#8FD3B3',
-  accentText: '#10221C',
-  header: '#1B3F33',
-  dangerTint: '#3A2622',
+  bg: '#0B1210',
+  card: '#161F1C',
+  soft: '#1F2D28',
+  text: '#F1F5F3',
+  muted: '#C6D2CC',
+  border: '#2A3833',
+  accent: '#63D6A8',
+  accentText: '#06231A',
+  header: '#0E3B2E',
+  dangerTint: '#3A1F1B',
   sun: '#F6B93B',
   coral: '#F4A088',
-  good: '#8FD3B3',
+  good: '#63D6A8',
   warn: '#F3C567',
-  bad: '#F2A08F',
+  bad: '#FF9C8A',
 };
 
 export type Theme = typeof light;
@@ -44,6 +47,21 @@ export type Theme = typeof light;
 export function useTheme(): Theme {
   return useColorScheme() === 'dark' ? dark : light;
 }
+
+/** True when the phone is in dark mode. */
+export const useDark = () => useColorScheme() === 'dark';
+
+// The soft circles behind icons, re-tuned for dark mode: a deep tint with a bright drawing.
+export const DARK_HUES: Record<string, { color: string; tint: string }> = {
+  '#FBE3DC': { color: '#FF9C8A', tint: '#3B211D' },
+  '#FDE9DF': { color: '#FFA988', tint: '#3A261D' },
+  '#FCEFC9': { color: '#F3C567', tint: '#372C12' },
+  '#DFF1E4': { color: '#63D6A8', tint: '#173227' },
+  '#D9EFEC': { color: '#5FD0C6', tint: '#143230' },
+  '#DCEBF8': { color: '#8EC1F5', tint: '#17293B' },
+  '#E9E3F7': { color: '#BBA6F2', tint: '#2A2340' },
+  '#F3E6D6': { color: '#E0B487', tint: '#33271A' },
+};
 
 // Icon colors: a strong color for the drawing and a soft tint behind it.
 export const HUES = {
@@ -73,3 +91,12 @@ export const TOPIC_LOOK: Record<string, { icon: string; hue: Hue }> = {
   diy: { icon: 'hammer-wrench', hue: 'sun' },
   books: { icon: 'bookshelf', hue: 'teal' },
 };
+
+/** The icon colors for the phone's current mode. Use this when a tint is a background. */
+export function useHues(): Record<Hue, { color: string; tint: string }> {
+  const isDark = useDark();
+  if (!isDark) return HUES;
+  const out = {} as Record<Hue, { color: string; tint: string }>;
+  for (const k of Object.keys(HUES) as Hue[]) out[k] = DARK_HUES[HUES[k].tint] ?? HUES[k];
+  return out;
+}

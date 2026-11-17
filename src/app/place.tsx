@@ -468,7 +468,7 @@ const s = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1,
   },
-  findInput: { flex: 1, fontSize: 17, fontFamily: 'Nunito_400Regular', height: 52 },
+  findInput: { flex: 1, fontSize: 17, height: 52 },
   stateRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14 },
   stepRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   round: {

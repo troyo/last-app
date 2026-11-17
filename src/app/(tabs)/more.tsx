@@ -28,7 +28,7 @@ export default function More() {
         ? 'Saving your guides…'
         : state.pack
           ? `${packName} pack · ${formatBytes(packBytes(state.pack))} on this phone`
-          : 'Nothing saved yet. Get the free pack',
+          : 'Get the free guides',
       to: '/packs',
     },
     {
@@ -37,7 +37,7 @@ export default function More() {
       title: 'My place and household',
       sub: profile
         ? `${profile.place[0].toUpperCase()}${profile.place.slice(1)} · ${profile.people} ${profile.people === 1 ? 'person' : 'people'}`
-        : 'Make the guides fit where you live',
+        : 'Fit the guides to your area',
       to: '/place',
     },
     {
@@ -51,7 +51,7 @@ export default function More() {
       icon: 'information',
       hue: 'blue',
       title: 'How Last App works',
-      sub: 'What it is and why you can trust it',
+      sub: 'And why you can trust it',
       to: '/about',
     },
     {

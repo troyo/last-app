@@ -1,4 +1,3 @@
-import { READER_FONT_CSS } from './reader-font';
 // Builds the page a saved guide is shown in.
 //
 // The guides arrive as plain encyclopedia-style HTML: very long, with history
@@ -27,16 +26,16 @@ const escapeHtml = (s: string) =>
 
 const css = (px: number, c: ReaderColors) => `
   html{scroll-behavior:smooth}
-  body{font:${px}px/1.6 Nunito,ui-rounded,-apple-system,Roboto,sans-serif;margin:0;padding:4px 20px 96px;
+  body{font:${px}px/1.6 -apple-system,system-ui,Roboto,sans-serif;margin:0;padding:4px 20px 96px;
        background:${c.bg};color:${c.text};-webkit-text-size-adjust:100%;overflow-wrap:break-word}
-  h1{font-size:1.65em;line-height:1.15;margin:.3em 0 .6em;font-weight:800;letter-spacing:-.01em}
-  h3{font-size:1.12em;line-height:1.3;margin:1.5em 0 .45em;font-weight:800}
-  h4,h5{font-size:1em;line-height:1.3;margin:1.3em 0 .4em;font-weight:800}
+  h1{font-size:1.65em;line-height:1.15;margin:.3em 0 .6em;font-weight:700;letter-spacing:-.01em}
+  h3{font-size:1.12em;line-height:1.3;margin:1.5em 0 .45em;font-weight:700}
+  h4,h5{font-size:1em;line-height:1.3;margin:1.3em 0 .4em;font-weight:700}
   p{margin:0 0 .95em}
   ul,ol{padding-left:1.25em;margin:0 0 1em} li{margin:.45em 0;padding-left:.15em}
-  li::marker{color:${c.accent};font-weight:800}
+  li::marker{color:${c.accent};font-weight:700}
   a{color:${c.accent};font-weight:700;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
-  b,strong{font-weight:800}
+  b,strong{font-weight:700}
   img{max-width:100%;max-height:260px;width:auto;height:auto;border-radius:14px;display:block;margin:0 auto;background:#fff}
   figure{margin:1.1em 0 1.3em;padding:0}
   figcaption,.thumbcaption,.gallerytext{font-size:.88em;line-height:1.4;color:${c.text};opacity:.8;margin-top:.5em;text-align:left}
@@ -46,11 +45,11 @@ const css = (px: number, c: ReaderColors) => `
         background:${c.card};border:1px solid ${c.border};border-radius:14px;overflow:hidden}
   td,th{padding:9px 11px;text-align:left;vertical-align:top;min-width:6.5em;border-bottom:1px solid ${c.border}}
   tr:last-child>td,tr:last-child>th{border-bottom:0}
-  th{background:${c.soft};font-weight:800}
-  caption{font-weight:800;text-align:left;padding:0 0 .5em}
+  th{background:${c.soft};font-weight:700}
+  caption{font-weight:700;text-align:left;padding:0 0 .5em}
   blockquote{margin:1em 0;padding:.7em 1em;background:${c.soft};border-radius:14px}
   blockquote p:last-child{margin-bottom:0}
-  dl{margin:0 0 1em} dt{font-weight:800;margin-top:.7em} dd{margin:.2em 0 .5em 0}
+  dl{margin:0 0 1em} dt{font-weight:700;margin-top:.7em} dd{margin:.2em 0 .5em 0}
   hr{border:0;border-top:1px solid ${c.border};margin:1.5em 0}
   sup,sub{font-size:.7em;line-height:0}
   .mw-ref,.reference,.mw-editsection,.navbox,.hatnote,.ambox,.metadata,.reflist,.mw-references-wrap,
@@ -62,16 +61,16 @@ const css = (px: number, c: ReaderColors) => `
   /* Jump-to list */
   .jump{background:${c.card};border-radius:20px;padding:6px 16px;margin:1.2em 0 1.4em;
         box-shadow:0 4px 14px rgba(23,53,44,.07)}
-  .jump .lab{font-size:.78em;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:12px 0 4px}
+  .jump .lab{font-size:.78em;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 0 4px}
   .jump a{display:flex;align-items:center;gap:10px;padding:12px 0;font-weight:700;text-decoration:none;
           color:${c.text};border-top:1px solid ${c.border}}
   .jump a:first-of-type{border-top:0}
-  .jump a i{margin-left:auto;font-style:normal;color:${c.accent};font-weight:800}
+  .jump a i{margin-left:auto;font-style:normal;color:${c.accent};font-weight:700}
   .jump a.star::before{content:'';width:9px;height:9px;border-radius:5px;background:${c.sun};flex:none}
 
   /* Folding sections */
   .sec{background:${c.card};border-radius:20px;margin:0 0 12px;box-shadow:0 4px 14px rgba(23,53,44,.07);overflow:hidden}
-  .sec>h2{font-size:1.14em;line-height:1.25;font-weight:800;margin:0;padding:17px 16px;display:flex;
+  .sec>h2{font-size:1.14em;line-height:1.25;font-weight:700;margin:0;padding:17px 16px;display:flex;
           align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .sec>h2::after{content:'+';margin-left:auto;flex:none;width:30px;height:30px;border-radius:15px;
           background:${c.soft};color:${c.accent};font-size:22px;line-height:28px;text-align:center;font-weight:700}
@@ -80,7 +79,7 @@ const css = (px: number, c: ReaderColors) => `
   .sec.open>.in{display:block}
   .sec .scroll{margin:1em -16px 1.2em;padding:0 16px}
   .sec table{background:${c.bg}}
-  .more{font-size:.78em;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin:1.8em 0 .8em}
+  .more{font-size:.78em;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin:1.8em 0 .8em}
 
   mark{background:${c.sun};color:#1B1300;border-radius:4px;padding:0 1px}
   mark.now{background:#F08A24;outline:2px solid #F08A24}
@@ -348,8 +347,8 @@ export function buildReaderPage(opts: {
   const nonce = Math.random().toString(36).slice(2) + Date.now().toString(36);
   return `<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:; script-src 'nonce-${nonce}'">
-<style>${READER_FONT_CSS}${css(opts.px, opts.colors)}</style></head><body><div id="doc"><h1>${escapeHtml(opts.title)}</h1>${body}</div>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; script-src 'nonce-${nonce}'">
+<style>${css(opts.px, opts.colors)}</style></head><body><div id="doc"><h1>${escapeHtml(opts.title)}</h1>${body}</div>
 <p class="credit">Source: ${escapeHtml(opts.source)} · ${escapeHtml(opts.license)}.
 General information, not medical advice. If you can reach emergency services, please do that first.</p>
 <script nonce="${nonce}">${SCRIPT}</script></body></html>`;

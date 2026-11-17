@@ -8,36 +8,47 @@ import {
   StyleSheet,
   Text as RNText,
   TextProps,
+  TextStyle,
   View,
   ViewStyle,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTheme } from '../lib/theme';
+import { DARK_HUES, useDark, useTheme } from '../lib/theme';
 
-// One friendly, rounded typeface everywhere. Each weight is its own font file,
-// so we turn "fontWeight" into the matching file.
-const FACE: Record<string, string> = {
-  '400': 'Nunito_400Regular',
-  '500': 'Nunito_600SemiBold',
-  '600': 'Nunito_600SemiBold',
-  '700': 'Nunito_700Bold',
-  '800': 'Nunito_800ExtraBold',
-  '900': 'Nunito_800ExtraBold',
-  normal: 'Nunito_400Regular',
-  bold: 'Nunito_700Bold',
-};
-export const fontFor = (weight?: string | number) => FACE[String(weight ?? '400')] ?? FACE['400'];
+// Type. The phone's own typeface (San Francisco on iPhone, Roboto on Android) is the one
+// people read all day, so it is the easiest to read here too.
+//
+// Two rules keep every screen legible without each screen having to think about it:
+//   1. Nothing is smaller than 15pt, and everyday text is at least 16pt.
+//   2. Only headlines are extra bold. Smaller text steps down a weight so pages don't shout.
+const MIN_SIZE: Record<number, number> = { 12: 14, 12.5: 14, 13: 15, 14: 15, 15: 16 };
+const CALMER: Record<string, string> = { '900': '700', '800': '700', '700': '600', bold: '600' };
 
-/** Drop-in replacement for React Native's Text that uses the app's typeface. */
+/** Drop-in replacement for React Native's Text that applies the app's type rules. */
 export function Text({ style, ...rest }: TextProps) {
   const flat = StyleSheet.flatten(style) ?? {};
+  const asked = flat.fontSize ?? 16;
+  const size = MIN_SIZE[asked] ?? asked;
+  const weight = String(flat.fontWeight ?? '400');
+  const headline = size >= 20;
   return (
     <RNText
       // If the phone is set to extra-large text, grow a little but never so
       // much that words spill out of their cards.
       maxFontSizeMultiplier={1.25}
       {...rest}
-      style={[flat, { fontFamily: fontFor(flat.fontWeight), fontWeight: undefined }]}
+      style={[
+        flat,
+        {
+          fontSize: size,
+          fontWeight: (headline ? weight : (CALMER[weight] ?? weight)) as TextStyle['fontWeight'],
+          // Keep the line height roomy when the size was bumped up.
+          lineHeight: flat.lineHeight
+            ? Math.max(flat.lineHeight, Math.round(size * 1.3))
+            : undefined,
+          letterSpacing: flat.letterSpacing ?? (headline ? -0.3 : 0),
+        },
+      ]}
     />
   );
 }
@@ -85,7 +96,14 @@ export function Card(props: {
   onPress?: () => void;
 }) {
   const t = useTheme();
-  const style = [s.card, { backgroundColor: t.card }, props.style];
+  const isDark = useDark();
+  // In dark mode a shadow can't be seen, so a thin edge separates the card from the page.
+  const style = [
+    s.card,
+    { backgroundColor: t.card },
+    isDark && { borderWidth: StyleSheet.hairlineWidth, borderColor: t.border, shadowOpacity: 0 },
+    props.style,
+  ];
   if (!props.onPress) return <View style={style}>{props.children}</View>;
   return (
     <Pressable
@@ -105,6 +123,8 @@ export type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 /** A drawn icon on a soft colored circle. Used instead of emoji so everything matches. */
 export function IconTile(props: { name: IconName; color: string; tint: string; size?: number }) {
   const size = props.size ?? 48;
+  const isDark = useDark();
+  const look = (isDark && DARK_HUES[props.tint]) || props;
   return (
     <View
       style={[
@@ -113,11 +133,11 @@ export function IconTile(props: { name: IconName; color: string; tint: string; s
           width: size,
           height: size,
           borderRadius: size / 2,
-          backgroundColor: props.tint,
+          backgroundColor: look.tint,
         },
       ]}
     >
-      <MaterialCommunityIcons name={props.name} size={size * 0.54} color={props.color} />
+      <MaterialCommunityIcons name={props.name} size={size * 0.54} color={look.color} />
     </View>
   );
 }
@@ -216,10 +236,10 @@ const s = StyleSheet.create({
     padding: 16,
     borderRadius: 22,
     // A soft lift instead of an outline.
-    shadowColor: '#17352C',
-    shadowOpacity: 0.09,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 6 },
+    shadowColor: '#0B1A15',
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
   tile: { alignItems: 'center', justifyContent: 'center' },

@@ -1,10 +1,3 @@
-import {
-  Nunito_400Regular,
-  Nunito_600SemiBold,
-  Nunito_700Bold,
-  Nunito_800ExtraBold,
-  useFonts,
-} from '@expo-google-fonts/nunito';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
@@ -14,24 +7,16 @@ import { LibraryProvider } from '../lib/LibraryContext';
 import { useTheme } from '../lib/theme';
 import { hasSeenWelcome } from '../lib/welcome';
 
-// Hold the splash screen until the typeface is ready, so text never flickers.
+// Hold the splash screen until the first screen is ready to draw.
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
   const t = useTheme();
-  const [loaded, error] = useFonts({
-    Nunito_400Regular,
-    Nunito_600SemiBold,
-    Nunito_700Bold,
-    Nunito_800ExtraBold,
-  });
   // On the very first launch the welcome film is the opening; two in a row is too much.
   const [opening, setOpening] = useState(hasSeenWelcome);
-  const ready = loaded || !!error; // if the font can't load, carry on with the system one
   useEffect(() => {
-    if (ready) SplashScreen.hideAsync().catch(() => {});
-  }, [ready]);
-  if (!ready) return null;
+    SplashScreen.hideAsync().catch(() => {});
+  }, []);
 
   return (
     <LibraryProvider>
@@ -40,7 +25,7 @@ export default function RootLayout() {
         screenOptions={{
           headerStyle: { backgroundColor: t.bg },
           headerTintColor: t.accent,
-          headerTitleStyle: { color: t.text, fontFamily: 'Nunito_700Bold' },
+          headerTitleStyle: { color: t.text, fontWeight: '600', fontSize: 18 },
           headerShadowVisible: false,
           // Just a clean back arrow, no "Back"/screen-name label next to it.
           headerBackButtonDisplayMode: 'minimal',
