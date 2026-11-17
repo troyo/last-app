@@ -162,10 +162,23 @@ export async function ask(question: string): Promise<Answer[]> {
       }
 
   // 4. The saved guides: open the best few and pull out the matching passages.
-  const guides = search(question, 40)
-    .guides.map((g) => g.item)
-    .filter((item) => item.type === 'article' && isDownloaded(item))
-    .slice(0, 8);
+  const saved = (q: string) =>
+    search(q, 40)
+      .guides.map((g) => g.item)
+      .filter((item) => item.type === 'article' && isDownloaded(item));
+  let guides = saved(question);
+  // A whole sentence can match only guides in packs this phone doesn't have.
+  // Then look word by word, so "how do I build a shelter" still finds the shelter guide.
+  if (guides.length < 3 && words.length > 1) {
+    const ids = new Set(guides.map((g) => g.id));
+    for (const w of words)
+      for (const item of saved(w).slice(0, 6))
+        if (!ids.has(item.id)) {
+          ids.add(item.id);
+          guides.push(item);
+        }
+  }
+  guides = guides.slice(0, 8);
   const read = await Promise.all(
     guides.map(async (item, rank) => {
       try {
