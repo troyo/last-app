@@ -31,7 +31,7 @@ const SLIDES = [
   },
   {
     image: require('../../assets/illustrations/packs.png'),
-    title: 'Start free, grow when you like',
+    title: 'Start free, add more later',
     body: 'The Small pack is free forever and covers the essentials. Want field manuals, handbooks and thousands more guides? Unlock the bigger packs any time.',
   },
 ];

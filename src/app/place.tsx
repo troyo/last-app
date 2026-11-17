@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Card, IconName, IconTile, Text } from '../components/ui';
 import { HAZARDS } from '../lib/hazards';
@@ -234,21 +234,16 @@ export default function Place() {
               Getting ready in Florida is nothing like getting ready in Minnesota. Tell us roughly
               where you are and everything here will fit your home.
             </Text>
-            {finding ? (
-              <Card style={s.finding}>
-                <ActivityIndicator color={t.accent} />
-                <Text style={{ color: t.text, fontSize: 16, flex: 1 }}>
-                  Finding you. This can take a moment…
-                </Text>
-              </Card>
-            ) : (
-              <Option
-                icon="crosshairs-gps"
-                title="Find me"
-                sub="Uses your phone’s GPS. Works with no signal."
-                onPress={findMe}
-              />
-            )}
+            <Option
+              icon="crosshairs-gps"
+              title={finding ? 'Finding you…' : 'Find me'}
+              sub={
+                finding
+                  ? 'This can take a moment. Step outside if you can.'
+                  : 'Uses your phone’s GPS. Works with no signal.'
+              }
+              onPress={finding ? () => {} : findMe}
+            />
             <Option
               icon="map-marker"
               title="Pick my state"
@@ -429,7 +424,6 @@ const s = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 1,
   },
-  finding: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   chip: {
     flexDirection: 'row',
     alignItems: 'center',
