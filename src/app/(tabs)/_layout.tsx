@@ -3,7 +3,8 @@ import { Tabs } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../lib/theme';
 
-// The three tabs at the bottom. You can always get home from anywhere.
+// The tabs at the bottom are the places people come back to. One-time setup
+// (packs, terms, about) lives under More.
 export default function TabsLayout() {
   const t = useTheme();
   const insets = useSafeAreaInsets();
@@ -22,17 +23,17 @@ export default function TabsLayout() {
           paddingBottom: Math.max(insets.bottom, 8),
         },
         tabBarAllowFontScaling: false,
-        tabBarLabelStyle: { fontSize: 12, lineHeight: 16, fontFamily: 'Nunito_700Bold' },
+        tabBarLabelStyle: { fontSize: 11, lineHeight: 15, fontFamily: 'Nunito_700Bold' },
         sceneStyle: { backgroundColor: t.bg },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Guides',
+          title: 'Home',
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name={focused ? 'book' : 'book-outline'}
+              name={focused ? 'home' : 'home-outline'}
               color={color as string}
               size={size}
             />
@@ -40,12 +41,12 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="packs"
+        name="emergency"
         options={{
-          title: 'My packs',
+          title: 'Emergency',
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name={focused ? 'briefcase' : 'briefcase-outline'}
+              name={focused ? 'medkit' : 'medkit-outline'}
               color={color as string}
               size={size}
             />
@@ -53,12 +54,30 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="about"
+        name="search"
         options={{
-          title: 'About',
+          title: 'Search',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? 'search' : 'search-outline'} color={color as string} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="prep"
+        options={{
+          title: 'Get ready',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? 'checkbox' : 'checkbox-outline'} color={color as string} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="more"
+        options={{
+          title: 'More',
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name={focused ? 'heart' : 'heart-outline'}
+              name={focused ? 'ellipsis-horizontal-circle' : 'ellipsis-horizontal-circle-outline'}
               color={color as string}
               size={size}
             />

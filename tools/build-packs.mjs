@@ -297,6 +297,26 @@ const fetched = await pool(articleList, 4, async (a) => {
   };
 });
 
+// The first real sentence or two of an article, as plain text. The app
+// shows it under search results and searches inside it.
+function summaryOf(html) {
+  const paras = html.match(/<p\b[^>]*>[\s\S]*?<\/p>/gi) || [];
+  for (const p of paras) {
+    const text = p
+      .replace(/<img[^>]*>/gi, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;|&#160;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;|&apos;/g, "'")
+      .replace(/&[a-z]+;|&#\d+;/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (text.length >= 60) return text.length > 170 ? text.slice(0, 167).replace(/\s\S*$/, '') + '…' : text;
+  }
+  return undefined;
+}
+
 // ---------- Bundle articles into ~20 MB chunks per tier ----------
 
 const items = [];
@@ -337,6 +357,7 @@ for (const tier of TIERS) {
       source: wiki.source,
       license: wiki.license,
       sourceUrl: a.sourceUrl,
+      summary: summaryOf(a.html),
     });
     chunk[a.id] = a.html;
     chunkBytes += a.html.length;

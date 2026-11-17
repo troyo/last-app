@@ -42,6 +42,7 @@ export type Item = {
   source: string;
   license: string;
   sourceUrl?: string;
+  summary?: string; // first sentence or two, for search
 };
 
 export type Catalog = {

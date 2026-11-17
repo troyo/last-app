@@ -57,7 +57,7 @@ export default function TopicScreen() {
             </Text>
             <Button
               label="See my packs"
-              onPress={() => router.dismissTo('/packs')}
+              onPress={() => router.push('/packs')}
               style={{ alignSelf: 'stretch' }}
             />
           </View>
