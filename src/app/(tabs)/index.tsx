@@ -1,6 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Redirect, router, useFocusEffect } from 'expo-router';
-import { setStatusBarStyle } from 'expo-status-bar';
+import { StatusBar } from 'expo-status-bar';
 import { useCallback, useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -44,10 +44,13 @@ export default function Home() {
   // Checklist progress may have changed while we were on another screen.
   useFocusEffect(useCallback(() => refresh((n) => n + 1), []));
   // White clock and battery on the green header; back to normal on other screens.
+  // Rendered (not set imperatively) so the root layout's <StatusBar> can't
+  // override it; it unmounts when another tab is focused.
+  const [focused, setFocused] = useState(false);
   useFocusEffect(
     useCallback(() => {
-      setStatusBarStyle('light', true);
-      return () => setStatusBarStyle('auto', true);
+      setFocused(true);
+      return () => setFocused(false);
     }, []),
   );
 
@@ -88,6 +91,7 @@ export default function Home() {
       contentContainerStyle={{ paddingBottom: 40 }}
     >
       {/* White clock and battery icons while the green header is showing */}
+      {focused && <StatusBar style="light" />}
       <View style={[s.header, { backgroundColor: t.header, paddingTop: insets.top + 22 }]}>
         <Text style={s.hello}>{greeting()}</Text>
         <Text style={s.sub}>Whatever comes up, you’ve got this.</Text>
