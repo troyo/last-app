@@ -53,10 +53,12 @@ function Article({ item }: { item: Item }) {
   // Our own simple, readable styling. Nothing is loaded from the internet.
   const page = `<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">
 <style>
   body{font:18px/1.55 -apple-system,Roboto,sans-serif;margin:0;padding:16px 18px 48px;
        background:${t.bg};color:${t.text};}
   a{color:${t.accent};text-decoration:underline}
+  img{max-width:100%;height:auto;border-radius:6px} figure{margin:14px 0} figcaption{font-size:14px;color:${t.muted}}
   h1,h2,h3{line-height:1.25} table{border-collapse:collapse;font-size:15px;display:block;overflow-x:auto}
   td,th{border:1px solid ${t.border};padding:4px 6px}
   .mw-ref,.reference,.mw-editsection,.navbox,.hatnote,.ambox,.metadata,.reflist,.mw-references-wrap{display:none}

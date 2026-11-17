@@ -10,12 +10,12 @@
     {
       "id": "medium",
       "title": "Medium",
-      "summary": "Small, plus Army and Marine survival manuals, FEMA CERT training, USDA canning, and 100+ more guides."
+      "summary": "Small, plus Army and Marine survival manuals, FEMA CERT training, USDA canning, first aid and survival handbooks, and 100+ more guides."
     },
     {
       "id": "large",
       "title": "Large",
-      "summary": "Everything: a full offline medical encyclopedia (MDWiki), more field manuals, gardening, power, radio and navigation."
+      "summary": "Everything: a full offline medical encyclopedia (MDWiki), Appropedia for DIY and off-grid living, cookbooks, gardening, more field manuals, radio and navigation."
     }
   ],
   "topics": [
@@ -58,6 +58,16 @@
       "id": "medical",
       "title": "Medical encyclopedia",
       "icon": "🩺"
+    },
+    {
+      "id": "diy",
+      "title": "DIY & off-grid",
+      "icon": "🛠️"
+    },
+    {
+      "id": "books",
+      "title": "Handbooks",
+      "icon": "📚"
     }
   ],
   "wikis": {
@@ -65,13 +75,29 @@
       "api": "https://en.wikipedia.org/w/api.php",
       "pageBase": "https://en.wikipedia.org/wiki/",
       "source": "Wikipedia contributors",
-      "license": "CC BY-SA 4.0"
+      "license": "CC BY-SA 4.0",
+      "images": 10
     },
     "mdwiki": {
       "api": "https://mdwiki.org/w/api.php",
       "pageBase": "https://mdwiki.org/wiki/",
       "source": "MDWiki contributors (Wiki Project Med)",
-      "license": "CC BY-SA 4.0"
+      "license": "CC BY-SA 4.0",
+      "images": 3
+    },
+    "appropedia": {
+      "api": "https://www.appropedia.org/w/api.php",
+      "pageBase": "https://www.appropedia.org/",
+      "source": "Appropedia contributors",
+      "license": "CC BY-SA 4.0",
+      "images": 0
+    },
+    "wikibooks": {
+      "api": "https://en.wikibooks.org/w/api.php",
+      "pageBase": "https://en.wikibooks.org/wiki/",
+      "source": "Wikibooks contributors",
+      "license": "CC BY-SA 4.0",
+      "images": 4
     }
   },
   "articles": [
@@ -407,10 +433,86 @@
   ],
   "allPagesOf": [
     {
+      "wiki": "wikibooks",
+      "tier": "medium",
+      "topic": "books",
+      "prefix": "First Aid",
+      "limit": 300
+    },
+    {
+      "wiki": "wikibooks",
+      "tier": "medium",
+      "topic": "books",
+      "prefix": "Outdoor Survival",
+      "limit": 300
+    },
+    {
+      "wiki": "wikibooks",
+      "tier": "medium",
+      "topic": "books",
+      "prefix": "Knots",
+      "limit": 300
+    },
+    {
+      "wiki": "wikibooks",
+      "tier": "medium",
+      "topic": "books",
+      "prefix": "Scouting",
+      "limit": 300
+    },
+    {
+      "wiki": "wikibooks",
+      "tier": "large",
+      "topic": "books",
+      "limit": 3000,
+      "namespace": 102
+    },
+    {
+      "wiki": "wikibooks",
+      "tier": "large",
+      "topic": "books",
+      "prefix": "Horticulture",
+      "limit": 1500
+    },
+    {
+      "wiki": "wikibooks",
+      "tier": "large",
+      "topic": "books",
+      "prefix": "Emergency Medicine",
+      "limit": 500
+    },
+    {
+      "wiki": "wikibooks",
+      "tier": "large",
+      "topic": "books",
+      "prefix": "Amateur Radio Manual",
+      "limit": 300
+    },
+    {
+      "wiki": "wikibooks",
+      "tier": "large",
+      "topic": "books",
+      "prefix": "Bicycles",
+      "limit": 300
+    },
+    {
+      "wiki": "wikibooks",
+      "tier": "large",
+      "topic": "books",
+      "prefix": "Electronics",
+      "limit": 800
+    },
+    {
+      "wiki": "appropedia",
+      "tier": "large",
+      "topic": "diy",
+      "limit": 6000
+    },
+    {
       "wiki": "mdwiki",
       "tier": "large",
       "topic": "medical",
-      "limit": 5000
+      "limit": 8000
     }
   ],
   "pdfs": [
@@ -422,8 +524,21 @@
       "license": "Public domain (US federal government work)",
       "source": "FEMA",
       "urls": [
+        "https://www.ready.gov/sites/default/files/2021-03/are-you-ready-guide.pdf",
         "https://www.nj.gov/njoem/pdf/areyouready.pdf",
         "https://bready.sd.gov/bReady/areyouready_full.pdf"
+      ]
+    },
+    {
+      "id": "cdc-make-water-safe",
+      "title": "Make Water Safe During an Emergency (CDC)",
+      "topic": "water",
+      "tier": "small",
+      "license": "Public domain (US federal government work)",
+      "source": "CDC",
+      "urls": [
+        "https://www.cdc.gov/healthywater/emergency/pdf/make-water-safe-during-emergency-p.pdf",
+        "https://stacks.cdc.gov/view/cdc/51278/cdc_51278_DS1.pdf"
       ]
     },
     {
@@ -538,6 +653,18 @@
       "urls": [
         "https://archive.org/download/MManuals/nuclear_war_survival_skills.pdf",
         "https://ia600501.us.archive.org/35/items/NuclearWarSurvivalSkills_201405/nwss.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-3-25-26-land-navigation",
+      "title": "Map Reading and Land Navigation, FM 3-25.26 (US Army)",
+      "topic": "manuals",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/Fm3-25.26MapReadingAndLandNavigation.pdf",
+        "https://elon.edu/assets/docs/rotc/FM%203-25.26%20Map%20Reading%20and%20Land%20Navigation.pdf"
       ]
     }
   ]

@@ -106,8 +106,9 @@ if (!QUICK) {
       const q = new URLSearchParams({
         action: 'query',
         list: 'allpages',
-        apnamespace: '0',
+        apnamespace: String(bulk.namespace ?? 0),
         apfilterredir: 'nonredirects',
+        ...(bulk.prefix ? { apprefix: bulk.prefix } : {}),
         aplimit: 'max',
         format: 'json',
         formatversion: '2',
@@ -126,7 +127,13 @@ if (!QUICK) {
       if (!data.continue) break;
       cont = data.continue;
     }
-    console.log(`Listed ${count} ${bulk.wiki} pages`);
+    console.log(
+      `Listed ${count} ${bulk.wiki} pages${bulk.prefix ? ` starting "${bulk.prefix}"` : ''}`,
+    );
+    if (count === 0)
+      report.skipped.push(
+        `No ${bulk.wiki} pages found${bulk.prefix ? ` starting "${bulk.prefix}"` : ''}`,
+      );
   }
 }
 
@@ -142,8 +149,6 @@ function cleanHtml(html, wiki) {
     .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<style[\s\S]*?<\/style>/gi, '')
     .replace(/<link[^>]*>/gi, '')
-    .replace(/<img[^>]*>/gi, '')
-    .replace(/<figure[\s\S]*?<\/figure>/gi, '')
     .replace(/<sup[^>]*class="[^"]*reference[^"]*"[\s\S]*?<\/sup>/gi, '')
     .replace(/<span class="mw-editsection[\s\S]*?<\/span>\s*<\/span>/gi, '')
     .replace(/<!--[\s\S]*?-->/g, '');
@@ -167,6 +172,46 @@ function cleanHtml(html, wiki) {
     return text;
   });
   return h.replace(/\n{3,}/g, '\n\n').trim();
+}
+
+// Pictures: only from Wikimedia Commons (freely licensed; "fair use" images
+// live elsewhere and are dropped). Each kept picture is stored inside the
+// article itself, so it shows with no internet.
+const COMMONS = /^(?:https?:)?\/\/upload\.wikimedia\.org\/wikipedia\/commons\//;
+const IMG_MAX_BYTES = 250 * 1024;
+let imageCount = 0;
+let imageBytes = 0;
+
+async function embedImages(html, maxImages) {
+  const tags = [...html.matchAll(/<img\b[^>]*>/gi)].map((m) => m[0]);
+  const replacements = new Map();
+  let kept = 0;
+  for (const tag of tags) {
+    let out = '';
+    const src = tag.match(/\bsrc="([^"]+)"/)?.[1]?.replace(/&amp;/g, '&') ?? '';
+    const width = Number(tag.match(/\bwidth="(\d+)"/)?.[1] ?? 0);
+    if (kept < maxImages && COMMONS.test(src) && width >= 120) {
+      const r = await fetchWithRetry(src.startsWith('//') ? `https:${src}` : src, {
+        binary: true,
+        tries: 2,
+      });
+      const type = r.ok ? r.type.split(';')[0].trim() : '';
+      if (r.ok && /^image\/(jpeg|png|gif|webp)$/.test(type) && r.body.length <= IMG_MAX_BYTES) {
+        const alt = (tag.match(/\balt="([^"]*)"/)?.[1] ?? '').slice(0, 200);
+        out = `<img alt="${alt}" src="data:${type};base64,${r.body.toString('base64')}">`;
+        kept++;
+        imageCount++;
+        imageBytes += r.body.length;
+      }
+    }
+    replacements.set(tag, out);
+  }
+  let h = html.replace(/<img\b[^>]*>/gi, (tag) => replacements.get(tag) ?? '');
+  // Remove picture frames whose picture was dropped (leftover captions).
+  h = h.replace(/<figure\b[^>]*>(?:(?!<\/figure>)[\s\S])*<\/figure>/gi, (f) =>
+    f.includes('<img') ? f : '',
+  );
+  return h;
 }
 
 console.log(`Fetching ${articleList.length} articles…`);
@@ -195,7 +240,10 @@ const fetched = await pool(articleList, 4, async (a) => {
     report.failed.push(`Article "${a.title}" (${a.wiki}): ${data.error?.info || 'no text'}`);
     return null;
   }
-  const html = cleanHtml(data.parse.text, a.wiki);
+  const html = await embedImages(
+    cleanHtml(data.parse.text, a.wiki),
+    QUICK ? 2 : (wiki.images ?? 0),
+  );
   if (html.length < 300) {
     report.skipped.push(`Article "${a.title}" (${a.wiki}): too short`);
     return null;
@@ -269,7 +317,7 @@ for (const p of sources.pdfs) {
   let got = null;
   for (const url of p.urls) {
     const r = await fetchWithRetry(url, { binary: true });
-    if (r.ok && r.body.subarray(0, 5).toString() === '%PDF-' && r.body.length > 50_000) {
+    if (r.ok && r.body.subarray(0, 5).toString() === '%PDF-' && r.body.length > 10_000) {
       got = { body: r.body, from: url };
       break;
     }
@@ -337,6 +385,8 @@ const md = [
     (t) =>
       `| ${t} | ${mb(packBytes(t))} | ${items.filter((i) => tierRank(i.tier) <= tierRank(t)).length} |`,
   ),
+  ``,
+  `Pictures kept: ${imageCount} (${mb(imageBytes)})`,
   ``,
   `## Failed (${report.failed.length})`,
   ...report.failed.map((x) => `- ${x}`),

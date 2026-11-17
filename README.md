@@ -43,8 +43,8 @@ Design choices worth knowing:
 
 - **Small downloads, not one giant zip.** Articles come in ~20 MB bundles and PDFs one by one, so a
   dropped connection only costs the file you were on, and you never need double the space to unzip.
-- **Nothing is fetched while reading.** Articles are cleaned on download (scripts, styles, remote
-  images removed) and shown with network requests blocked.
+- **Nothing is fetched while reading.** Articles are cleaned when the packs are built (scripts and
+  remote files removed, pictures stored inside the article) and shown with network access blocked.
 - **Switching to a smaller pack frees the space immediately.**
 - Every download has a `sha256` checksum, so damaged downloads are caught.
 - Links between saved guides work offline.
@@ -57,9 +57,11 @@ Wikipedia / MDWiki articles (CC BY-SA 4.0). The list lives in
 
 | Pack | What's in it | Rough size |
 | --- | --- | --- |
-| Small | ~46 core guides (first aid, water, fire, shelter, kit) + FEMA "Are You Ready?" + Army First Aid TC 4-02.1 | ~20-40 MB |
-| Medium | Small + ~90 more guides + Army/Marine survival manuals, FEMA CERT manual, Army FM 4-25.11, USDA canning guide | ~100-200 MB |
-| Large | Medium + ~75 more guides + all of MDWiki (offline medical encyclopedia) + Air Force/DoD SERE manuals | ~400-600 MB |
+| Small | ~46 core guides with pictures (first aid, water, fire, shelter, kit) + FEMA "Are You Ready?", Army First Aid TC 4-02.1, CDC safe water sheet | ~50 MB |
+| Medium | Small + ~90 more guides + Wikibooks handbooks (first aid, survival, knots) + Army/Marine survival manuals, land navigation, FEMA CERT, USDA canning | ~250 MB |
+| Large | Medium + ~75 more guides + all of MDWiki (medical encyclopedia) + Appropedia (DIY, off-grid) + Wikibooks cookbook, gardening, electronics + SERE manuals | ~2 GB |
+
+Pictures come only from Wikimedia Commons (freely licensed) and are stored inside each article.
 
 Sizes are estimates until the first real build. `REPORT.md` on each release has the exact numbers.
 
@@ -88,7 +90,8 @@ public domain or openly licensed for redistribution. If you're unsure, set
 ## Not done yet
 
 - Background downloads (keep going when the app is closed)
-- Offline maps
+- Offline maps (OpenStreetMap, pick your state)
+- All of Wikipedia (needs a reader for its offline dump format)
 - Videos (need sources that allow redistribution)
 - Full-text search inside articles (right now search matches titles)
 - App icon, name, store listings

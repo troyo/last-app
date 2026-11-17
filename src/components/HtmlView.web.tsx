@@ -7,12 +7,11 @@ export function HtmlView(props: {
   dark: boolean;
   onOpenItem: (id: string) => void;
 }) {
-  const csp = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">`;
   return (
     <iframe
       title="article"
       sandbox="allow-same-origin"
-      srcDoc={props.html.replace('<head>', `<head>${csp}`)}
+      srcDoc={props.html}
       onLoad={(e) => {
         const doc = (e.target as HTMLIFrameElement).contentDocument;
         doc?.addEventListener('click', (ev) => {
