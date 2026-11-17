@@ -15,7 +15,9 @@ export default function ItemScreen() {
   if (!item || !fileFor(item).exists) {
     return (
       <View style={[s.pad, { backgroundColor: t.bg, flex: 1 }]}>
-        <Text style={{ color: t.text }}>This isn't on your phone yet.</Text>
+        <Text style={{ color: t.text, fontSize: 17 }}>
+          This guide isn’t saved on your phone yet. You can get it from My packs.
+        </Text>
       </View>
     );
   }
@@ -55,7 +57,7 @@ function Article({ item }: { item: Item }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">
 <style>
-  body{font:18px/1.55 -apple-system,Roboto,sans-serif;margin:0;padding:16px 18px 48px;
+  body{font:18px/1.6 -apple-system,Roboto,sans-serif;margin:0;padding:8px 20px 56px;
        background:${t.bg};color:${t.text};}
   a{color:${t.accent};text-decoration:underline}
   img{max-width:100%;height:auto;border-radius:6px} figure{margin:14px 0} figcaption{font-size:14px;color:${t.muted}}
@@ -65,7 +67,7 @@ function Article({ item }: { item: Item }) {
   .credit{color:${t.muted};font-size:13px;border-top:1px solid ${t.border};margin-top:32px;padding-top:12px}
 </style></head><body><h1>${escapeHtml(item.title)}</h1>${html}
 <p class="credit">Source: ${escapeHtml(item.source)} · ${escapeHtml(item.license)}.
-Not medical advice. In an emergency, contact emergency services if you can.</p></body></html>`;
+General information, not medical advice. If you can reach emergency services, please do that first.</p></body></html>`;
 
   return (
     <HtmlView
@@ -123,5 +125,5 @@ function escapeHtml(s: string) {
 const s = StyleSheet.create({
   pad: { padding: 16 },
   credit: { fontSize: 13, padding: 16 },
-  btn: { padding: 14, borderRadius: 10, alignItems: 'center' },
+  btn: { padding: 15, borderRadius: 16, alignItems: 'center' },
 });

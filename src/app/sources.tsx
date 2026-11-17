@@ -42,6 +42,6 @@ export default function Sources() {
 }
 
 const s = StyleSheet.create({
-  wrap: { padding: 16, gap: 10 },
-  card: { padding: 14, borderRadius: 12, borderWidth: 1, gap: 4 },
+  wrap: { padding: 20, gap: 10 },
+  card: { padding: 16, borderRadius: 20, borderWidth: 1, gap: 4 },
 });

@@ -33,8 +33,13 @@ then `npx expo start --web` (browser storage is in-memory only, it's just for lo
 | `src/lib/catalog.ts` | Reads the catalog. Packs stack up: Medium = Small + more, Large = Medium + more |
 | `src/lib/library.ts` | Downloads each file to the phone, checks it, and tracks what's saved |
 | `src/lib/LibraryContext.tsx` | Shares download progress with every screen, keeps the screen awake while downloading |
-| `src/app/index.tsx` | Home: topics + search (only shows what's actually on the phone) |
-| `src/app/packs.tsx` | Pick / switch / pause / delete packs, with a free-space check |
+| `src/app/welcome.tsx` | First-launch explainer (three swipeable pages) |
+| `src/app/(tabs)/index.tsx` | Guides tab (home): topics + search |
+| `src/app/(tabs)/about.tsx` | About tab: how it works and why to trust it |
+| `src/components/ui.tsx` | Shared buttons, cards and gentle animations |
+| `src/lib/theme.ts` | Colors (warm cream, deep green, a little sunshine) |
+| `tools/icon/generate-art.js` | Draws the app icon and illustrations |
+| `src/app/(tabs)/packs.tsx` | Pick / switch / pause / delete packs, with a free-space check |
 | `src/app/topic/[id].tsx` | List of guides in a topic |
 | `src/app/item/[id].tsx` | Reader: articles, videos (built-in player) and PDFs (phone's own viewer) |
 | `src/app/sources.tsx` | Sources & licenses (credits every source) |

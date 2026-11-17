@@ -11,13 +11,16 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: t.bg },
-          headerTintColor: t.text,
+          headerTintColor: t.accent,
+          headerTitleStyle: { color: t.text, fontWeight: '700' },
           headerShadowVisible: false,
+          // Just a clean back arrow, no "Back"/screen-name label next to it.
+          headerBackButtonDisplayMode: 'minimal',
           contentStyle: { backgroundColor: t.bg },
         }}>
-        <Stack.Screen name="index" options={{ title: 'Last App' }} />
-        <Stack.Screen name="packs" options={{ title: 'Download packs' }} />
-        <Stack.Screen name="sources" options={{ title: 'Sources & licenses' }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Home' }} />
+        <Stack.Screen name="welcome" options={{ headerShown: false, gestureEnabled: false }} />
+        <Stack.Screen name="sources" options={{ title: 'Where this comes from' }} />
         <Stack.Screen name="topic/[id]" options={{ title: '' }} />
         <Stack.Screen name="item/[id]" options={{ title: '' }} />
       </Stack>

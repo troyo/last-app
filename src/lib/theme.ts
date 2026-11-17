@@ -1,31 +1,37 @@
 import { useColorScheme } from 'react-native';
 
-// High-contrast, simple colors. In an emergency people may be reading
-// in the dark, with a cracked screen, or stressed. Keep it plain.
+// Calm and warm, like a friend who has your back. Cream paper, deep green,
+// a little sunshine. Nothing alarming: red is saved for real problems.
 const light = {
-  bg: '#F7F5F0',
+  bg: '#FBF7EF', // warm cream
   card: '#FFFFFF',
-  text: '#1C1B19',
-  muted: '#6B675F',
-  border: '#E3DFD6',
-  accent: '#C2410C', // signal orange
+  soft: '#EAF3EC', // pale sage, for gentle highlights
+  text: '#17352C', // deep green-black
+  muted: '#5F7269',
+  border: '#E6E0D2',
+  accent: '#1F5C4A', // deep green: buttons and links
   accentText: '#FFFFFF',
-  good: '#15803D',
-  warn: '#B45309',
-  bad: '#B91C1C',
+  sun: '#F6B93B', // highlights
+  coral: '#F08A6B',
+  good: '#1F7A55',
+  warn: '#A8690A',
+  bad: '#B4412F',
 };
 
 const dark: typeof light = {
-  bg: '#141311',
-  card: '#1F1E1B',
-  text: '#F3F1EC',
-  muted: '#A8A399',
-  border: '#33312C',
-  accent: '#F97316',
-  accentText: '#141311',
-  good: '#4ADE80',
-  warn: '#FBBF24',
-  bad: '#F87171',
+  bg: '#12241E', // deep forest, not black
+  card: '#1B3129',
+  soft: '#223B32',
+  text: '#F4EFE3',
+  muted: '#A9BBB1',
+  border: '#2B4439',
+  accent: '#8FD3B3',
+  accentText: '#10221C',
+  sun: '#F6B93B',
+  coral: '#F4A088',
+  good: '#8FD3B3',
+  warn: '#F3C567',
+  bad: '#F2A08F',
 };
 
 export type Theme = typeof light;
@@ -33,3 +39,17 @@ export type Theme = typeof light;
 export function useTheme(): Theme {
   return useColorScheme() === 'dark' ? dark : light;
 }
+
+// Soft tint behind each topic's icon.
+export const TOPIC_TINTS = [
+  '#FDE7E0',
+  '#DDEFF7',
+  '#FCEFC9',
+  '#FFE3CC',
+  '#E2F1E3',
+  '#E8E4F6',
+  '#DDEBF0',
+  '#F9DFE5',
+  '#E6F0D8',
+  '#F3E6D6',
+];
