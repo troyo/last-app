@@ -113,13 +113,14 @@ export default function Search() {
                     pressed && { opacity: 0.7 },
                   ]}
                 >
-                  <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={36} />
+                  <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={40} />
                   <Text
-                    style={{ color: t.text, fontSize: 15, fontWeight: '800', flex: 1 }}
-                    numberOfLines={2}
+                    style={{ color: t.text, fontSize: 17, fontWeight: '800', flex: 1 }}
+                    numberOfLines={1}
                   >
                     {topic.title}
                   </Text>
+                  <Ionicons name="chevron-forward" size={18} color={t.text} />
                 </Pressable>
               );
             })}
@@ -252,15 +253,16 @@ const s = StyleSheet.create({
   label: { fontSize: 15, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
   chip: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 999 },
-  topics: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  // One per row, so no topic name has to break onto two lines.
+  topics: { gap: 8 },
   topic: {
-    flexBasis: '47%',
-    flexGrow: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    padding: 10,
-    minHeight: 58,
+    gap: 12,
+    paddingVertical: 10,
+    paddingLeft: 12,
+    paddingRight: 14,
+    minHeight: 62,
     borderRadius: 18,
   },
   list: { padding: 18, gap: 10, paddingBottom: 32 },

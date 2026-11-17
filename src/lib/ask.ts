@@ -36,6 +36,9 @@ const clean = (html: string) =>
     .replace(/&[a-z]+;|&#\d+;/gi, ' ')
     .replace(/\[\s*\d+\s*\]/g, '')
     .replace(/\s+/g, ' ')
+    .replace(/\s+([,.;:!?)\]])/g, '$1')
+    .replace(/([(\[])\s+/g, '$1')
+    .replace(/\(\s*[,;]?\s*\)/g, '')
     .trim();
 
 /** How many of the question's words (or their everyday synonyms) a text mentions. */
@@ -81,6 +84,16 @@ function passagesOf(html: string, words: string[]): Passage[] {
     else if (ABOUT_HEADING.test(heading)) score -= 1.5;
     if (/<li\b/i.test(block) && DO_HEADING.test(heading)) score += 0.5;
     if (text.length > 900) score -= 0.5;
+    // "A bivouac is a kind of…" explains the word. It does not tell you what to do.
+    if (!heading && /^.{0,90}\b(is|are|was|refers to|means)\b (a|an|the|any|one)\b/i.test(text))
+      score -= 2;
+    // A passage that starts by telling you to do something is what people came for.
+    if (
+      /^(first|then|next|to \w+|if you|you can|you should|make|put|cut|dig|tie|fill|find|build|use|keep|place|apply|boil|wash|cover|wrap|press|hold|lay|pour|mix|add|take|remove|check|start|stop|never|always|do not|don't)\b/i.test(
+        text,
+      )
+    )
+      score += 1.5;
     out.push({ heading, text, score });
   }
   return out;
@@ -168,7 +181,7 @@ export async function ask(question: string): Promise<Answer[]> {
     if (!r || r.best.score < need) continue;
     answers.push({
       key: `guide-${r.item.id}`,
-      from: r.best.heading ? `${r.item.title} · ${r.best.heading}` : r.item.title,
+      from: r.best.heading || 'Saved guide',
       title: r.item.title,
       text: shorten(r.best.text),
       href: `/item/${r.item.id}`,

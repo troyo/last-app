@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -41,11 +42,25 @@ export default function Ask() {
   const nextId = useRef(1);
   const tops = useRef<Record<number, number>>({}); // where each question sits in the chat
 
+  // Is the keyboard up? Then the bar sits right on it, with no extra gap.
+  const [typing, setTyping] = useState(false);
+  useEffect(() => {
+    const up = Keyboard.addListener('keyboardWillShow', () => setTyping(true));
+    const down = Keyboard.addListener('keyboardWillHide', () => setTyping(false));
+    const down2 = Keyboard.addListener('keyboardDidHide', () => setTyping(false));
+    return () => {
+      up.remove();
+      down.remove();
+      down2.remove();
+    };
+  }, []);
+
   const send = async (text: string) => {
     const question = text.trim();
     if (question.length < 2) return;
     const id = nextId.current++;
     setDraft('');
+    Keyboard.dismiss(); // so the answer has the whole screen
     setTurns((all) => [...all, { id, question, answers: null }]);
     setTimeout(() => scroller.current?.scrollToEnd({ animated: true }), 50);
     const answers = await ask(question);
@@ -139,11 +154,13 @@ export default function Ask() {
                           <Text style={[s.pillText, { color: t.accentText }]}>Best match</Text>
                         </View>
                       )}
-                      <View style={[s.pill, { backgroundColor: t.soft, flexShrink: 1 }]}>
-                        <Text style={[s.pillText, { color: t.accent }]} numberOfLines={1}>
-                          {a.from}
-                        </Text>
-                      </View>
+                      {a.from !== a.title && (
+                        <View style={[s.pill, { backgroundColor: t.soft, flexShrink: 1 }]}>
+                          <Text style={[s.pillText, { color: t.accent }]} numberOfLines={1}>
+                            {a.from}
+                          </Text>
+                        </View>
+                      )}
                     </View>
                     <Text style={[s.title, { color: t.text }]}>{a.title}</Text>
                     {a.steps?.map((step, n) => (
@@ -186,18 +203,18 @@ export default function Ask() {
             )}
           </View>
         ))}
+        <Text style={[s.fine, { color: t.text }]}>
+          Answers come from your saved guides, not AI. General information only.
+        </Text>
       </ScrollView>
 
-      <Text style={[s.fine, { color: t.text, backgroundColor: t.card, borderTopColor: t.border }]}>
-        From your guides, not AI. General information only.
-      </Text>
       <View
         style={[
           s.bar,
           {
             backgroundColor: t.card,
             borderTopColor: t.border,
-            paddingBottom: Math.max(insets.bottom, 10),
+            paddingBottom: typing ? 10 : Math.max(insets.bottom, 10),
           },
         ]}
       >
@@ -300,7 +317,8 @@ const s = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     paddingHorizontal: 14,
-    paddingTop: 8,
+    paddingTop: 10,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   input: {
     flex: 1,
@@ -315,7 +333,5 @@ const s = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     paddingHorizontal: 16,
-    paddingTop: 8,
-    borderTopWidth: StyleSheet.hairlineWidth,
   },
 });

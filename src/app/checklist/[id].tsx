@@ -151,8 +151,9 @@ const s = StyleSheet.create({
   fit: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 14,
+    gap: 10,
+    paddingLeft: 14,
+    paddingRight: 18,
     paddingVertical: 12,
     borderRadius: 16,
   },

@@ -165,9 +165,12 @@ export default function TopicScreen() {
         }
         ListFooterComponent={
           items.length > 0 && inAnyPack > items.length ? (
-            <Text style={{ color: t.muted, textAlign: 'center', padding: 12 }}>
-              {(inAnyPack - items.length).toLocaleString()} more in the bigger packs
-            </Text>
+            <Card onPress={() => router.push('/packs')} style={s.row}>
+              <Text style={{ color: t.text, fontSize: 16, fontWeight: '800', flex: 1 }}>
+                {(inAnyPack - items.length).toLocaleString()} more in the bigger packs
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={t.accent} />
+            </Card>
           ) : undefined
         }
         renderItem={({ item }) => (

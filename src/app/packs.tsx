@@ -155,7 +155,7 @@ export default function Packs() {
                 onPress={() => choose(p.id)}
               />
             ) : locked ? (
-              <Button label={`Unlock everything · ${PRICE_LABEL}`} onPress={buy} />
+              <Button label={`Unlock Medium and Large · ${PRICE_LABEL}`} onPress={buy} />
             ) : (
               <Button
                 label={state.pack ? `Switch to ${p.title}` : `Save ${p.title} to my phone`}

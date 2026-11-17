@@ -28,7 +28,7 @@ export default function Prep() {
             onPress={() => router.push(`/checklist/${list.id}`)}
             style={{ gap: 12 }}
           >
-            <View style={s.row}>
+            <View style={[s.row, { alignItems: 'flex-start' }]}>
               <IconTile name={list.icon as IconName} {...HUES[list.hue]} size={46} />
               <View style={{ flex: 1 }}>
                 <Text style={{ color: t.text, fontSize: 19, fontWeight: '800' }}>
@@ -36,14 +36,24 @@ export default function Prep() {
                 </Text>
                 <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>{list.blurb}</Text>
               </View>
-              <Ionicons name="chevron-forward" size={18} color={t.muted} />
+              <Ionicons name="chevron-forward" size={18} color={t.muted} style={{ marginTop: 4 }} />
             </View>
-            <View style={[s.barBg, { backgroundColor: t.soft }]}>
-              <View style={[s.bar, { width: `${pct}%`, backgroundColor: t.accent }]} />
-            </View>
-            <Text style={{ color: t.muted, fontSize: 15, fontWeight: '700' }}>
-              {p.done === p.total ? 'All done. Nice work.' : `${p.done} of ${p.total} done`}
-            </Text>
+            {p.done === 0 ? (
+              <View style={[s.chip, { backgroundColor: t.soft }]}>
+                <Text style={{ color: t.accent, fontSize: 15, fontWeight: '800' }}>
+                  Not started · {p.total} things
+                </Text>
+              </View>
+            ) : (
+              <>
+                <View style={[s.barBg, { backgroundColor: t.soft }]}>
+                  <View style={[s.bar, { width: `${pct}%`, backgroundColor: t.accent }]} />
+                </View>
+                <Text style={{ color: t.text, fontSize: 15, fontWeight: '700' }}>
+                  {p.done === p.total ? 'All done. Nice work.' : `${p.done} of ${p.total} done`}
+                </Text>
+              </>
+            )}
           </Card>
         );
       })}
@@ -60,6 +70,13 @@ export default function Prep() {
 const s = StyleSheet.create({
   wrap: { padding: 18, gap: 12, paddingBottom: 32 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  chip: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+  },
   barBg: { height: 10, borderRadius: 5, overflow: 'hidden' },
   bar: { height: 10, borderRadius: 5 },
 });

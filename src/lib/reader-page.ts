@@ -1,3 +1,4 @@
+import { READER_FONT_CSS } from './reader-font';
 // Builds the page a saved guide is shown in.
 //
 // The guides arrive as plain encyclopedia-style HTML: very long, with history
@@ -26,7 +27,7 @@ const escapeHtml = (s: string) =>
 
 const css = (px: number, c: ReaderColors) => `
   html{scroll-behavior:smooth}
-  body{font:${px}px/1.6 ui-rounded,-apple-system,Roboto,sans-serif;margin:0;padding:4px 20px 96px;
+  body{font:${px}px/1.6 Nunito,ui-rounded,-apple-system,Roboto,sans-serif;margin:0;padding:4px 20px 96px;
        background:${c.bg};color:${c.text};-webkit-text-size-adjust:100%;overflow-wrap:break-word}
   h1{font-size:1.65em;line-height:1.15;margin:.3em 0 .6em;font-weight:800;letter-spacing:-.01em}
   h3{font-size:1.12em;line-height:1.3;margin:1.5em 0 .45em;font-weight:800}
@@ -34,11 +35,11 @@ const css = (px: number, c: ReaderColors) => `
   p{margin:0 0 .95em}
   ul,ol{padding-left:1.25em;margin:0 0 1em} li{margin:.45em 0;padding-left:.15em}
   li::marker{color:${c.accent};font-weight:800}
-  a{color:${c.accent};font-weight:600;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+  a{color:${c.accent};font-weight:700;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
   b,strong{font-weight:800}
   img{max-width:100%;max-height:260px;width:auto;height:auto;border-radius:14px;display:block;margin:0 auto;background:#fff}
   figure{margin:1.1em 0 1.3em;padding:0}
-  figcaption,.thumbcaption,.gallerytext{font-size:.85em;line-height:1.4;color:${c.text};opacity:.85;margin-top:.5em;text-align:center}
+  figcaption,.thumbcaption,.gallerytext{font-size:.88em;line-height:1.4;color:${c.text};opacity:.8;margin-top:.5em;text-align:left}
   .gallery{list-style:none;padding:0;margin:1em 0} .gallery li{margin:0 0 1em;padding:0}
   .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:1em -20px 1.2em;padding:0 20px}
   table{border-collapse:separate;border-spacing:0;font-size:.88em;line-height:1.4;min-width:100%;
@@ -146,7 +147,10 @@ const SCRIPT = String.raw`
   }
 
   // ---- 3. Fold the guide into sections, practical ones first ----
-  var DROP = /^(references?|notes?|footnotes?|citations?|sources?|bibliography|external links?|further reading|other websites|works cited|gallery)$/i;
+  var DROP = /^(references?|notes?|footnotes?|citations?|sources?|bibliography|external links?|further reading|other websites|works cited|gallery|etymology|names?|naming|in popular culture|popular culture|in fiction|in media|notable .*|awards?|see also|related pages)$/i;
+  // Never stretch a small picture past its real size: that is what makes photos look blurry.
+  var sharp = function (im) { if (im.naturalWidth) im.style.maxWidth = 'min(100%, ' + im.naturalWidth + 'px)'; };
+  Array.prototype.forEach.call(document.images, function (im) { if (im.complete) sharp(im); else im.addEventListener('load', function () { sharp(im); }); });
   var DO = /\b(treat|treatment|treating|first aid|management|managing|what to do|how to|steps?|care|caring|procedure|technique|methods?|instructions?|prevention|preventing|remed(y|ies)|emergency|response|making|building|construction|preparation|preparing|uses?|using|application|skills|safety|storage|purification|recipes?)\b/i;
   var ABOUT = /\b(history|historical|etymology|epidemiology|prognosis|pathophysiology|society|culture|research|statistics|terminology|mechanism|physiology|other animals|in animals|on animals|notable|awards|controvers(y|ies)|legal|economics|prevalence|origins?|see also|related pages)\b/i;
 
@@ -336,8 +340,8 @@ export function buildReaderPage(opts: {
   const nonce = Math.random().toString(36).slice(2) + Date.now().toString(36);
   return `<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; script-src 'nonce-${nonce}'">
-<style>${css(opts.px, opts.colors)}</style></head><body><div id="doc"><h1>${escapeHtml(opts.title)}</h1>${opts.html}</div>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:; script-src 'nonce-${nonce}'">
+<style>${READER_FONT_CSS}${css(opts.px, opts.colors)}</style></head><body><div id="doc"><h1>${escapeHtml(opts.title)}</h1>${opts.html}</div>
 <p class="credit">Source: ${escapeHtml(opts.source)} · ${escapeHtml(opts.license)}.
 General information, not medical advice. If you can reach emergency services, please do that first.</p>
 <script nonce="${nonce}">${SCRIPT}</script></body></html>`;

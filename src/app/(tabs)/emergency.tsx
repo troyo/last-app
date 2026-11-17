@@ -36,7 +36,7 @@ export default function Emergency() {
       >
         <Text style={[s.h1, { color: t.text }]}>Emergency</Text>
         <Text style={{ color: t.text, fontSize: 16, lineHeight: 22 }}>
-          What to do yourself, step by step, when help can’t come.
+          Step-by-step help for when no one is coming.
         </Text>
         <View style={[s.box, { backgroundColor: t.card, borderColor: t.border }]}>
           <Ionicons name="search" size={20} color={t.text} />
@@ -144,10 +144,12 @@ const s = StyleSheet.create({
   tile: {
     flexBasis: '47%',
     flexGrow: 1,
-    height: 118,
+    height: 124,
     borderRadius: 22,
     alignItems: 'center',
-    justifyContent: 'center',
+    // Pinned to the top so the icons line up across a row, whether the name takes one line or two.
+    justifyContent: 'flex-start',
+    paddingTop: 16,
     gap: 8,
     paddingHorizontal: 10,
     shadowColor: '#17352C',

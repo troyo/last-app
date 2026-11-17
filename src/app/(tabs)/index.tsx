@@ -19,7 +19,7 @@ import { hasSeenWelcome } from '../../lib/welcome';
 // Short names so six cards fit in two tidy rows.
 const SHORT: Record<string, string> = {
   bleeding: 'Bleeding',
-  cpr: 'Not breathing',
+  cpr: 'CPR',
   choking: 'Choking',
   burn: 'Burns',
   'broken-bone': 'Broken bone',
@@ -114,21 +114,24 @@ export default function Home() {
       <View style={s.body}>
         {!state.pack ? (
           <FadeIn style={{ marginTop: 20 }}>
-            <Card style={{ gap: 14, alignItems: 'center' }}>
-              <Image
-                source={require('../../../assets/illustrations/welcome.png')}
-                style={s.heroImage}
-                resizeMode="cover"
-              />
-              <Text style={[s.cardTitle, { color: t.text }]}>Save your first guides</Text>
-              <Text style={[s.center, { color: t.muted }]}>
-                The Small pack is free and works with no signal.
-              </Text>
-              <Button
-                label="Get the free pack"
-                onPress={() => router.push('/packs')}
-                style={{ alignSelf: 'stretch' }}
-              />
+            {/* Kept short so the emergency tiles below stay on the first screen. */}
+            <Card style={{ gap: 12 }}>
+              <View style={s.row}>
+                <Image
+                  source={require('../../../assets/illustrations/welcome.png')}
+                  style={{ width: 64, height: 64, borderRadius: 18 }}
+                  resizeMode="cover"
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: t.text, fontWeight: '800', fontSize: 19 }}>
+                    Save your first guides
+                  </Text>
+                  <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
+                    Free, and they work with no signal.
+                  </Text>
+                </View>
+              </View>
+              <Button label="Get the free pack" onPress={() => router.push('/packs')} />
             </Card>
           </FadeIn>
         ) : !ready || downloading ? (
@@ -198,7 +201,7 @@ export default function Home() {
                 Make this fit where you live
               </Text>
               <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
-                Takes a minute. Works with no signal.
+                Takes a minute. No signal needed.
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={t.text} />
