@@ -181,6 +181,8 @@ const COMMONS = /^(?:https?:)?\/\/upload\.wikimedia\.org\/wikipedia\/commons\//;
 const IMG_MAX_BYTES = 250 * 1024;
 let imageCount = 0;
 let imageBytes = 0;
+const imageDrops = {};
+const imgNote = (why) => (imageDrops[why] = (imageDrops[why] || 0) + 1);
 
 async function embedImages(html, maxImages) {
   const tags = [...html.matchAll(/<img\b[^>]*>/gi)].map((m) => m[0]);
@@ -190,6 +192,9 @@ async function embedImages(html, maxImages) {
     let out = '';
     const src = tag.match(/\bsrc="([^"]+)"/)?.[1]?.replace(/&amp;/g, '&') ?? '';
     const width = Number(tag.match(/\bwidth="(\d+)"/)?.[1] ?? 0);
+    if (kept >= maxImages) imgNote('over the per-article limit');
+    else if (!COMMONS.test(src)) imgNote('not from Wikimedia Commons');
+    else if (width < 120) imgNote('too small (icon)');
     if (kept < maxImages && COMMONS.test(src) && width >= 120) {
       const r = await fetchWithRetry(src.startsWith('//') ? `https:${src}` : src, {
         binary: true,
@@ -202,7 +207,9 @@ async function embedImages(html, maxImages) {
         kept++;
         imageCount++;
         imageBytes += r.body.length;
-      }
+      } else if (!r.ok) imgNote(`download failed (${r.status || r.error})`);
+      else if (r.body.length > IMG_MAX_BYTES) imgNote('file too big');
+      else imgNote(`unsupported type ${type}`);
     }
     replacements.set(tag, out);
   }
@@ -216,6 +223,7 @@ async function embedImages(html, maxImages) {
 
 console.log(`Fetching ${articleList.length} articles…`);
 let done = 0;
+const seenTitles = new Set();
 const fetched = await pool(articleList, 4, async (a) => {
   const wiki = sources.wikis[a.wiki];
   const q = new URLSearchParams({
@@ -249,6 +257,12 @@ const fetched = await pool(articleList, 4, async (a) => {
     return null;
   }
   const title = data.parse.displaytitle?.replace(/<[^>]+>/g, '') || a.title;
+  const seenKey = `${a.wiki}|${title}`;
+  if (seenTitles.has(seenKey)) {
+    report.skipped.push(`Article "${a.title}" (${a.wiki}): same page as "${title}"`);
+    return null;
+  }
+  seenTitles.add(seenKey);
   return {
     ...a,
     title,
@@ -387,6 +401,7 @@ const md = [
   ),
   ``,
   `Pictures kept: ${imageCount} (${mb(imageBytes)})`,
+  ...Object.entries(imageDrops).map(([why, n]) => `- Pictures dropped, ${why}: ${n}`),
   ``,
   `## Failed (${report.failed.length})`,
   ...report.failed.map((x) => `- ${x}`),
