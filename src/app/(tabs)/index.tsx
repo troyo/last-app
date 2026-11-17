@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Redirect, router, useFocusEffect, useIsFocused } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useMemo, useState } from 'react';
@@ -15,6 +15,16 @@ import { CLIMATES, getProfile, placeAsked } from '../../lib/place';
 import { QUICK_HELP } from '../../lib/quick-help';
 import { HUES, TOPIC_LOOK, useTheme } from '../../lib/theme';
 import { hasSeenWelcome } from '../../lib/welcome';
+
+// Short names so six cards fit in two tidy rows.
+const SHORT: Record<string, string> = {
+  bleeding: 'Bleeding',
+  cpr: 'Not breathing',
+  choking: 'Choking',
+  burn: 'Burns',
+  'broken-bone': 'Broken bone',
+  heat: 'Overheating',
+};
 
 function greeting() {
   const h = new Date().getHours();
@@ -115,46 +125,45 @@ export default function Home() {
               <Ionicons name="chevron-forward" size={20} color={t.muted} />
             </Card>
           </FadeIn>
-        ) : (
-          // All saved: just a quiet reassurance, no card to tap.
-          <View style={[s.row, { gap: 8 }]}>
-            <Ionicons name="checkmark-circle" size={20} color={t.good} />
-            <Text style={{ color: t.muted, fontSize: 14, flex: 1 }}>
-              {onPhone.length.toLocaleString()} guides saved. Everything here works offline.
-            </Text>
-          </View>
-        )}
+        ) : null}
 
         <View style={s.sectionHead}>
-          <Text style={[s.section, { color: t.text }]}>Right now</Text>
+          <View style={s.row}>
+            <Text style={[s.section, { color: t.text, flex: 1 }]}>Right now</Text>
+            <Pressable onPress={() => router.push('/emergency')} hitSlop={10}>
+              <Text style={{ color: t.accent, fontSize: 14, fontWeight: '800' }}>See all</Text>
+            </Pressable>
+          </View>
           <Text style={{ color: t.muted, fontSize: 14 }}>
             What to do yourself when help can’t come.
           </Text>
         </View>
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={s.helpRow}
-      >
-        {QUICK_HELP.map((h) => (
-          <Pressable
-            key={h.id}
-            onPress={() => router.push(`/help/${h.id}`)}
-            style={({ pressed }) => [
-              s.helpTile,
-              { backgroundColor: HUES[h.hue].tint },
-              pressed && { opacity: 0.8 },
-            ]}
-          >
-            <IconTile name={h.icon as IconName} color={HUES[h.hue].color} tint={t.card} size={40} />
-            <Text style={s.helpTitle} numberOfLines={2}>
-              {h.title.replace(/ \(.*\)$/, '')}
-            </Text>
-          </Pressable>
+      {/* Six most urgent cards in two short rows; the rest are one tap away. */}
+      <View style={s.helpGrid}>
+        {QUICK_HELP.slice(0, 6).map((h) => (
+          <View key={h.id} style={s.helpCell}>
+            <Pressable
+              onPress={() => router.push(`/help/${h.id}`)}
+              style={({ pressed }) => [
+                s.helpChip,
+                { backgroundColor: HUES[h.hue].tint },
+                pressed && { opacity: 0.8 },
+              ]}
+            >
+              <MaterialCommunityIcons
+                name={h.icon as IconName}
+                size={22}
+                color={HUES[h.hue].color}
+              />
+              <Text style={s.chipTitle} numberOfLines={2}>
+                {SHORT[h.id] ?? h.title}
+              </Text>
+            </Pressable>
+          </View>
         ))}
-      </ScrollView>
+      </View>
 
       <View style={s.body}>
         <View style={[s.sectionHead, { marginTop: 8 }]}>
@@ -314,6 +323,14 @@ export default function Home() {
             );
           })}
         </View>
+        {ready && !downloading && (
+          <View style={[s.row, { gap: 8, marginTop: 22, justifyContent: 'center' }]}>
+            <Ionicons name="checkmark-circle" size={18} color={t.good} />
+            <Text style={{ color: t.muted, fontSize: 13 }}>
+              {onPhone.length.toLocaleString()} guides saved. Everything here works offline.
+            </Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -352,6 +369,17 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
   },
   helpTitle: { fontSize: 15, fontWeight: '800', color: '#17352C', lineHeight: 19 },
+  helpGrid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 14 },
+  helpCell: { width: '33.333%', padding: 4 },
+  helpChip: {
+    height: 54,
+    borderRadius: 16,
+    paddingHorizontal: 9,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  chipTitle: { flex: 1, fontSize: 13, fontWeight: '800', color: '#17352C', lineHeight: 16 },
   prepRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 },
   barBg: { height: 8, borderRadius: 4, overflow: 'hidden' },
   bar: { height: 8, borderRadius: 4 },
