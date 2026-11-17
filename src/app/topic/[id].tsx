@@ -11,7 +11,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { Button, Card, IconName, IconTile, Text } from '../../components/ui';
+import { Button, Card, IconName, IconTile, Text, TitleBar } from '../../components/ui';
 import { findTopic, getCatalog, itemsForPack } from '../../lib/catalog';
 import { isDownloaded } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
@@ -61,7 +61,16 @@ export default function TopicScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ title: items.length > 0 ? '' : (topic?.title ?? '') }} />
+      <Stack.Screen
+        options={{
+          header: () => (
+            <TitleBar
+              title={topic?.title ?? ''}
+              icon={<IconTile name={look.icon as IconName} {...HUES[look.hue]} size={44} />}
+            />
+          ),
+        }}
+      />
       <FlatList
         style={{ backgroundColor: t.bg }}
         contentContainerStyle={s.list}
@@ -71,18 +80,10 @@ export default function TopicScreen() {
         ListHeaderComponent={
           items.length > 0 ? (
             <View style={{ gap: 12, marginBottom: 2 }}>
-              <View style={s.row}>
-                <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={52} />
-                <View style={{ flex: 1 }}>
-                  <Text style={{ color: t.text, fontSize: 24, fontWeight: '800', lineHeight: 29 }}>
-                    {topic?.title}
-                  </Text>
-                  <Text style={{ color: t.muted, fontSize: 15 }}>
-                    {items.length.toLocaleString()} {items.length === 1 ? 'guide' : 'guides'} on
-                    this phone
-                  </Text>
-                </View>
-              </View>
+              <Text style={{ color: t.muted, fontSize: 16 }}>
+                {items.length.toLocaleString()} {items.length === 1 ? 'guide' : 'guides'} on this
+                phone
+              </Text>
               {items.length > 12 && (
                 <View style={[s.filter, { backgroundColor: t.card, borderColor: t.border }]}>
                   <Ionicons name="search" size={18} color={t.muted} />

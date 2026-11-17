@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { minutesIn, StepTimer } from '../../components/StepTimer';
-import { Card, IconName, IconTile, Text } from '../../components/ui';
+import { Bullets, Card, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
 import { DiagramId, DIAGRAMS } from '../../lib/diagrams';
 import { findQuickHelp } from '../../lib/quick-help';
 import { hasShowMe } from '../../lib/show-me';
@@ -32,12 +32,17 @@ export default function QuickHelpScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ title: '' }} />
+      <Stack.Screen
+        options={{
+          header: () => (
+            <TitleBar
+              title={h.title}
+              icon={<IconTile name={h.icon as IconName} {...HUES[h.hue]} size={44} />}
+            />
+          ),
+        }}
+      />
       <ScrollView style={{ backgroundColor: t.bg }} contentContainerStyle={s.wrap}>
-        <View style={s.head}>
-          <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={52} />
-          <Text style={[s.title, { color: t.text }]}>{h.title}</Text>
-        </View>
         <Text style={[s.when, { color: t.muted }]}>{h.when}</Text>
 
         {hasShowMe(h.id) && (
@@ -62,60 +67,43 @@ export default function QuickHelpScreen() {
         )}
 
         <Text style={[s.label, { color: t.accent, marginTop: 4 }]}>Do this now</Text>
-        {h.steps.map((step, i) => (
-          <Card key={i} style={{ gap: 12 }}>
-            <View style={s.step}>
-              <View style={[s.num, { backgroundColor: t.accent }]}>
-                <Text style={{ color: t.accentText, fontSize: 16, fontWeight: '800' }}>
-                  {i + 1}
-                </Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={[s.stepText, { color: t.text }]}>{step}</Text>
-                {minutesIn(step) !== null && <StepTimer minutes={minutesIn(step)!} />}
-              </View>
-            </View>
-            {h.pictures?.[i] && <Diagram id={h.pictures[i]} />}
-          </Card>
-        ))}
+        <Steps
+          steps={h.steps}
+          extra={(i) => (
+            <>
+              {minutesIn(h.steps[i]) !== null && <StepTimer minutes={minutesIn(h.steps[i])!} />}
+              {h.pictures?.[i] && <Diagram id={h.pictures[i]} />}
+            </>
+          )}
+        />
 
         {h.dont && (
-          <Card style={{ gap: 6 }}>
+          <Card style={{ paddingBottom: 6 }}>
             <Text style={[s.label, { color: t.bad }]}>Don’t</Text>
-            {h.dont.map((d) => (
-              <Text key={d} style={[s.body, { color: t.text }]}>
-                ✕ {d}
-              </Text>
-            ))}
+            <Bullets items={h.dont} kind="dont" />
           </Card>
         )}
 
         {h.next && (
-          <Card style={{ gap: 8 }}>
+          <Card style={{ paddingBottom: 6 }}>
             <Text style={[s.label, { color: t.accent }]}>Over the next hours and days</Text>
-            {h.nextPicture && <Diagram id={h.nextPicture} />}
-            {h.next.map((n) => (
-              <View key={n} style={s.bullet}>
-                <View style={[s.dot, { backgroundColor: t.accent }]} />
-                <Text style={[s.body, { color: t.text, flex: 1 }]}>{n}</Text>
+            {h.nextPicture && (
+              <View style={{ marginTop: 8 }}>
+                <Diagram id={h.nextPicture} />
               </View>
-            ))}
+            )}
+            <Bullets items={h.next} />
           </Card>
         )}
 
         {h.danger && (
-          <Card style={{ gap: 8, backgroundColor: t.dangerTint }}>
+          <Card style={{ backgroundColor: t.dangerTint, paddingBottom: 6 }}>
             <Text style={[s.label, { color: t.bad }]}>This needs more than home care</Text>
-            <Text style={{ color: t.text, fontSize: 15, lineHeight: 22 }}>
+            <Text style={{ color: t.text, fontSize: 16, lineHeight: 23, marginTop: 6 }}>
               Do everything you can to reach trained help (a neighbor with medical training, a
               clinic, a radio, or travel to find signal) if you see:
             </Text>
-            {h.danger.map((d) => (
-              <View key={d} style={s.bullet}>
-                <View style={[s.dot, { backgroundColor: t.bad }]} />
-                <Text style={[s.body, { color: t.text, flex: 1 }]}>{d}</Text>
-              </View>
-            ))}
+            <Bullets items={h.danger} kind="warn" />
           </Card>
         )}
 
@@ -154,7 +142,13 @@ const s = StyleSheet.create({
     fontWeight: '800',
     lineHeight: 25,
   },
-  diagram: { width: '100%', aspectRatio: 720 / 420, borderRadius: 16, overflow: 'hidden' },
+  diagram: {
+    marginTop: 10,
+    width: '100%',
+    aspectRatio: 720 / 420,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
   show: {
     flexDirection: 'row',
     alignItems: 'center',

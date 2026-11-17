@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Card, IconName, IconTile, Text } from '../../components/ui';
+import { Bullets, Card, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
 import { findHazard } from '../../lib/hazards';
 import { HUES, useTheme } from '../../lib/theme';
 
@@ -24,12 +24,17 @@ export default function HazardScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ title: '' }} />
+      <Stack.Screen
+        options={{
+          header: () => (
+            <TitleBar
+              title={h.title}
+              icon={<IconTile name={h.icon as IconName} {...HUES[h.hue]} size={44} />}
+            />
+          ),
+        }}
+      />
       <ScrollView style={{ backgroundColor: t.bg }} contentContainerStyle={s.wrap}>
-        <View style={s.head}>
-          <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={52} />
-          <Text style={[s.title, { color: t.text }]}>{h.title}</Text>
-        </View>
         <Text style={{ color: t.muted, fontSize: 16, lineHeight: 23 }}>{h.blurb}</Text>
 
         <View style={[s.tabs, { backgroundColor: t.soft }]}>
@@ -59,23 +64,11 @@ export default function HazardScreen() {
         </View>
 
         <Text style={[s.label, { color: t.accent, marginTop: 4 }]}>{now.head}</Text>
-        {lines.map((line, i) => (
-          <Card key={line} style={s.step}>
-            <View style={[s.num, { backgroundColor: t.accent }]}>
-              <Text style={{ color: t.accentText, fontSize: 16, fontWeight: '800' }}>{i + 1}</Text>
-            </View>
-            <Text style={[s.stepText, { color: t.text }]}>{line}</Text>
-          </Card>
-        ))}
+        <Steps steps={lines} />
 
-        <Card style={{ gap: 6 }}>
+        <Card style={{ paddingBottom: 6 }}>
           <Text style={[s.label, { color: t.bad }]}>Don’t</Text>
-          {h.dont.map((d) => (
-            <View key={d} style={s.bullet}>
-              <Ionicons name="close" size={18} color={t.bad} style={{ marginTop: 3 }} />
-              <Text style={{ color: t.text, fontSize: 16, lineHeight: 24, flex: 1 }}>{d}</Text>
-            </View>
-          ))}
+          <Bullets items={h.dont} kind="dont" />
         </Card>
 
         <Card

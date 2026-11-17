@@ -12,7 +12,9 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DARK_HUES, useDark, useTheme } from '../lib/theme';
 
 // Type. The phone's own typeface (San Francisco on iPhone, Roboto on Android) is the one
@@ -142,6 +144,108 @@ export function IconTile(props: { name: IconName; color: string; tint: string; s
   );
 }
 
+/**
+ * The top of a page: back arrow, title and (optionally) the page's icon, all on one line,
+ * so the page's own content starts right underneath instead of below an empty bar.
+ */
+export function TitleBar(props: { title: string; icon?: ReactNode }) {
+  const t = useTheme();
+  const top = useSafeAreaInsets().top;
+  return (
+    <View style={[s.bar, { backgroundColor: t.bg, paddingTop: top + 4 }]}>
+      <Pressable
+        onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+        accessibilityRole="button"
+        accessibilityLabel="Back"
+        hitSlop={8}
+        style={({ pressed }) => [s.back, { backgroundColor: t.soft }, pressed && { opacity: 0.7 }]}
+      >
+        <Ionicons name="chevron-back" size={24} color={t.accent} />
+      </Pressable>
+      <Text
+        style={{ color: t.text, fontSize: 24, fontWeight: '800', lineHeight: 29, flex: 1 }}
+        numberOfLines={2}
+        accessibilityRole="header"
+      >
+        {props.title}
+      </Text>
+      {props.icon}
+    </View>
+  );
+}
+
+/** Splits a step into the thing to do (first sentence) and the detail after it. */
+function leadOf(step: string): [string, string] {
+  const m = step.match(/^(.{8,90}?[.?!])\s+(.+)$/);
+  return m ? [m[1], m[2]] : [step, ''];
+}
+
+/**
+ * Steps to follow in order. One card, a big plain number down the left with a line joining
+ * each step to the next, the action in bold and the detail in regular type under it.
+ */
+export function Steps(props: {
+  steps: string[];
+  /** Anything that belongs under a step: a timer, a drawing. */
+  extra?: (index: number) => ReactNode;
+  /** Use inside another card: drops this one's own card. */
+  bare?: boolean;
+}) {
+  const t = useTheme();
+  const rows = props.steps.map((step, i) => {
+    const [lead, rest] = leadOf(step);
+    const last = i === props.steps.length - 1;
+    return (
+      <View key={i} style={s.stepRow} accessible accessibilityLabel={`Step ${i + 1}. ${step}`}>
+        <View style={s.stepRail}>
+          <Text style={[s.stepNum, { color: t.accent }]}>{i + 1}</Text>
+          {!last && <View style={[s.stepLine, { backgroundColor: t.border }]} />}
+        </View>
+        <View style={[s.stepBody, !last && { paddingBottom: 20 }]}>
+          <Text style={[s.stepLead, { color: t.text }]}>{lead}</Text>
+          {!!rest && <Text style={[s.stepRest, { color: t.text }]}>{rest}</Text>}
+          {props.extra?.(i)}
+        </View>
+      </View>
+    );
+  });
+  if (props.bare) return <View>{rows}</View>;
+  return <Card style={{ paddingVertical: 18 }}>{rows}</Card>;
+}
+
+const BULLET = {
+  do: { icon: 'checkmark-circle', bad: false },
+  dont: { icon: 'close-circle', bad: true },
+  warn: { icon: 'alert-circle', bad: true },
+} as const;
+
+/** A list where order doesn't matter. Each line gets a clear icon and its own row. */
+export function Bullets(props: { items: string[]; kind?: keyof typeof BULLET }) {
+  const t = useTheme();
+  const look = BULLET[props.kind ?? 'do'];
+  return (
+    <View>
+      {props.items.map((item, i) => (
+        <View
+          key={item}
+          style={[
+            s.bulletRow,
+            i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: t.border },
+          ]}
+        >
+          <Ionicons
+            name={look.icon}
+            size={22}
+            color={look.bad ? t.bad : t.accent}
+            style={{ marginTop: 1 }}
+          />
+          <Text style={{ color: t.text, fontSize: 16, lineHeight: 24, flex: 1 }}>{item}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 /** Fades and slides its children in. `delay` staggers a list nicely. */
 export function FadeIn(props: {
   children: ReactNode;
@@ -243,4 +347,20 @@ const s = StyleSheet.create({
     elevation: 2,
   },
   tile: { alignItems: 'center', justifyContent: 'center' },
+  bar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 18,
+    paddingBottom: 8,
+  },
+  back: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+  stepRow: { flexDirection: 'row', gap: 12 },
+  stepRail: { width: 30, alignItems: 'center' },
+  stepNum: { fontSize: 26, fontWeight: '800', lineHeight: 30, fontVariant: ['tabular-nums'] },
+  stepLine: { width: 2, flex: 1, borderRadius: 1, marginTop: 6, marginBottom: 6 },
+  stepBody: { flex: 1, gap: 4 },
+  stepLead: { fontSize: 18, fontWeight: '700', lineHeight: 26, paddingTop: 2 },
+  stepRest: { fontSize: 17, lineHeight: 25 },
+  bulletRow: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', paddingVertical: 10 },
 });

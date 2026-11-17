@@ -32,7 +32,10 @@ const css = (px: number, c: ReaderColors) => `
   h3{font-size:1.12em;line-height:1.3;margin:1.5em 0 .45em;font-weight:700}
   h4,h5{font-size:1em;line-height:1.3;margin:1.3em 0 .4em;font-weight:700}
   p{margin:0 0 .95em}
-  ul,ol{padding-left:1.25em;margin:0 0 1em} li{margin:.45em 0;padding-left:.15em}
+  ul,ol{padding-left:1.25em;margin:0 0 1em} li{margin:.6em 0;padding-left:.15em}
+  ol{list-style:none;counter-reset:n;padding-left:0}
+  ol>li{counter-increment:n;position:relative;padding-left:2.2em;margin:.85em 0}
+  ol>li::before{content:counter(n);position:absolute;left:.1em;top:-.12em;font-size:1.3em;font-weight:700;color:${c.accent}}
   li::marker{color:${c.accent};font-weight:700}
   a{color:${c.accent};font-weight:700;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
   b,strong{font-weight:700}

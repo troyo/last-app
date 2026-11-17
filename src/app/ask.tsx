@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text } from '../components/ui';
+import { Steps, Text } from '../components/ui';
 import { Answer, ask, ASK_IDEAS } from '../lib/ask';
 import { useTheme } from '../lib/theme';
 
@@ -163,16 +163,7 @@ export default function Ask() {
                       )}
                     </View>
                     <Text style={[s.title, { color: t.text }]}>{a.title}</Text>
-                    {a.steps?.map((step, n) => (
-                      <View key={n} style={s.step}>
-                        <View style={[s.num, { backgroundColor: t.accent }]}>
-                          <Text style={{ color: t.accentText, fontSize: 15, fontWeight: '800' }}>
-                            {n + 1}
-                          </Text>
-                        </View>
-                        <Text style={[s.body, { color: t.text, flex: 1 }]}>{step}</Text>
-                      </View>
-                    ))}
+                    {a.steps && <Steps steps={a.steps} bare />}
                     {!!a.text &&
                       sentences(a.text).map((line, n) => (
                         <Text key={n} style={[s.body, { color: t.text }]}>

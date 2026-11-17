@@ -43,42 +43,80 @@ export function StepTimer({ minutes }: { minutes: number }) {
     setEndsAt(Date.now() + minutes * 60000);
   };
 
+  if (running) {
+    const total = minutes * 60;
+    return (
+      <View style={[s.panel, { backgroundColor: t.soft, borderColor: t.accent }]}>
+        <View style={s.top}>
+          <View style={{ flex: 1 }}>
+            <Text style={[s.clock, { color: t.text }]} accessibilityLiveRegion="none">
+              {clock(left)}
+            </Text>
+            <Text style={{ color: t.text, fontSize: 16 }}>left. Your phone will buzz.</Text>
+          </View>
+          <Pressable
+            onPress={() => setEndsAt(null)}
+            accessibilityRole="button"
+            accessibilityLabel="Stop timer"
+            hitSlop={8}
+            style={({ pressed }) => [
+              s.stop,
+              { borderColor: t.accent },
+              pressed && { opacity: 0.7 },
+            ]}
+          >
+            <Ionicons name="stop" size={18} color={t.accent} />
+            <Text style={{ color: t.accent, fontSize: 16, fontWeight: '700' }}>Stop</Text>
+          </Pressable>
+        </View>
+        <View style={[s.track, { backgroundColor: t.border }]}>
+          <View
+            style={[s.fill, { backgroundColor: t.accent, width: `${100 - (left / total) * 100}%` }]}
+          />
+        </View>
+      </View>
+    );
+  }
+
   return (
     <Pressable
-      onPress={running ? () => setEndsAt(null) : start}
+      onPress={start}
       accessibilityRole="button"
-      style={({ pressed }) => [
-        s.pill,
-        { backgroundColor: running ? t.accent : t.soft },
-        pressed && { opacity: 0.8 },
-      ]}
+      style={({ pressed }) => [s.btn, { backgroundColor: t.accent }, pressed && { opacity: 0.85 }]}
     >
-      <Ionicons
-        name={running ? 'stop-circle' : done ? 'checkmark-circle' : 'timer-outline'}
-        size={22}
-        color={running ? t.accentText : t.accent}
-      />
+      <Ionicons name={done ? 'refresh' : 'play'} size={22} color={t.accentText} />
       <View style={{ flex: 1 }}>
-        <Text style={{ color: running ? t.accentText : t.accent, fontSize: 16, fontWeight: '800' }}>
-          {running
-            ? `${clock(left)} left · tap to stop`
-            : done
-              ? 'Time’s up. Tap to go again'
-              : `Start ${minutes}-minute timer`}
+        <Text style={{ color: t.accentText, fontSize: 17, fontWeight: '700' }}>
+          {done ? 'Time’s up. Start again' : `Start ${minutes}-minute timer`}
         </Text>
+        {!done && <Text style={{ color: t.accentText, fontSize: 15 }}>Buzzes when time is up</Text>}
       </View>
     </Pressable>
   );
 }
 
 const s = StyleSheet.create({
-  pill: {
+  btn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 14,
-    minHeight: 46,
-    borderRadius: 14,
+    gap: 12,
+    paddingHorizontal: 16,
+    minHeight: 60,
+    borderRadius: 18,
     marginTop: 10,
   },
+  panel: { borderRadius: 18, borderWidth: 2, padding: 14, gap: 12, marginTop: 10 },
+  top: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  clock: { fontSize: 40, fontWeight: '800', lineHeight: 44, fontVariant: ['tabular-nums'] },
+  stop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 16,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 2,
+  },
+  track: { height: 8, borderRadius: 4, overflow: 'hidden' },
+  fill: { height: 8, borderRadius: 4 },
 });
