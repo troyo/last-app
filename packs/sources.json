@@ -866,6 +866,149 @@
         "https://archive.org/download/MManuals/Fm3-25.26MapReadingAndLandNavigation.pdf",
         "https://elon.edu/assets/docs/rotc/FM%203-25.26%20Map%20Reading%20and%20Land%20Navigation.pdf"
       ]
+    },
+    {
+      "id": "jts-prolonged-casualty-care-guidelines",
+      "title": "Prolonged Casualty Care: looking after the badly hurt for days (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Prolonged_Casualty_Care_Guidelines_21_Dec_2021_ID91v1.1.pdf"
+      ]
+    },
+    {
+      "id": "jts-nursing-interventions-pcc",
+      "title": "Nursing Care in the Field: wounds, splints and daily care (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Nursing_Interventions_PCC_08_July_2025_ID70_v1.1.pdf"
+      ]
+    },
+    {
+      "id": "jts-austere-resuscitative-surgical-care",
+      "title": "Surgery with Limited Equipment (austere surgical care) (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Austere_Resuscitative_Surgical_Care_30_Oct_2019_ID76.pdf"
+      ]
+    },
+    {
+      "id": "jts-damage-control-resuscitation-pfc",
+      "title": "Severe Blood Loss: field resuscitation (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Damage_Control_Resuscitation_PFC_01_Oct_2018_ID73.pdf"
+      ]
+    },
+    {
+      "id": "jts-burn-care-cpg",
+      "title": "Burn Care (clinical guideline) (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Burn_Care_CPG_10_June_2025_ID12_v1.3.pdf"
+      ]
+    },
+    {
+      "id": "jts-burn-management-pfc",
+      "title": "Burn Management in the Field (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Burn_Management_PFC_13_Jan_2017_ID57.pdf"
+      ]
+    },
+    {
+      "id": "jts-wound-management-pfc",
+      "title": "Wound Management in the Field (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Wound_Management_PFC_24_Jul_2017_ID62.pdf"
+      ]
+    },
+    {
+      "id": "jts-war-wounds-debridement-and-irrigation-27-sep-202",
+      "title": "Cleaning Out Serious Wounds (debridement and irrigation) (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/War_Wounds_Debridement_and_Irrigation_27_Sep_2021_ID31.pdf"
+      ]
+    },
+    {
+      "id": "jts-airway-management-in-trauma",
+      "title": "Airway Management after Injury (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Airway_Management_in_Trauma_28_Jan_2026_ID39.pdf"
+      ]
+    },
+    {
+      "id": "jts-analgesia-and-sedation-management-during-pfc-11-",
+      "title": "Pain Relief and Sedation, with drug doses (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Analgesia_and_Sedation_Management_during_PFC_11_May_2017_ID61.pdf"
+      ]
+    },
+    {
+      "id": "jts-sepsis-management-pfc",
+      "title": "Sepsis (blood infection) in the Field (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Sepsis_Management_PFC_28_Oct_2020_ID83.pdf"
+      ]
+    },
+    {
+      "id": "jts-hypothermia-prevention-treatment",
+      "title": "Hypothermia Prevention and Treatment (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Hypothermia_Prevention_Treatment_07_Jun_2023_ID23.pdf"
+      ]
+    },
+    {
+      "id": "jts-traumatic-brain-injury-pfc",
+      "title": "Head and Brain Injury in the Field (US military medical guideline)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense, Joint Trauma System",
+      "urls": [
+        "https://jts.health.mil/assets/docs/cpgs/Traumatic_Brain_Injury_PFC_06_Dec_2017_ID63.pdf"
+      ]
     }
   ],
   "simpleVersionsOf": {
