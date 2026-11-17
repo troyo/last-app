@@ -4,7 +4,6 @@ import {
   CameraRef,
   GeoJSONSource,
   Layer,
-  LocationManager,
   Map,
   MapRef,
   OfflineManager,
@@ -24,6 +23,7 @@ import {
   outlineOf,
   planDownload,
 } from '../lib/map-areas';
+import { locate } from '../lib/locate';
 import { useTheme } from '../lib/theme';
 import { Button, Text } from './ui';
 
@@ -79,29 +79,23 @@ export function MapsScreen() {
   }, [refreshSaved]);
 
   // ----- Where am I -----
-  const goToMe = useCallback(async () => {
-    try {
-      const ok = await LocationManager.requestPermissions();
-      if (!ok) {
-        Alert.alert(
-          'Location is off',
-          'You can still move the map by hand. To show where you are, allow location for Last App in Settings.',
-        );
-        return;
-      }
-      setLocated(true);
-      const pos = await LocationManager.getCurrentPosition();
-      if (pos) {
-        const here: [number, number] = [pos.coords.longitude, pos.coords.latitude];
-        setCenter(here);
-        camera.current?.flyTo({ center: here, zoom: 11, duration: 1200 });
-      }
-    } catch {
-      // no GPS fix: leave the map where it is
+  const goToMe = useCallback(async (quiet = false) => {
+    const fix = await locate();
+    if (!fix) {
+      if (quiet) return; // opening the tab shouldn't pop an alert
+      Alert.alert(
+        'Couldn’t find you',
+        'You can still move the map by hand. To show where you are, allow location for Last App in Settings and step outside for a clear view of the sky.',
+      );
+      return;
     }
+    setLocated(true);
+    const here: [number, number] = [fix.lon, fix.lat];
+    setCenter(here);
+    camera.current?.flyTo({ center: here, zoom: 11, duration: 1200 });
   }, []);
   useEffect(() => {
-    goToMe();
+    goToMe(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -197,7 +191,7 @@ export function MapsScreen() {
 
       {/* "Find me" button */}
       <Pressable
-        onPress={goToMe}
+        onPress={() => goToMe()}
         accessibilityLabel="Show where I am"
         style={[s.fab, { top: insets.top + 12, backgroundColor: t.card }]}
       >
