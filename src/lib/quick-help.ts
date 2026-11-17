@@ -1,3 +1,4 @@
+import type { DiagramId } from './diagrams';
 import type { Hue } from './theme';
 
 // "What do I do right now?" cards. These ship inside the app, so they work
@@ -20,6 +21,10 @@ export type QuickHelp = {
   when: string;
   /** Do this right now. */
   steps: string[];
+  /** A picture to show under a step: step number (counting from 0) to picture. */
+  pictures?: Record<number, DiagramId>;
+  /** A picture to show with the "next hours and days" notes. */
+  nextPicture?: DiagramId;
   /** Looking after them over the next hours and days, with no outside help. */
   next?: string[];
   dont?: string[];
@@ -43,6 +48,7 @@ export const QUICK_HELP: QuickHelp[] = [
       'Arm or leg still pouring blood? Tie a belt or strip of cloth 2 to 3 inches above the wound, not on a joint. Twist it tight with a stick until the bleeding stops. Write down the time.',
       'Lay them down, raise their legs a little, and keep them warm.',
     ],
+    pictures: { 3: 'tourniquet' },
     next: [
       'Once it stops, leave the cloth in place and wrap it firmly with a bandage or strips of fabric.',
       'Check the fingers or toes below the wrap. If they turn cold, blue or numb, loosen it slightly.',
@@ -75,6 +81,8 @@ export const QUICK_HELP: QuickHelp[] = [
       'After every 30 pushes, tilt the head back, pinch the nose and give 2 breaths, if you are able. If not, just keep pushing.',
       'Swap with another person every 2 minutes so you don’t tire out.',
     ],
+    pictures: { 2: 'cpr' },
+    nextPicture: 'recovery',
     next: [
       'If they start breathing, roll them onto their side with the head tilted back, and keep them warm.',
       'Stay with them. Check their breathing every minute and be ready to start again.',

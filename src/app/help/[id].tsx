@@ -1,9 +1,23 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { minutesIn, StepTimer } from '../../components/StepTimer';
 import { Card, IconName, IconTile, Text } from '../../components/ui';
+import { DiagramId, DIAGRAMS } from '../../lib/diagrams';
 import { findQuickHelp } from '../../lib/quick-help';
 import { HUES, useTheme } from '../../lib/theme';
+
+function Diagram({ id }: { id: DiagramId }) {
+  return (
+    <View style={s.diagram}>
+      <Image
+        source={DIAGRAMS[id].image}
+        accessibilityLabel={DIAGRAMS[id].alt}
+        style={{ width: '100%', height: '100%' }}
+        resizeMode="contain"
+      />
+    </View>
+  );
+}
 
 // One "what do I do right now" card: big type, numbered steps, nothing else.
 export default function QuickHelpScreen() {
@@ -24,14 +38,19 @@ export default function QuickHelpScreen() {
 
         <Text style={[s.label, { color: t.accent, marginTop: 4 }]}>Do this now</Text>
         {h.steps.map((step, i) => (
-          <Card key={i} style={s.step}>
-            <View style={[s.num, { backgroundColor: t.accent }]}>
-              <Text style={{ color: t.accentText, fontSize: 16, fontWeight: '800' }}>{i + 1}</Text>
+          <Card key={i} style={{ gap: 12 }}>
+            <View style={s.step}>
+              <View style={[s.num, { backgroundColor: t.accent }]}>
+                <Text style={{ color: t.accentText, fontSize: 16, fontWeight: '800' }}>
+                  {i + 1}
+                </Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={[s.stepText, { color: t.text }]}>{step}</Text>
+                {minutesIn(step) !== null && <StepTimer minutes={minutesIn(step)!} />}
+              </View>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text style={[s.stepText, { color: t.text }]}>{step}</Text>
-              {minutesIn(step) !== null && <StepTimer minutes={minutesIn(step)!} />}
-            </View>
+            {h.pictures?.[i] && <Diagram id={h.pictures[i]} />}
           </Card>
         ))}
 
@@ -49,6 +68,7 @@ export default function QuickHelpScreen() {
         {h.next && (
           <Card style={{ gap: 8 }}>
             <Text style={[s.label, { color: t.accent }]}>Over the next hours and days</Text>
+            {h.nextPicture && <Diagram id={h.nextPicture} />}
             {h.next.map((n) => (
               <View key={n} style={s.bullet}>
                 <View style={[s.dot, { backgroundColor: t.accent }]} />
@@ -109,6 +129,7 @@ const s = StyleSheet.create({
     fontWeight: '800',
     lineHeight: 25,
   },
+  diagram: { width: '100%', aspectRatio: 720 / 420, borderRadius: 16, overflow: 'hidden' },
   step: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
   num: {
     width: 36,
