@@ -2786,6 +2786,391 @@
       "urls": [
         "https://jts.health.mil/assets/docs/cpgs/Traumatic_Brain_Injury_PFC_06_Dec_2017_ID63.pdf"
       ]
+    },
+    {
+      "id": "pc-wells-construction",
+      "title": "Wells Construction: Hand Dug and Hand Drilled (Peace Corps)",
+      "topic": "water",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED241770.pdf"
+      ]
+    },
+    {
+      "id": "pc-water-purification-sewage",
+      "title": "Water Purification, Distribution and Sewage Disposal (Peace Corps)",
+      "topic": "water",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED243656.pdf"
+      ]
+    },
+    {
+      "id": "pc-water-sanitation-technologies",
+      "title": "Water and Sanitation Technologies (Peace Corps)",
+      "topic": "sanitation",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED307486.pdf"
+      ]
+    },
+    {
+      "id": "pc-soil-water-conservation",
+      "title": "Conservation of Soil and Water (Peace Corps)",
+      "topic": "grow",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED308074.pdf"
+      ]
+    },
+    {
+      "id": "pc-small-scale-irrigation",
+      "title": "Small Scale Irrigation (Peace Corps)",
+      "topic": "grow",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED307464.pdf"
+      ]
+    },
+    {
+      "id": "pc-irrigation-principles",
+      "title": "Irrigation Principles and Practices (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED242880.pdf"
+      ]
+    },
+    {
+      "id": "pc-small-farm-grain-storage",
+      "title": "Small Farm Grain Storage (Peace Corps)",
+      "topic": "food",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED241766.pdf"
+      ]
+    },
+    {
+      "id": "pc-preserving-food-drying",
+      "title": "Preserving Food by Drying (Peace Corps)",
+      "topic": "food",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED242558.pdf"
+      ]
+    },
+    {
+      "id": "pc-solar-energy-food-tech",
+      "title": "Solar and Energy-Conserving Food Technologies (Peace Corps)",
+      "topic": "power",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED307484.pdf"
+      ]
+    },
+    {
+      "id": "pc-practical-poultry-raising",
+      "title": "Practical Poultry Raising (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED241771.pdf"
+      ]
+    },
+    {
+      "id": "pc-rabbit-production",
+      "title": "Rabbit Production (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED241783.pdf"
+      ]
+    },
+    {
+      "id": "pc-small-scale-beekeeping",
+      "title": "Small Scale Beekeeping (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED241775.pdf"
+      ]
+    },
+    {
+      "id": "pc-freshwater-fish-ponds",
+      "title": "Freshwater Fish Pond Culture and Management (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED242565.pdf"
+      ]
+    },
+    {
+      "id": "pc-aquaculture-training",
+      "title": "Aquaculture Training Manual (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED327732.pdf"
+      ]
+    },
+    {
+      "id": "pc-animal-traction",
+      "title": "Animal Traction (Peace Corps)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED241772.pdf"
+      ]
+    },
+    {
+      "id": "pc-traditional-field-crops",
+      "title": "Traditional Field Crops (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED241773.pdf"
+      ]
+    },
+    {
+      "id": "pc-crop-production-handbook",
+      "title": "Crop Production Handbook (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED241777.pdf"
+      ]
+    },
+    {
+      "id": "pc-soils-crops-fertilizer",
+      "title": "Soils, Crops and Fertilizer Use (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED241778.pdf"
+      ]
+    },
+    {
+      "id": "pc-orchard-management",
+      "title": "Orchard Management (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED242882.pdf"
+      ]
+    },
+    {
+      "id": "pc-mixed-gardening",
+      "title": "Mixed Gardening (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED288051.pdf"
+      ]
+    },
+    {
+      "id": "pc-soil-conservation-hillsides",
+      "title": "Soil Conservation Techniques for Hillside Farms (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED288044.pdf"
+      ]
+    },
+    {
+      "id": "pc-reforestation-arid-lands",
+      "title": "Reforestation in Arid Lands (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED242563.pdf"
+      ]
+    },
+    {
+      "id": "pc-reforestation-notes",
+      "title": "Volunteer Notes on Reforestation (Peace Corps)",
+      "topic": "grow",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED242564.pdf"
+      ]
+    },
+    {
+      "id": "pc-forestry-inter-america",
+      "title": "Forestry Training Manual: Inter-America (Peace Corps)",
+      "topic": "grow",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED243661.pdf"
+      ]
+    },
+    {
+      "id": "pc-forestry-africa",
+      "title": "Forestry Training Manual: Africa (Peace Corps)",
+      "topic": "grow",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED307482.pdf"
+      ]
+    },
+    {
+      "id": "pc-self-help-construction",
+      "title": "Self-Help Construction of 1-Story Buildings (Peace Corps)",
+      "topic": "shelter",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED241769.pdf"
+      ]
+    },
+    {
+      "id": "pc-building-homes-of-earth",
+      "title": "Building Homes of Earth (Peace Corps)",
+      "topic": "shelter",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED242877.pdf"
+      ]
+    },
+    {
+      "id": "pc-appropriate-community-tech",
+      "title": "Appropriate Community Technology (Peace Corps)",
+      "topic": "diy",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED307485.pdf"
+      ]
+    },
+    {
+      "id": "pc-biogas",
+      "title": "Biogas: Small-Scale Digesters (Peace Corps)",
+      "topic": "power",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED309038.pdf"
+      ]
+    },
+    {
+      "id": "pc-health-sanitation-lessons",
+      "title": "Health and Sanitation Lessons (Peace Corps)",
+      "topic": "sanitation",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED243818.pdf"
+      ]
+    },
+    {
+      "id": "pc-oral-rehydration",
+      "title": "Oral Rehydration Therapy (Peace Corps)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED289005.pdf"
+      ]
+    },
+    {
+      "id": "pc-preparation-childbirth",
+      "title": "Preparation for Childbirth (Peace Corps)",
+      "topic": "first-aid",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED289004.pdf"
+      ]
+    },
+    {
+      "id": "pc-child-health-manual",
+      "title": "Child Health Manual (Peace Corps)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED438407.pdf"
+      ]
+    },
+    {
+      "id": "pc-aids-health-home",
+      "title": "Aids for Health and Home Extension (Peace Corps)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED243820.pdf"
+      ]
+    },
+    {
+      "id": "pc-homemaking-handbook",
+      "title": "Homemaking Handbook (Peace Corps)",
+      "topic": "diy",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "Peace Corps (via ERIC, US Dept. of Education)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED307465.pdf"
+      ]
     }
   ],
   "simpleVersionsOf": {
