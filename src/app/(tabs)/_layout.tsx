@@ -54,20 +54,24 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="search"
+        name="maps"
         options={{
-          title: 'Search',
+          title: 'Maps',
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? 'search' : 'search-outline'} color={color as string} size={size} />
+            <Ionicons name={focused ? 'map' : 'map-outline'} color={color as string} size={size} />
           ),
         }}
       />
       <Tabs.Screen
-        name="prep"
+        name="search"
         options={{
-          title: 'Get ready',
+          title: 'Search',
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? 'checkbox' : 'checkbox-outline'} color={color as string} size={size} />
+            <Ionicons
+              name={focused ? 'search' : 'search-outline'}
+              color={color as string}
+              size={size}
+            />
           ),
         }}
       />

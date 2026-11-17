@@ -44,7 +44,8 @@ export default function Search() {
     <Pressable
       key={label}
       onPress={() => setQuery(label)}
-      style={({ pressed }) => [s.chip, { backgroundColor: t.card }, pressed && { opacity: 0.7 }]}>
+      style={({ pressed }) => [s.chip, { backgroundColor: t.card }, pressed && { opacity: 0.7 }]}
+    >
       <Text style={{ color: t.text, fontSize: 15, fontWeight: '600' }}>{label}</Text>
     </Pressable>
   );
@@ -127,19 +128,25 @@ export default function Search() {
             return (
               <Card
                 onPress={() => open(() => router.push(saved ? `/item/${item.id}` : '/packs'))}
-                style={[s.row, { alignItems: 'flex-start' }]}>
+                style={[s.row, { alignItems: 'flex-start' }]}
+              >
                 <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={42} />
                 <View style={{ flex: 1, gap: 2 }}>
                   <Text style={[s.title, { color: t.text }]} numberOfLines={2}>
                     {item.title}
                   </Text>
                   {!!item.summary && (
-                    <Text style={{ color: t.muted, fontSize: 14, lineHeight: 19 }} numberOfLines={2}>
+                    <Text
+                      style={{ color: t.muted, fontSize: 14, lineHeight: 19 }}
+                      numberOfLines={2}
+                    >
                       {item.summary}
                     </Text>
                   )}
                   <Text style={{ color: saved ? t.good : t.warn, fontSize: 13, fontWeight: '700' }}>
-                    {saved ? 'On this phone' : `In the ${PACK_NAME[item.tier]} pack · tap to get it`}
+                    {saved
+                      ? 'On this phone'
+                      : `In the ${PACK_NAME[item.tier]} pack · tap to get it`}
                     <Text style={{ color: t.muted, fontWeight: '400' }}>
                       {'  ·  '}
                       {findTopic(item.topic)?.title ?? ''}

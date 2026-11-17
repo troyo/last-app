@@ -26,6 +26,13 @@ export default function More() {
       to: '/packs',
     },
     {
+      icon: 'clipboard-check',
+      hue: 'coral',
+      title: 'Get ready checklists',
+      sub: '3 days, 2 weeks and 1 year',
+      to: '/prep',
+    },
+    {
       icon: 'information',
       hue: 'blue',
       title: 'How Last App works',
@@ -48,7 +55,7 @@ export default function More() {
     },
     {
       icon: 'hand-wave',
-      hue: 'coral',
+      hue: 'violet',
       title: 'Show the welcome tour',
       sub: 'A 30-second refresher',
       to: '/welcome',

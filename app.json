@@ -8,7 +8,10 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.troyo.lastapp"
+      "bundleIdentifier": "com.troyo.lastapp",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Last App uses your location only to show where you are on the map. It never leaves your phone."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +21,11 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.troyo.lastapp"
+      "package": "com.troyo.lastapp",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -38,7 +45,8 @@
             "image": "./assets/icon.png"
           }
         }
-      ]
+      ],
+      "@maplibre/maplibre-react-native"
     ],
     "experiments": {
       "typedRoutes": false

@@ -44,7 +44,8 @@ export default function Home() {
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: t.bg }}
-      contentContainerStyle={{ paddingBottom: 36 }}>
+      contentContainerStyle={{ paddingBottom: 36 }}
+    >
       {/* White clock and battery icons while the green header is showing */}
       {focused && <StatusBar style="light" />}
       <View style={[s.header, { backgroundColor: t.header, paddingTop: insets.top + 18 }]}>
@@ -54,7 +55,8 @@ export default function Home() {
         <Pressable
           onPress={() => router.push('/search')}
           accessibilityRole="search"
-          style={[s.search, { backgroundColor: t.card }]}>
+          style={[s.search, { backgroundColor: t.card }]}
+        >
           <Ionicons name="search" size={20} color={t.muted} />
           <Text style={{ color: t.muted, fontSize: 16 }}>What do you need help with?</Text>
         </Pressable>
@@ -122,7 +124,8 @@ export default function Home() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={s.helpRow}>
+        contentContainerStyle={s.helpRow}
+      >
         {QUICK_HELP.map((h) => (
           <Pressable
             key={h.id}
@@ -131,13 +134,9 @@ export default function Home() {
               s.helpTile,
               { backgroundColor: HUES[h.hue].tint },
               pressed && { opacity: 0.8 },
-            ]}>
-            <IconTile
-              name={h.icon as IconName}
-              color={HUES[h.hue].color}
-              tint={t.card}
-              size={40}
-            />
+            ]}
+          >
+            <IconTile name={h.icon as IconName} color={HUES[h.hue].color} tint={t.card} size={40} />
             <Text style={s.helpTitle} numberOfLines={2}>
               {h.title.replace(/ \(.*\)$/, '')}
             </Text>
@@ -162,7 +161,8 @@ export default function Home() {
                 style={[
                   s.prepRow,
                   i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: t.border },
-                ]}>
+                ]}
+              >
                 <IconTile name={list.icon as IconName} {...HUES[list.hue]} size={40} />
                 <View style={{ flex: 1, gap: 6 }}>
                   <Text style={{ color: t.text, fontSize: 16, fontWeight: '700' }}>
@@ -188,7 +188,9 @@ export default function Home() {
 
         <View style={s.sectionHead}>
           <Text style={[s.section, { color: t.text }]}>Learn</Text>
-          <Text style={{ color: t.muted, fontSize: 14 }}>Every guide, sorted by what you need.</Text>
+          <Text style={{ color: t.muted, fontSize: 14 }}>
+            Every guide, sorted by what you need.
+          </Text>
         </View>
         <View style={s.grid}>
           {topics.map((topic, i) => {
@@ -200,7 +202,8 @@ export default function Home() {
                   <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={42} />
                   <Text
                     style={{ color: t.text, fontSize: 15, fontWeight: '700', lineHeight: 19 }}
-                    numberOfLines={2}>
+                    numberOfLines={2}
+                  >
                     {topic.title}
                   </Text>
                   <Text style={{ color: t.muted, fontSize: 13 }} numberOfLines={1}>
