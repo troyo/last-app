@@ -179,9 +179,12 @@ export async function ask(question: string): Promise<Answer[]> {
 
   // Best first, one answer per source, and never a wall of cards.
   const seen = new Set<string>();
+  const top = Math.max(0, ...answers.map((a) => a.score));
   return answers
     .sort((a, b) => b.score - a.score)
     .filter((a) => {
+      // Weak matches next to a strong one are just noise.
+      if (a.score < top * 0.6) return false;
       // A guide and its plain-language twin say the same thing: keep whichever ranked higher.
       const base = a.title.replace(' (in simple words)', '');
       if (seen.has(base)) return false;

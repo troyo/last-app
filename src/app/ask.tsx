@@ -16,6 +16,18 @@ import { Text } from '../components/ui';
 import { Answer, ask, ASK_IDEAS } from '../lib/ask';
 import { useTheme } from '../lib/theme';
 
+// One or two sentences per paragraph, so a passage never reads as a wall of text.
+function sentences(text: string): string[] {
+  const parts = text.match(/[^.!?]+[.!?]+["”’)]*\s*|[^.!?]+$/g) ?? [text];
+  const out: string[] = [];
+  for (const part of parts) {
+    const last = out[out.length - 1];
+    if (last && last.length + part.length < 150) out[out.length - 1] = last + part;
+    else out.push(part);
+  }
+  return out.map((line) => line.trim()).filter(Boolean);
+}
+
 type Turn = { id: number; question: string; answers: Answer[] | null };
 
 // A chat that works with no internet. You ask in plain words; it replies with
@@ -61,10 +73,13 @@ export default function Ask() {
       >
         {turns.length === 0 && (
           <View style={{ gap: 12 }}>
-            <View style={[s.bubble, s.them, { backgroundColor: t.card }]}>
-              <Text style={[s.body, { color: t.text }]}>
-                Hi. Ask me anything in your own words. I’ll find the answer in the guides saved on
-                this phone, so it works with no signal.
+            <View style={s.hello}>
+              <View style={[s.helloIcon, { backgroundColor: t.soft }]}>
+                <Ionicons name="chatbubbles" size={30} color={t.accent} />
+              </View>
+              <Text style={[s.helloTitle, { color: t.text }]}>Ask in your own words</Text>
+              <Text style={[s.body, { color: t.text, textAlign: 'center' }]}>
+                I’ll find the answer in the guides saved on this phone, so it works with no signal.
               </Text>
             </View>
             <Text style={[s.label, { color: t.text }]}>Try one of these</Text>
@@ -90,7 +105,7 @@ export default function Ask() {
         {turns.map((turn) => (
           <View
             key={turn.id}
-            style={{ gap: 10 }}
+            style={{ gap: 14 }}
             onLayout={(e) => (tops.current[turn.id] = e.nativeEvent.layout.y)}
           >
             <View style={[s.bubble, s.me, { backgroundColor: t.accent }]}>
@@ -98,12 +113,12 @@ export default function Ask() {
             </View>
 
             {turn.answers === null ? (
-              <View style={[s.bubble, s.them, s.thinking, { backgroundColor: t.card }]}>
+              <View style={[s.card, s.thinking, { backgroundColor: t.card }]}>
                 <ActivityIndicator color={t.accent} />
                 <Text style={[s.body, { color: t.text }]}>Looking through your guides…</Text>
               </View>
             ) : turn.answers.length === 0 ? (
-              <View style={[s.bubble, s.them, { backgroundColor: t.card, gap: 10 }]}>
+              <View style={[s.card, { backgroundColor: t.card }]}>
                 <Text style={[s.body, { color: t.text }]}>
                   I couldn’t find that in your saved guides. Try fewer, simpler words, like “burn”
                   or “clean water”. A bigger pack also gives me more to look through.
@@ -117,15 +132,20 @@ export default function Ask() {
             ) : (
               <>
                 {turn.answers.map((a, i) => (
-                  <View key={a.key} style={[s.bubble, s.them, { backgroundColor: t.card, gap: 8 }]}>
-                    {i === 0 && turn.answers!.length > 1 && (
-                      <Text style={[s.best, { color: t.good }]}>Best match</Text>
-                    )}
-                    <Text
-                      style={{ color: t.text, fontSize: 18, fontWeight: '800', lineHeight: 23 }}
-                    >
-                      {a.title}
-                    </Text>
+                  <View key={a.key} style={[s.card, { backgroundColor: t.card }]}>
+                    <View style={s.kicker}>
+                      {i === 0 && turn.answers!.length > 1 && (
+                        <View style={[s.pill, { backgroundColor: t.good }]}>
+                          <Text style={[s.pillText, { color: t.accentText }]}>Best match</Text>
+                        </View>
+                      )}
+                      <View style={[s.pill, { backgroundColor: t.soft, flexShrink: 1 }]}>
+                        <Text style={[s.pillText, { color: t.accent }]} numberOfLines={1}>
+                          {a.from}
+                        </Text>
+                      </View>
+                    </View>
+                    <Text style={[s.title, { color: t.text }]}>{a.title}</Text>
                     {a.steps?.map((step, n) => (
                       <View key={n} style={s.step}>
                         <View style={[s.num, { backgroundColor: t.accent }]}>
@@ -136,7 +156,12 @@ export default function Ask() {
                         <Text style={[s.body, { color: t.text, flex: 1 }]}>{step}</Text>
                       </View>
                     ))}
-                    {!!a.text && <Text style={[s.body, { color: t.text }]}>{a.text}</Text>}
+                    {!!a.text &&
+                      sentences(a.text).map((line, n) => (
+                        <Text key={n} style={[s.body, { color: t.text }]}>
+                          {line}
+                        </Text>
+                      ))}
                     <Pressable
                       onPress={() => router.push(a.href as never)}
                       hitSlop={6}
@@ -148,15 +173,13 @@ export default function Ask() {
                       </Text>
                       <Ionicons name="chevron-forward" size={18} color={t.accent} />
                     </Pressable>
-                    <Text style={{ color: t.muted, fontSize: 15 }} numberOfLines={1}>
-                      From: {a.from}
-                    </Text>
                   </View>
                 ))}
                 <Pressable
                   onPress={() => router.push({ pathname: '/search', params: { q: turn.question } })}
-                  style={{ alignSelf: 'flex-start', paddingVertical: 4 }}
+                  style={[s.more, { borderColor: t.accent }]}
                 >
+                  <Ionicons name="search" size={18} color={t.accent} />
                   <Text style={[s.link, { color: t.accent }]}>See every guide about this</Text>
                 </Pressable>
               </>
@@ -187,7 +210,6 @@ export default function Ask() {
           returnKeyType="send"
           onSubmitEditing={() => send(draft)}
           blurOnSubmit={false}
-          autoFocus
         />
         <Pressable
           onPress={() => send(draft)}
@@ -206,21 +228,46 @@ export default function Ask() {
 }
 
 const s = StyleSheet.create({
-  wrap: { padding: 16, gap: 18, paddingBottom: 24 },
-  bubble: { borderRadius: 22, padding: 14, maxWidth: '92%' },
-  me: { alignSelf: 'flex-end', borderBottomRightRadius: 6 },
-  them: {
-    alignSelf: 'flex-start',
-    borderBottomLeftRadius: 6,
+  wrap: { padding: 20, gap: 22, paddingBottom: 28 },
+  hello: { alignItems: 'center', gap: 8, paddingTop: 12, paddingBottom: 8, paddingHorizontal: 8 },
+  helloIcon: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
+  helloTitle: { fontSize: 24, fontWeight: '800', textAlign: 'center' },
+  card: {
+    alignSelf: 'stretch',
+    borderRadius: 22,
+    padding: 20,
+    gap: 14,
     shadowColor: '#17352C',
     shadowOpacity: 0.07,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 },
     elevation: 1,
   },
+  kicker: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  pill: { paddingHorizontal: 10, height: 26, borderRadius: 13, justifyContent: 'center' },
+  pillText: { fontSize: 14, fontWeight: '800' },
+  title: { fontSize: 22, fontWeight: '800', lineHeight: 28 },
+  more: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    height: 48,
+    borderRadius: 16,
+    borderWidth: 1.5,
+  },
+  bubble: { borderRadius: 22, paddingVertical: 12, paddingHorizontal: 16, maxWidth: '85%' },
+  me: { alignSelf: 'flex-end', borderBottomRightRadius: 6 },
   thinking: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  body: { fontSize: 17, lineHeight: 25 },
-  label: { fontSize: 16, fontWeight: '800', marginTop: 6 },
+  body: { fontSize: 17, lineHeight: 26 },
+  label: { fontSize: 16, fontWeight: '800', marginTop: 10, textAlign: 'center' },
   idea: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -230,8 +277,7 @@ const s = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1,
   },
-  best: { fontSize: 15, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 },
-  step: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
+  step: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
   num: {
     width: 28,
     height: 28,
@@ -244,9 +290,9 @@ const s = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     paddingHorizontal: 12,
-    height: 44,
-    borderRadius: 14,
-    marginTop: 4,
+    height: 48,
+    borderRadius: 16,
+    marginTop: 2,
   },
   link: { fontSize: 16, fontWeight: '800' },
   bar: {
