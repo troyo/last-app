@@ -64,18 +64,18 @@ purchases (for example with RevenueCat) and set `TEST_MODE` to false.
 ## Content packs
 
 All content is free to share: US government guides (public domain) and
-Wikipedia / MDWiki articles (CC BY-SA 4.0). The list lives in
+Wikipedia / Wikibooks / Appropedia articles (CC BY-SA 4.0). The list lives in
 [`packs/sources.json`](packs/sources.json), with the license for every source.
 
 | Pack | What's in it | Rough size |
 | --- | --- | --- |
-| Small | ~46 core guides with pictures (first aid, water, fire, shelter, kit) + FEMA "Are You Ready?", Army First Aid TC 4-02.1, CDC safe water sheet | ~50 MB |
-| Medium | Small + ~90 more guides + Wikibooks handbooks (first aid, survival, knots) + Army/Marine survival manuals, land navigation, FEMA CERT, USDA canning | ~250 MB |
-| Large | Medium + ~75 more guides + all of MDWiki (medical encyclopedia) + Appropedia (DIY, off-grid) + Wikibooks cookbook, gardening, electronics + SERE manuals | ~2 GB |
+| Small | ~46 core guides with pictures (first aid, water, fire, shelter, kit) + FEMA "Are You Ready?", Army First Aid TC 4-02.1, CDC safe water sheet | ~18 MB |
+| Medium | Small + ~90 more guides + Wikibooks handbooks (first aid, survival, knots) + Army/Marine survival manuals, land navigation, FEMA CERT, USDA canning | ~125 MB |
+| Large | Medium + ~75 more guides + Appropedia (DIY, off-grid) + Wikibooks cookbook, gardening, electronics + SERE manuals | ~360 MB |
 
 Pictures come only from Wikimedia Commons (freely licensed) and are stored inside each article.
 
-Sizes are estimates until the first real build. `REPORT.md` on each release has the exact numbers.
+Sizes are from the 2026-11-17 build. Hand-picked guides also come in a Simple English version when one exists. `REPORT.md` on each release has the exact numbers.
 
 ### Building the packs
 

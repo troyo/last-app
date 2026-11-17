@@ -109,6 +109,14 @@ for (const group of sources.articles) {
   const titles = QUICK ? group.titles.slice(0, 2) : group.titles;
   for (const t of titles) want(group.wiki, t, group.tier, group.topic);
 }
+// Plain-language twins: for every hand-picked Wikipedia guide, also grab the
+// Simple English version when one exists (missing ones are skipped quietly).
+if (sources.simpleVersionsOf) {
+  const { from, wiki } = sources.simpleVersionsOf;
+  for (const a of [...wanted.values()]) {
+    if (a.wiki === from) want(wiki, a.title, a.tier, a.topic);
+  }
+}
 if (!QUICK) {
   for (const bulk of sources.allPagesOf || []) {
     const wiki = sources.wikis[bulk.wiki];
@@ -261,6 +269,7 @@ const fetched = await pool(articleList, 4, async (a) => {
   }
   const data = JSON.parse(r.body);
   if (data.error || !data.parse?.text) {
+    if (wiki.optional) return null; // no plain-language version of this one
     report.failed.push(`Article "${a.title}" (${a.wiki}): ${data.error?.info || 'no text'}`);
     return null;
   }
@@ -272,7 +281,8 @@ const fetched = await pool(articleList, 4, async (a) => {
     report.skipped.push(`Article "${a.title}" (${a.wiki}): too short`);
     return null;
   }
-  const title = data.parse.displaytitle?.replace(/<[^>]+>/g, '') || a.title;
+  const title =
+    (data.parse.displaytitle?.replace(/<[^>]+>/g, '') || a.title) + (wiki.titleSuffix || '');
   const seenKey = `${a.wiki}|${title}`;
   if (seenTitles.has(seenKey)) {
     report.skipped.push(`Article "${a.title}" (${a.wiki}): same page as "${title}"`);

@@ -30,7 +30,7 @@ const PROMISES = [
   },
   {
     icon: 'library-outline',
-    text: 'From sources you can check: US government guides, Wikipedia and MDWiki. Every page says where it came from.',
+    text: 'From sources you can check: US government guides, Wikipedia and Wikibooks. Every page says where it came from.',
   },
   {
     icon: 'gift-outline',

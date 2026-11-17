@@ -15,7 +15,7 @@
     {
       "id": "large",
       "title": "Large",
-      "summary": "Everything: a full offline medical encyclopedia (MDWiki), Appropedia for DIY and off-grid living, cookbooks, gardening, more field manuals, radio and navigation."
+      "summary": "Everything: Appropedia for DIY and off-grid living, cookbooks, gardening, more field manuals, radio and navigation."
     }
   ],
   "topics": [
@@ -78,13 +78,6 @@
       "license": "CC BY-SA 4.0",
       "images": 10
     },
-    "mdwiki": {
-      "api": "https://mdwiki.org/w/api.php",
-      "pageBase": "https://mdwiki.org/wiki/",
-      "source": "MDWiki contributors (Wiki Project Med)",
-      "license": "CC BY-SA 4.0",
-      "images": 3
-    },
     "appropedia": {
       "api": "https://www.appropedia.org/w/api.php",
       "pageBase": "https://www.appropedia.org/",
@@ -98,6 +91,15 @@
       "source": "Wikibooks contributors",
       "license": "CC BY-SA 4.0",
       "images": 4
+    },
+    "simple": {
+      "api": "https://simple.wikipedia.org/w/api.php",
+      "pageBase": "https://simple.wikipedia.org/wiki/",
+      "source": "Simple English Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "images": 4,
+      "titleSuffix": " (in simple words)",
+      "optional": true
     }
   },
   "articles": [
@@ -506,12 +508,6 @@
       "tier": "large",
       "topic": "diy",
       "limit": 6000
-    },
-    {
-      "wiki": "mdwiki",
-      "tier": "large",
-      "topic": "medical",
-      "limit": 8000
     }
   ],
   "pdfs": [
@@ -549,17 +545,6 @@
       "source": "US Army",
       "urls": [
         "https://ciehub.info/ref/TC/4-02x1_2018.pdf"
-      ]
-    },
-    {
-      "id": "army-fm-4-25-11-first-aid",
-      "title": "First Aid, FM 4-25.11 (US Army, 2002)",
-      "topic": "first-aid",
-      "tier": "medium",
-      "license": "Public domain (US federal government work; approved for public release)",
-      "source": "US Army",
-      "urls": [
-        "https://irp.fas.org/doddir/milmed/first.pdf"
       ]
     },
     {
@@ -627,7 +612,8 @@
       "license": "Public domain (US federal government work)",
       "source": "US Air Force",
       "urls": [
-        "https://irp.fas.org/doddir/usaf/afh10-644.pdf"
+        "https://irp.fas.org/doddir/usaf/afh10-644.pdf",
+        "https://static.e-publishing.af.mil/production/1/af_a3/publication/afh10-644/afh10-644.pdf"
       ]
     },
     {
@@ -638,7 +624,8 @@
       "license": "Public domain (US federal government work)",
       "source": "US Department of Defense",
       "urls": [
-        "https://irp.fas.org/doddir/army/fm3-50-3.pdf"
+        "https://irp.fas.org/doddir/army/fm3-50-3.pdf",
+        "https://rmp.nc.gov/LCF/Publications/AL_Resources/Survival/Multi%20Service%20Survival%20Manual.pdf"
       ]
     },
     {
@@ -666,5 +653,9 @@
         "https://elon.edu/assets/docs/rotc/FM%203-25.26%20Map%20Reading%20and%20Land%20Navigation.pdf"
       ]
     }
-  ]
+  ],
+  "simpleVersionsOf": {
+    "from": "wikipedia",
+    "wiki": "simple"
+  }
 }
