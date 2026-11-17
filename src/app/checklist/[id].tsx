@@ -8,7 +8,7 @@ import { getProfile } from '../../lib/place';
 import { useTheme } from '../../lib/theme';
 
 // One checklist. Tap a line to tick it; it's remembered on this phone.
-// "Why?" under a line opens a short, plain explanation.
+// The (i) on a line opens a short, plain explanation of why it matters.
 export default function ChecklistScreen() {
   const t = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -77,52 +77,51 @@ export default function ChecklistScreen() {
                       },
                     ]}
                   >
-                    <Pressable
-                      onPress={() => {
-                        toggle(key);
-                        refresh((n) => n + 1);
-                      }}
-                      accessibilityRole="checkbox"
-                      accessibilityState={{ checked: on }}
-                      style={s.item}
-                    >
-                      <View
-                        style={[
-                          s.box,
-                          { borderColor: on ? t.accent : t.muted },
-                          on && { backgroundColor: t.accent },
-                        ]}
-                      >
-                        {on && <Ionicons name="checkmark" size={18} color={t.accentText} />}
-                      </View>
-                      <Text
-                        style={[
-                          s.itemText,
-                          { color: on ? t.muted : t.text },
-                          on && { textDecorationLine: 'line-through' },
-                        ]}
-                      >
-                        {item.text}
-                      </Text>
-                    </Pressable>
-                    {item.why && (
+                    <View style={s.line}>
                       <Pressable
-                        onPress={() => setOpen(showWhy ? null : key)}
-                        hitSlop={6}
-                        accessibilityRole="button"
-                        accessibilityLabel={`Why: ${item.text}`}
-                        style={s.whyRow}
+                        onPress={() => {
+                          toggle(key);
+                          refresh((n) => n + 1);
+                        }}
+                        accessibilityRole="checkbox"
+                        accessibilityState={{ checked: on }}
+                        style={s.item}
                       >
-                        <Text style={{ color: t.accent, fontSize: 15, fontWeight: '700' }}>
-                          {showWhy ? 'Hide' : 'Why?'}
+                        <View
+                          style={[
+                            s.box,
+                            { borderColor: on ? t.accent : t.muted },
+                            on && { backgroundColor: t.accent },
+                          ]}
+                        >
+                          {on && <Ionicons name="checkmark" size={18} color={t.accentText} />}
+                        </View>
+                        <Text
+                          style={[
+                            s.itemText,
+                            { color: on ? t.muted : t.text },
+                            on && { textDecorationLine: 'line-through' },
+                          ]}
+                        >
+                          {item.text}
                         </Text>
-                        <Ionicons
-                          name={showWhy ? 'chevron-up' : 'chevron-down'}
-                          size={14}
-                          color={t.accent}
-                        />
                       </Pressable>
-                    )}
+                      {item.why && (
+                        <Pressable
+                          onPress={() => setOpen(showWhy ? null : key)}
+                          hitSlop={8}
+                          accessibilityRole="button"
+                          accessibilityLabel={`Why: ${item.text}`}
+                          style={s.whyBtn}
+                        >
+                          <Ionicons
+                            name={showWhy ? 'information-circle' : 'information-circle-outline'}
+                            size={26}
+                            color={t.accent}
+                          />
+                        </Pressable>
+                      )}
+                    </View>
                     {showWhy && (
                       <View style={[s.why, { backgroundColor: t.soft }]}>
                         <Text style={{ color: t.text, fontSize: 15, lineHeight: 22 }}>
@@ -137,7 +136,8 @@ export default function ChecklistScreen() {
           </View>
         ))}
         <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
-          General guidelines. Adjust for children, health needs and what you already have.
+          Tap ⓘ on a line to see why it matters. General guidelines. Adjust for children, health
+          needs and what you already have.
         </Text>
       </ScrollView>
     </>
@@ -160,7 +160,8 @@ const s = StyleSheet.create({
   group: { fontSize: 18, fontWeight: '800' },
   badge: { paddingHorizontal: 9, paddingVertical: 3, borderRadius: 999 },
   badgeText: { fontSize: 12, fontWeight: '800', color: '#3D2A00' },
-  item: { flexDirection: 'row', gap: 12, alignItems: 'center', paddingTop: 12, paddingBottom: 10 },
+  line: { flexDirection: 'row', alignItems: 'center' },
+  item: { flex: 1, flexDirection: 'row', gap: 12, alignItems: 'center', paddingVertical: 13 },
   box: {
     width: 26,
     height: 26,
@@ -170,14 +171,6 @@ const s = StyleSheet.create({
     justifyContent: 'center',
   },
   itemText: { flex: 1, fontSize: 16, lineHeight: 22 },
-  whyRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 3,
-    marginLeft: 38,
-    marginTop: -4,
-    paddingBottom: 10,
-    alignSelf: 'flex-start',
-  },
+  whyBtn: { width: 40, height: 44, alignItems: 'flex-end', justifyContent: 'center' },
   why: { marginLeft: 38, marginBottom: 12, padding: 12, borderRadius: 14 },
 });

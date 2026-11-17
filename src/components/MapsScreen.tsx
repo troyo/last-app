@@ -24,6 +24,7 @@ import {
   planDownload,
 } from '../lib/map-areas';
 import { locate } from '../lib/locate';
+import { findState, getProfile } from '../lib/place';
 import { useTheme } from '../lib/theme';
 import { Button, Text } from './ui';
 
@@ -37,7 +38,13 @@ TransformRequestManager.addHeader({
 OfflineManager.setTileCountLimit(40000);
 
 type Saved = { id: string; name: string; bounds: Bounds; megabytes: number };
-const START: [number, number] = [-96, 38.5]; // middle of the US until we know better
+const USA: [number, number] = [-96, 38.5]; // middle of the US until we know better
+
+/** Open on the person's own state if they told us, so the map starts somewhere useful. */
+function startView(): { center: [number, number]; zoom: number } {
+  const st = findState(getProfile()?.state);
+  return st ? { center: [st.lon, st.lat], zoom: 6 } : { center: USA, zoom: 3 };
+}
 
 // Offline maps: move the map to the place you care about, pick how big an
 // area to keep, and save it. Saved areas work with no signal.
@@ -47,7 +54,8 @@ export function MapsScreen() {
   const map = useRef<MapRef>(null);
   const camera = useRef<CameraRef>(null);
 
-  const [center, setCenter] = useState<[number, number]>(START);
+  const start = useMemo(startView, []);
+  const [center, setCenter] = useState<[number, number]>(start.center);
   const [sizeId, setSizeId] = useState<AreaSizeId>('town');
   const [picking, setPicking] = useState(false); // is the "save an area" panel open?
   const [saved, setSaved] = useState<Saved[]>([]);
@@ -168,10 +176,10 @@ export function MapsScreen() {
         style={{ flex: 1 }}
         mapStyle={MAP_STYLE}
         logo={false}
-        attributionPosition={{ bottom: 8, left: 8 }}
+        attribution={false} // the credit line is written out in the panel below instead
         onRegionDidChange={onMoved}
       >
-        <Camera ref={camera} initialViewState={{ center: START, zoom: 3 }} />
+        <Camera ref={camera} initialViewState={start} />
         {located && <UserLocation />}
         {picking && (
           <GeoJSONSource id="area-outline" data={outlineOf(bounds)}>
@@ -236,7 +244,11 @@ export function MapsScreen() {
             )}
             <Button
               label={saved.length ? 'Save another area' : 'Save an area'}
-              onPress={() => setPicking(true)}
+              onPress={() => {
+                setPicking(true);
+                // Zoom so the green box fills the screen instead of being a dot.
+                show(bounds);
+              }}
             />
           </>
         ) : (
@@ -267,7 +279,7 @@ export function MapsScreen() {
                       >
                         {opt.label}
                       </Text>
-                      <Text style={{ color: on ? t.accentText : t.muted, fontSize: 12 }}>
+                      <Text style={{ color: on ? t.accentText : t.text, fontSize: 13 }}>
                         {opt.miles} mi each way
                       </Text>
                     </Pressable>
@@ -301,7 +313,7 @@ export function MapsScreen() {
             )}
           </>
         )}
-        <Text style={{ color: t.muted, fontSize: 11 }}>
+        <Text style={{ color: t.text, fontSize: 13 }}>
           Map data © OpenStreetMap contributors · OpenFreeMap
         </Text>
       </View>

@@ -1,10 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { FlatList, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card, IconName, IconTile, Text } from '../../components/ui';
-import { findTopic } from '../../lib/catalog';
+import { findTopic, getCatalog } from '../../lib/catalog';
 import { Hazard } from '../../lib/hazards';
 import { isDownloaded } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
@@ -15,7 +15,8 @@ import { HUES, TOPIC_LOOK, useTheme } from '../../lib/theme';
 type Row =
   | { kind: 'help'; help: QuickHelp }
   | { kind: 'hazard'; hazard: Hazard }
-  | { kind: 'guide'; hit: GuideHit };
+  | { kind: 'guide'; hit: GuideHit }
+  | { kind: 'locked'; count: number };
 const PACK_NAME = { small: 'Small', medium: 'Medium', large: 'Large' } as const;
 
 // Search everything: emergency cards first, then every guide in every pack.
@@ -39,8 +40,15 @@ export default function Search() {
   const rows: Row[] = [
     ...results.help.map((help) => ({ kind: 'help', help }) as Row),
     ...results.hazards.map((hazard) => ({ kind: 'hazard', hazard }) as Row),
-    ...results.guides.map((hit) => ({ kind: 'guide', hit }) as Row),
   ];
+  // Guides on the phone come first; the ones in packs not saved yet sit under their own heading.
+  const mine = results.guides.filter((hit) => isDownloaded(hit.item));
+  const locked = results.guides.filter((hit) => !isDownloaded(hit.item));
+  rows.push(...mine.map((hit) => ({ kind: 'guide', hit }) as Row));
+  if (locked.length > 0) {
+    rows.push({ kind: 'locked', count: locked.length });
+    rows.push(...locked.map((hit) => ({ kind: 'guide', hit }) as Row));
+  }
   const typing = query.trim().length > 1;
   const found = results.total + results.help.length + results.hazards.length;
   const recent = recentSearches();
@@ -82,7 +90,7 @@ export default function Search() {
       </View>
 
       {!typing ? (
-        <View style={s.idle}>
+        <ScrollView contentContainerStyle={s.idle} keyboardShouldPersistTaps="handled">
           {recent.length > 0 && (
             <>
               <Text style={[s.label, { color: t.muted }]}>Recent</Text>
@@ -91,11 +99,32 @@ export default function Search() {
           )}
           <Text style={[s.label, { color: t.muted }]}>People often look for</Text>
           <View style={s.chips}>{SUGGESTED.map(chip)}</View>
-          <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21, marginTop: 8 }}>
-            Use everyday words. Search looks through every guide and the emergency steps, and works
-            with no signal.
-          </Text>
-        </View>
+          <Text style={[s.label, { color: t.muted }]}>Or browse a topic</Text>
+          <View style={s.topics}>
+            {getCatalog().topics.map((topic) => {
+              const look = TOPIC_LOOK[topic.id] ?? { icon: 'book-open-variant', hue: 'teal' };
+              return (
+                <Pressable
+                  key={topic.id}
+                  onPress={() => router.push(`/topic/${topic.id}`)}
+                  style={({ pressed }) => [
+                    s.topic,
+                    { backgroundColor: t.card },
+                    pressed && { opacity: 0.7 },
+                  ]}
+                >
+                  <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={36} />
+                  <Text
+                    style={{ color: t.text, fontSize: 15, fontWeight: '800', flex: 1 }}
+                    numberOfLines={2}
+                  >
+                    {topic.title}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </ScrollView>
       ) : (
         <FlatList
           data={rows}
@@ -104,7 +133,9 @@ export default function Search() {
               ? `h-${r.help.id}`
               : r.kind === 'hazard'
                 ? `z-${r.hazard.id}`
-                : r.hit.item.id
+                : r.kind === 'locked'
+                  ? 'locked'
+                  : r.hit.item.id
           }
           contentContainerStyle={s.list}
           keyboardShouldPersistTaps="handled"
@@ -152,6 +183,18 @@ export default function Search() {
                 </Card>
               );
             }
+            if (row.kind === 'locked')
+              return (
+                <View style={{ paddingTop: 10, gap: 2 }}>
+                  <Text style={{ color: t.text, fontSize: 18, fontWeight: '800' }}>
+                    In packs you haven’t saved
+                  </Text>
+                  <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
+                    {mine.length === 0 ? 'Nothing on this phone matches yet. ' : ''}Tap one to get
+                    its pack.
+                  </Text>
+                </View>
+              );
             const { item } = row.hit;
             const saved = isDownloaded(item);
             const look = TOPIC_LOOK[item.topic] ?? { icon: 'book-open-variant', hue: 'teal' };
@@ -205,10 +248,21 @@ const s = StyleSheet.create({
     height: 50,
   },
   input: { flex: 1, fontSize: 16, paddingVertical: 0, fontFamily: 'Nunito_400Regular' },
-  idle: { padding: 18, gap: 10 },
+  idle: { padding: 18, gap: 10, paddingBottom: 32 },
   label: { fontSize: 15, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
   chip: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 999 },
+  topics: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  topic: {
+    flexBasis: '47%',
+    flexGrow: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    padding: 10,
+    minHeight: 58,
+    borderRadius: 18,
+  },
   list: { padding: 18, gap: 10, paddingBottom: 32 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   title: { fontSize: 16, fontWeight: '800', lineHeight: 21 },

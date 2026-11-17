@@ -14,7 +14,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '../components/ui';
 import { Answer, ask, ASK_IDEAS } from '../lib/ask';
-import { rememberSearch } from '../lib/search';
 import { useTheme } from '../lib/theme';
 
 type Turn = { id: number; question: string; answers: Answer[] | null };
@@ -28,6 +27,7 @@ export default function Ask() {
   const [draft, setDraft] = useState('');
   const scroller = useRef<React.ComponentRef<typeof ScrollView>>(null);
   const nextId = useRef(1);
+  const tops = useRef<Record<number, number>>({}); // where each question sits in the chat
 
   const send = async (text: string) => {
     const question = text.trim();
@@ -35,11 +35,15 @@ export default function Ask() {
     const id = nextId.current++;
     setDraft('');
     setTurns((all) => [...all, { id, question, answers: null }]);
-    rememberSearch(question);
     setTimeout(() => scroller.current?.scrollToEnd({ animated: true }), 50);
     const answers = await ask(question);
     setTurns((all) => all.map((turn) => (turn.id === id ? { ...turn, answers } : turn)));
-    setTimeout(() => scroller.current?.scrollToEnd({ animated: true }), 80);
+    // Show the question and the start of its answer, not the bottom of a long one.
+    setTimeout(
+      () =>
+        scroller.current?.scrollTo({ y: Math.max(0, (tops.current[id] ?? 0) - 8), animated: true }),
+      80,
+    );
   };
 
   return (
@@ -84,7 +88,11 @@ export default function Ask() {
         )}
 
         {turns.map((turn) => (
-          <View key={turn.id} style={{ gap: 10 }}>
+          <View
+            key={turn.id}
+            style={{ gap: 10 }}
+            onLayout={(e) => (tops.current[turn.id] = e.nativeEvent.layout.y)}
+          >
             <View style={[s.bubble, s.me, { backgroundColor: t.accent }]}>
               <Text style={[s.body, { color: t.accentText }]}>{turn.question}</Text>
             </View>
@@ -157,6 +165,9 @@ export default function Ask() {
         ))}
       </ScrollView>
 
+      <Text style={[s.fine, { color: t.text, backgroundColor: t.card, borderTopColor: t.border }]}>
+        From your guides, not AI. General information only.
+      </Text>
       <View
         style={[
           s.bar,
@@ -190,9 +201,6 @@ export default function Ask() {
           <Ionicons name="arrow-up" size={22} color={t.accentText} />
         </Pressable>
       </View>
-      <Text style={[s.fine, { color: t.muted, backgroundColor: t.card }]}>
-        Answers are copied from your guides, not written by AI. General information only.
-      </Text>
     </KeyboardAvoidingView>
   );
 }
@@ -246,8 +254,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     paddingHorizontal: 14,
-    paddingTop: 10,
-    borderTopWidth: StyleSheet.hairlineWidth,
+    paddingTop: 8,
   },
   input: {
     flex: 1,
@@ -258,5 +265,11 @@ const s = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
   },
   send: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
-  fine: { fontSize: 13, textAlign: 'center', paddingHorizontal: 16, paddingBottom: 6 },
+  fine: {
+    fontSize: 14,
+    textAlign: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
 });

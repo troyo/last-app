@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Card, IconName, IconTile, Text } from '../components/ui';
 import { HAZARDS } from '../lib/hazards';
@@ -41,6 +41,15 @@ export default function Place() {
   const [finding, setFinding] = useState(false);
   const [note, setNote] = useState('');
   const [near, setNear] = useState<USState[]>([]);
+  const [filter, setFilter] = useState('');
+  const shownStates = useMemo(() => {
+    const want = filter.trim().toLowerCase();
+    return [...STATES]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .filter(
+        (st) => !want || st.name.toLowerCase().includes(want) || st.code.toLowerCase() === want,
+      );
+  }, [filter]);
 
   const [place, setPlace] = useState(old?.place ?? '');
   const [state, setState] = useState<string | undefined>(old?.state);
@@ -285,8 +294,25 @@ export default function Place() {
         {step === 'states' && (
           <>
             <Text style={[s.title, { color: t.text }]}>Pick your state</Text>
+            <View style={[s.find, { backgroundColor: t.card, borderColor: t.border }]}>
+              <Ionicons name="search" size={20} color={t.text} />
+              <TextInput
+                value={filter}
+                onChangeText={setFilter}
+                placeholder="Type your state"
+                placeholderTextColor={t.muted}
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                style={[s.findInput, { color: t.text }]}
+              />
+            </View>
+            {shownStates.length === 0 && (
+              <Text style={[s.lead, { color: t.text }]}>
+                No state by that name. Check the spelling, or go back and pick “Somewhere else”.
+              </Text>
+            )}
             <Card style={{ paddingVertical: 4 }}>
-              {STATES.map((st, i) => (
+              {shownStates.map((st, i) => (
                 <Pressable
                   key={st.code}
                   onPress={() => chooseState(st)}
@@ -433,6 +459,16 @@ const s = StyleSheet.create({
     borderRadius: 16,
   },
   climate: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  find: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 16,
+    height: 52,
+    borderRadius: 18,
+    borderWidth: 1,
+  },
+  findInput: { flex: 1, fontSize: 17, fontFamily: 'Nunito_400Regular', height: 52 },
   stateRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14 },
   stepRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   round: {

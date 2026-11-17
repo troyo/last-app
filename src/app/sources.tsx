@@ -12,10 +12,11 @@ export default function Sources() {
   const groups = useMemo(() => {
     const m = new Map<string, { source: string; license: string; count: number }>();
     for (const i of getCatalog().items) {
-      const key = `${i.source}|${i.license}`;
-      const g = m.get(key) ?? { source: i.source, license: i.license, count: 0 };
+      const g = m.get(i.source) ?? { source: i.source, license: i.license, count: 0 };
+      // The same publisher can appear with slightly different wording; keep the fuller one.
+      if (i.license.length > g.license.length) g.license = i.license;
       g.count++;
-      m.set(key, g);
+      m.set(i.source, g);
     }
     return [...m.values()].sort((a, b) => b.count - a.count);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -29,11 +30,9 @@ export default function Sources() {
         If you can reach emergency services, call them.
       </Text>
       {groups.map((g) => (
-        <View
-          key={g.source + g.license}
-          style={[s.card, { backgroundColor: t.card, borderColor: t.border }]}>
-          <Text style={{ color: t.text, fontWeight: '600', fontSize: 16 }}>{g.source}</Text>
-          <Text style={{ color: t.muted }}>
+        <View key={g.source} style={[s.card, { backgroundColor: t.card, borderColor: t.border }]}>
+          <Text style={{ color: t.text, fontWeight: '800', fontSize: 17 }}>{g.source}</Text>
+          <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
             {g.license} · {g.count.toLocaleString()} {g.count === 1 ? 'item' : 'items'}
           </Text>
         </View>

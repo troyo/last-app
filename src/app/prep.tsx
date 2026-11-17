@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, IconName, IconTile, Text } from '../components/ui';
 import { getChecklists, progressOf } from '../lib/checklists';
+import { getProfile } from '../lib/place';
 import { HUES, useTheme } from '../lib/theme';
 
 // "Get ready": three checklists that build on each other. Progress is saved.
@@ -47,8 +48,10 @@ export default function Prep() {
         );
       })}
       <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
-        General guidelines. Tap “Why?” on any line for a plain explanation. Set your place and
-        household under More to get amounts that fit your home.
+        General guidelines. Tap the ⓘ on any line for a plain explanation.
+        {getProfile()
+          ? ''
+          : ' Set your place and household under More to get amounts that fit your home.'}
       </Text>
     </ScrollView>
   );

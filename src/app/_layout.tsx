@@ -52,7 +52,7 @@ export default function RootLayout() {
         <Stack.Screen name="packs" options={{ title: 'My packs' }} />
         <Stack.Screen name="about" options={{ title: 'How Last App works' }} />
         <Stack.Screen name="legal" options={{ title: 'Safety and terms' }} />
-        <Stack.Screen name="sources" options={{ title: 'Where this comes from' }} />
+        <Stack.Screen name="sources" options={{ title: 'Where the guides come from' }} />
         <Stack.Screen name="topic/[id]" options={{ title: '' }} />
         <Stack.Screen name="item/[id]" options={{ title: '' }} />
         <Stack.Screen name="checklist/[id]" options={{ title: '' }} />

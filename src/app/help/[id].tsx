@@ -1,5 +1,6 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { minutesIn, StepTimer } from '../../components/StepTimer';
 import { Card, IconName, IconTile, Text } from '../../components/ui';
 import { findQuickHelp } from '../../lib/quick-help';
 import { HUES, useTheme } from '../../lib/theme';
@@ -27,7 +28,10 @@ export default function QuickHelpScreen() {
             <View style={[s.num, { backgroundColor: t.accent }]}>
               <Text style={{ color: t.accentText, fontSize: 16, fontWeight: '800' }}>{i + 1}</Text>
             </View>
-            <Text style={[s.stepText, { color: t.text }]}>{step}</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={[s.stepText, { color: t.text }]}>{step}</Text>
+              {minutesIn(step) !== null && <StepTimer minutes={minutesIn(step)!} />}
+            </View>
           </Card>
         ))}
 
@@ -113,7 +117,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  stepText: { flex: 1, fontSize: 17, lineHeight: 25, paddingTop: 3 },
+  stepText: { fontSize: 17, lineHeight: 25, paddingTop: 3 },
   label: {
     fontSize: 15,
     fontWeight: '800',

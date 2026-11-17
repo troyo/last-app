@@ -6,6 +6,7 @@
 import { Catalog, getCatalog, Item, PackId } from './catalog';
 import { File, Paths } from './fs';
 import { Hazard, HAZARDS } from './hazards';
+import { isDownloaded } from './library';
 import { QUICK_HELP, QuickHelp } from './quick-help';
 
 // Everyday word -> the words guides actually use.
@@ -168,7 +169,14 @@ export function search(query: string, limit = 60): SearchResults {
   };
   let hits = collect(true);
   if (hits.length === 0 && words.length > 1) hits = collect(false);
-  hits.sort((a, b) => b.score - a.score || a.item.title.localeCompare(b.item.title));
+  // What is already on the phone comes first: that is what can help right now.
+  const have = new Map(hits.map((h) => [h.item.id, isDownloaded(h.item) ? 1 : 0]));
+  hits.sort(
+    (a, b) =>
+      have.get(b.item.id)! - have.get(a.item.id)! ||
+      b.score - a.score ||
+      a.item.title.localeCompare(b.item.title),
+  );
   return { help, hazards, guides: hits.slice(0, limit), total: hits.length };
 }
 

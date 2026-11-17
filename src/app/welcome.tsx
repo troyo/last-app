@@ -36,6 +36,13 @@ const SLIDES = [
   },
 ];
 
+// A smooth dark fade behind the words, built from thin strips (clear at the top,
+// darkest at the bottom) so there is no visible edge across the film.
+const FADE = Array.from({ length: 48 }, (_, i) => {
+  const x = (i + 1) / 48;
+  return (0.78 * x * x * (3 - 2 * x)).toFixed(3);
+});
+
 const NIGHT = '#1B3A4E'; // shown for the split second before the film starts
 
 // The first-launch explainer: three swipeable pages. Page one plays a short
@@ -61,12 +68,16 @@ export default function Welcome() {
     // Next stop: the safety terms. Home sends people there until they agree.
     router.replace(hasAgreed() ? '/' : '/agree');
   };
+  const goal = useRef(0); // the page we're heading to, so two quick taps move two pages
   const next = () => {
-    if (last) return finish();
-    scroller.current?.scrollTo({ x: width * (page + 1), animated: true });
+    if (goal.current >= SLIDES.length - 1) return finish();
+    goal.current += 1;
+    scroller.current?.scrollTo({ x: width * goal.current, animated: true });
   };
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) =>
     setPage(Math.round(e.nativeEvent.contentOffset.x / width));
+  const onSettled = (e: NativeSyntheticEvent<NativeScrollEvent>) =>
+    (goal.current = Math.round(e.nativeEvent.contentOffset.x / width));
 
   return (
     <View style={{ flex: 1, backgroundColor: film ? NIGHT : t.bg }}>
@@ -82,14 +93,22 @@ export default function Welcome() {
             playsInline
           />
           {/* Darkens the lower half so the white words are easy to read. */}
-          <View style={s.shadeSoft} />
-          <View style={s.shade} />
+          <View style={s.fade}>
+            {FADE.map((alpha, i) => (
+              <View key={i} style={{ flex: 1, backgroundColor: `rgba(8, 28, 22, ${alpha})` }} />
+            ))}
+          </View>
         </View>
       )}
       <SafeAreaView style={{ flex: 1 }}>
         <View style={s.skipRow}>
           {!last && (
-            <Pressable onPress={finish} hitSlop={12} accessibilityRole="button">
+            <Pressable
+              onPress={finish}
+              hitSlop={12}
+              accessibilityRole="button"
+              style={film && s.skipPill}
+            >
               <Text style={{ color: film ? '#FFFFFF' : t.text, fontSize: 17, fontWeight: '700' }}>
                 Skip
               </Text>
@@ -103,6 +122,7 @@ export default function Welcome() {
           showsHorizontalScrollIndicator={false}
           onScroll={onScroll}
           scrollEventThrottle={16}
+          onMomentumScrollEnd={onSettled}
           onLayout={(e) => setTall(e.nativeEvent.layout.height)}
           style={{ flex: 1 }}
         >
@@ -193,20 +213,11 @@ const s = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
   },
-  shadeSoft: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: '56%',
-    backgroundColor: 'rgba(10, 32, 25, 0.35)',
-  },
-  shade: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: '42%',
-    backgroundColor: 'rgba(10, 32, 25, 0.45)',
+  fade: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '70%' },
+  skipPill: {
+    backgroundColor: 'rgba(8, 28, 22, 0.45)',
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    borderRadius: 999,
   },
 });

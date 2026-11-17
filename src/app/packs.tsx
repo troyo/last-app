@@ -122,9 +122,7 @@ export default function Packs() {
                 </Text>
               </View>
             </View>
-            <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }} numberOfLines={3}>
-              {p.summary}
-            </Text>
+            <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>{p.summary}</Text>
             <Text style={{ color: t.muted, fontSize: 15 }}>
               {count.toLocaleString()} guides · about {formatBytes(packBytes(p.id))}
             </Text>
@@ -194,7 +192,7 @@ export default function Packs() {
 
       {TEST_MODE && (
         <Text
-          style={{ color: t.warn, fontSize: 12 }}
+          style={{ color: t.warn, fontSize: 14 }}
           onPress={unlocked ? resetForTesting : undefined}
         >
           Test mode: unlocking is free and nobody is charged.

@@ -1,6 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Redirect, router, useFocusEffect, useIsFocused } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { Redirect, router, useFocusEffect } from 'expo-router';
+import { setStatusBarStyle } from 'expo-status-bar';
 import { useCallback, useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -39,11 +39,17 @@ function greeting() {
 export default function Home() {
   const t = useTheme();
   const insets = useSafeAreaInsets();
-  const focused = useIsFocused();
   const { state, downloading, progress, version } = useLibrary();
   const [, refresh] = useState(0);
   // Checklist progress may have changed while we were on another screen.
   useFocusEffect(useCallback(() => refresh((n) => n + 1), []));
+  // White clock and battery on the green header; back to normal on other screens.
+  useFocusEffect(
+    useCallback(() => {
+      setStatusBarStyle('light', true);
+      return () => setStatusBarStyle('auto', true);
+    }, []),
+  );
 
   // Only count what's actually on the phone, since that's what works offline.
   const onPhone = useMemo(
@@ -82,7 +88,6 @@ export default function Home() {
       contentContainerStyle={{ paddingBottom: 40 }}
     >
       {/* White clock and battery icons while the green header is showing */}
-      {focused && <StatusBar style="light" />}
       <View style={[s.header, { backgroundColor: t.header, paddingTop: insets.top + 22 }]}>
         <Text style={s.hello}>{greeting()}</Text>
         <Text style={s.sub}>Whatever comes up, you’ve got this.</Text>

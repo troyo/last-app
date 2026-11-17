@@ -49,6 +49,11 @@ function hits(words: string[], text: string): number {
   return n;
 }
 
+const DO_HEADING =
+  /\b(treat|treatment|treating|first aid|management|managing|what to do|how to|steps|care|caring|procedure|method|instructions|prevention|preventing|remedy|remedies|emergency|response|making|building|preparation|preparing|use|using)\b/i;
+const ABOUT_HEADING =
+  /\b(cause|causes|classification|types|signs|symptoms|diagnosis|epidemiology|prognosis|pathophysiology|etymology|society|culture|research|statistics|overview|background|definition|terminology|mechanism|risk factors|in animals)\b/i;
+
 type Passage = { heading: string; text: string; score: number };
 
 /** Split a guide into its paragraphs and list items, remembering the heading above each. */
@@ -71,6 +76,10 @@ function passagesOf(html: string, words: string[]): Passage[] {
     )
       score += 0.75;
     if (/^(see also|references|external links|further reading|history)/i.test(heading)) score -= 3;
+    // People asking in an emergency want what to do, not what the thing is.
+    if (DO_HEADING.test(heading)) score += 2.5;
+    else if (ABOUT_HEADING.test(heading)) score -= 1.5;
+    if (/<li\b/i.test(block) && DO_HEADING.test(heading)) score += 0.5;
     if (text.length > 900) score -= 0.5;
     out.push({ heading, text, score });
   }
