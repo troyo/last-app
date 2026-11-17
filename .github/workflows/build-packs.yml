@@ -5,6 +5,14 @@
 name: Build content packs
 
 on:
+  # Also runs when the source list, the builder, or packs/build-mode.txt changes.
+  # packs/build-mode.txt says "quick" (small test) or "full" (the real thing).
+  push:
+    branches: [main]
+    paths:
+      - packs/**
+      - tools/build-packs.mjs
+      - .github/workflows/build-packs.yml
   workflow_dispatch:
     inputs:
       quick:
@@ -26,15 +34,21 @@ jobs:
         with:
           node-version: 22
 
-      - name: Pick a release name
+      - name: Pick a release name and mode
         id: tag
-        run: echo "tag=packs-$(date -u +%Y%m%d-%H%M)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "tag=packs-$(date -u +%Y%m%d-%H%M)" >> "$GITHUB_OUTPUT"
+          if [ "${{ inputs.quick }}" = "true" ] || { [ "${{ github.event_name }}" = "push" ] && grep -qi quick packs/build-mode.txt; }; then
+            echo "quick=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "quick=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Build packs
         env:
           PACKS_BASE_URL: https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/
           PACKS_USER_AGENT: LastAppPackBuilder/1.0 (https://github.com/${{ github.repository }})
-        run: node tools/build-packs.mjs ${{ inputs.quick && '--quick' || '' }}
+        run: node tools/build-packs.mjs ${{ steps.tag.outputs.quick == 'true' && '--quick' || '' }}
 
       - name: Keep the report
         uses: actions/upload-artifact@v4
@@ -52,4 +66,4 @@ jobs:
             dist/catalog.json dist/REPORT.md dist/files/* \
             --title "Content packs ${{ steps.tag.outputs.tag }}" \
             --notes-file notes.md \
-            ${{ inputs.quick && '--prerelease' || '--latest' }}
+            ${{ steps.tag.outputs.quick == 'true' && '--prerelease' || '--latest' }}
