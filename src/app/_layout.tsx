@@ -23,6 +23,7 @@ export default function RootLayout() {
         <Stack.Screen name="sources" options={{ title: 'Where this comes from' }} />
         <Stack.Screen name="topic/[id]" options={{ title: '' }} />
         <Stack.Screen name="item/[id]" options={{ title: '' }} />
+        <Stack.Screen name="help/[id]" options={{ title: '' }} />
       </Stack>
     </LibraryProvider>
   );

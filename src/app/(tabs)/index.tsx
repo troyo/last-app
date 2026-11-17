@@ -7,6 +7,7 @@ import { Button, Card, FadeIn } from '../../components/ui';
 import { getCatalog, itemsForPack } from '../../lib/catalog';
 import { isDownloaded, remainingBytes } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
+import { QUICK_HELP } from '../../lib/quick-help';
 import { TOPIC_TINTS, useTheme } from '../../lib/theme';
 import { hasSeenWelcome } from '../../lib/welcome';
 
@@ -28,6 +29,9 @@ export default function Home() {
 
   const topics = getCatalog().topics;
   const q = query.trim().toLowerCase();
+  const helpResults = q
+    ? QUICK_HELP.filter((h) => `${h.title} ${h.when}`.toLowerCase().includes(q))
+    : [];
   const results = q ? onPhone.filter((i) => i.title.toLowerCase().includes(q)).slice(0, 60) : [];
   const ready = !!state.pack && state.complete && remainingBytes(state.pack) === 0;
   const packName = state.pack ? state.pack[0].toUpperCase() + state.pack.slice(1) : '';
@@ -107,7 +111,16 @@ export default function Home() {
 
         {q ? (
           <View style={{ gap: 10 }}>
-            {results.length === 0 && (
+            {helpResults.map((h) => (
+              <Card key={h.id} onPress={() => router.push(`/help/${h.id}`)} style={s.resultRow}>
+                <Text style={{ fontSize: 22 }}>{h.icon}</Text>
+                <Text style={{ color: t.text, fontSize: 17, fontWeight: '700', flex: 1 }}>
+                  {h.title}
+                </Text>
+                <Ionicons name="chevron-forward" size={18} color={t.muted} />
+              </Card>
+            ))}
+            {results.length === 0 && helpResults.length === 0 && (
               <Text style={{ color: t.muted, fontSize: 16, lineHeight: 23, padding: 4 }}>
                 {onPhone.length === 0
                   ? 'Nothing is saved on this phone yet. Grab the free pack and try again.'
@@ -126,6 +139,23 @@ export default function Home() {
           </View>
         ) : (
           <>
+            <Text style={[s.section, { color: t.text }]}>Need help right now?</Text>
+            <Text style={{ color: t.muted, fontSize: 15, marginTop: -10 }}>
+              Simple steps. Always on this phone, no download needed.
+            </Text>
+            <View style={s.grid}>
+              {QUICK_HELP.map((h) => (
+                <View key={h.id} style={s.cell}>
+                  <Card onPress={() => router.push(`/help/${h.id}`)} style={s.help}>
+                    <Text style={{ fontSize: 24 }}>{h.icon}</Text>
+                    <Text style={{ color: t.text, fontSize: 16, fontWeight: '700', flex: 1 }}>
+                      {h.title}
+                    </Text>
+                  </Card>
+                </View>
+              ))}
+            </View>
+
             <Text style={[s.section, { color: t.text }]}>Browse by topic</Text>
             <View style={s.grid}>
               {topics.map((topic, i) => {
@@ -186,6 +216,7 @@ const s = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -6 },
   cell: { width: '50%', padding: 6 },
   topic: { gap: 6, minHeight: 132 },
+  help: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 72 },
   topicIcon: {
     width: 50,
     height: 50,
