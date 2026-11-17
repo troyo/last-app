@@ -74,9 +74,8 @@ export default function Packs() {
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: t.bg }}>
       <ScrollView contentContainerStyle={s.wrap}>
         <Text style={[s.h1, { color: t.text }]}>My packs</Text>
-        <Text style={{ color: t.muted, fontSize: 16, lineHeight: 23 }}>
-          Pick how much you’d like to keep on your phone. Each bigger pack includes everything in
-          the smaller ones.
+        <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
+          Each bigger pack includes everything in the smaller ones.
           {Number.isFinite(free) ? ` You have ${formatBytes(free)} free.` : ''}
         </Text>
 
@@ -104,7 +103,7 @@ export default function Packs() {
                     gap: 10,
                   }}
                 >
-                  <Image source={PACK_ART[p.id]} style={{ width: 46, height: 49 }} />
+                  <Image source={PACK_ART[p.id]} style={{ width: 40, height: 43 }} />
                   <Text style={[s.title, { color: t.text }]}>{p.title}</Text>
                 </View>
                 <View
@@ -126,7 +125,9 @@ export default function Packs() {
                   </Text>
                 </View>
               </View>
-              <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>{p.summary}</Text>
+              <Text style={{ color: t.muted, fontSize: 14, lineHeight: 20 }} numberOfLines={3}>
+                {p.summary}
+              </Text>
               <Text style={{ color: t.muted, fontSize: 13 }}>
                 {count.toLocaleString()} guides · about {formatBytes(packBytes(p.id))}
               </Text>
@@ -222,15 +223,15 @@ export default function Packs() {
 }
 
 const s = StyleSheet.create({
-  wrap: { padding: 20, gap: 14, paddingBottom: 32 },
-  h1: { fontSize: 32, fontWeight: '800' },
+  wrap: { padding: 18, gap: 12, paddingBottom: 32 },
+  h1: { fontSize: 28, fontWeight: '800' },
   card: { gap: 10 },
   cardHead: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  title: { fontSize: 22, fontWeight: '800' },
+  title: { fontSize: 20, fontWeight: '800' },
   pill: { paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999 },
   barBg: { height: 12, borderRadius: 6, overflow: 'hidden' },
   bar: { height: 12, borderRadius: 6 },

@@ -15,8 +15,10 @@ export default function QuickHelpScreen() {
     <>
       <Stack.Screen options={{ title: '' }} />
       <ScrollView style={{ backgroundColor: t.bg }} contentContainerStyle={s.wrap}>
-        <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={64} />
-        <Text style={[s.title, { color: t.text }]}>{h.title}</Text>
+        <View style={s.head}>
+          <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={52} />
+          <Text style={[s.title, { color: t.text }]}>{h.title}</Text>
+        </View>
         <Text style={[s.when, { color: t.muted }]}>{h.when}</Text>
 
         {h.call && (
@@ -28,7 +30,7 @@ export default function QuickHelpScreen() {
         {h.steps.map((step, i) => (
           <Card key={i} style={s.step}>
             <View style={[s.num, { backgroundColor: t.accent }]}>
-              <Text style={{ color: t.accentText, fontSize: 18, fontWeight: '800' }}>{i + 1}</Text>
+              <Text style={{ color: t.accentText, fontSize: 16, fontWeight: '800' }}>{i + 1}</Text>
             </View>
             <Text style={[s.stepText, { color: t.text }]}>{step}</Text>
           </Card>
@@ -68,9 +70,10 @@ export default function QuickHelpScreen() {
 }
 
 const s = StyleSheet.create({
-  wrap: { padding: 20, gap: 12, paddingBottom: 40 },
-  title: { fontSize: 30, fontWeight: '800' },
-  when: { fontSize: 17, lineHeight: 24, marginBottom: 4 },
+  wrap: { paddingHorizontal: 18, paddingTop: 4, gap: 10, paddingBottom: 40 },
+  head: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  title: { fontSize: 26, fontWeight: '800', lineHeight: 31, flex: 1 },
+  when: { fontSize: 16, lineHeight: 23, marginBottom: 2 },
   call: { borderRadius: 20, padding: 18 },
   callText: {
     color: '#FFFFFF',
@@ -78,7 +81,7 @@ const s = StyleSheet.create({
     fontWeight: '800',
     lineHeight: 25,
   },
-  step: { flexDirection: 'row', gap: 14, alignItems: 'flex-start' },
+  step: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
   num: {
     width: 36,
     height: 36,
@@ -86,7 +89,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  stepText: { flex: 1, fontSize: 19, lineHeight: 27 },
+  stepText: { flex: 1, fontSize: 17, lineHeight: 25, paddingTop: 3 },
   label: {
     fontSize: 14,
     fontWeight: '800',

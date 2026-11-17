@@ -100,26 +100,21 @@ export default function Home() {
           <>
             {!state.pack ? (
               <FadeIn>
-                <Card style={{ padding: 0, overflow: 'hidden' }}>
-                  <Image
-                    source={require('../../../assets/illustrations/welcome.png')}
-                    style={s.heroImage}
-                    resizeMode="cover"
-                  />
-                  <View style={{ padding: 18, gap: 8 }}>
-                    <Text style={[s.cardTitle, { color: t.text }]}>
-                      Let’s save your first guides
-                    </Text>
-                    <Text style={{ color: t.muted, fontSize: 15, lineHeight: 22 }}>
-                      The Small pack is free. Download it once and it works anywhere, even with no
-                      signal.
-                    </Text>
-                    <Button
-                      label="Get the free pack"
-                      onPress={() => router.push('/packs')}
-                      style={{ marginTop: 6 }}
+                <Card style={{ gap: 12 }}>
+                  <View style={s.row}>
+                    <Image
+                      source={require('../../../assets/illustrations/welcome.png')}
+                      style={s.heroImage}
+                      resizeMode="cover"
                     />
+                    <View style={{ flex: 1, gap: 4 }}>
+                      <Text style={[s.cardTitle, { color: t.text }]}>Save your first guides</Text>
+                      <Text style={{ color: t.muted, fontSize: 14, lineHeight: 20 }}>
+                        The Small pack is free and works with no signal.
+                      </Text>
+                    </View>
                   </View>
+                  <Button label="Get the free pack" onPress={() => router.push('/packs')} />
                 </Card>
               </FadeIn>
             ) : (
@@ -178,15 +173,15 @@ export default function Home() {
                   pressed && { opacity: 0.8 },
                 ]}
               >
-                <View style={[s.helpIcon, { backgroundColor: t.card }]}>
-                  <IconTile
-                    name={h.icon as IconName}
-                    color={HUES[h.hue].color}
-                    tint="transparent"
-                    size={44}
-                  />
-                </View>
-                <Text style={s.helpTitle}>{h.title}</Text>
+                <IconTile
+                  name={h.icon as IconName}
+                  color={HUES[h.hue].color}
+                  tint={t.card}
+                  size={40}
+                />
+                <Text style={s.helpTitle} numberOfLines={2}>
+                  {h.title.replace(/ \(.*\)$/, '')}
+                </Text>
               </Pressable>
             ))}
           </ScrollView>
@@ -234,50 +229,40 @@ export default function Home() {
 
 const s = StyleSheet.create({
   header: {
-    paddingHorizontal: 20,
-    paddingBottom: 22,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
+    paddingHorizontal: 18,
+    paddingBottom: 18,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
   },
-  hello: { fontSize: 32, fontWeight: '800', color: '#FFFFFF' },
-  sub: { fontSize: 16, marginTop: 2, color: '#CFE6DA' },
+  hello: { fontSize: 28, fontWeight: '800', color: '#FFFFFF' },
+  sub: { fontSize: 15, marginTop: 2, color: '#CFE6DA' },
   search: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    paddingHorizontal: 18,
+    paddingHorizontal: 16,
     borderRadius: 999,
-    marginTop: 18,
+    marginTop: 14,
+    height: 48,
   },
-  searchInput: {
-    flex: 1,
-    fontSize: 17,
-    paddingVertical: 14,
-    fontFamily: 'Nunito_400Regular',
-  },
-  body: { paddingHorizontal: 20, paddingTop: 20 },
-  heroImage: { width: '100%', height: 190 },
-  cardTitle: { fontSize: 21, fontWeight: '800' },
+  searchInput: { flex: 1, fontSize: 16, paddingVertical: 0, fontFamily: 'Nunito_400Regular' },
+  body: { paddingHorizontal: 18, paddingTop: 16 },
+  heroImage: { width: 84, height: 84, borderRadius: 18 },
+  cardTitle: { fontSize: 18, fontWeight: '800', lineHeight: 23 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  rowTitle: { fontSize: 17, fontWeight: '700', flex: 1 },
-  sectionHead: { marginTop: 26, marginBottom: 12, gap: 2 },
-  section: { fontSize: 21, fontWeight: '800' },
-  helpRow: { paddingHorizontal: 20, gap: 12, paddingBottom: 6 },
+  rowTitle: { fontSize: 16, fontWeight: '700', flex: 1 },
+  sectionHead: { marginTop: 22, marginBottom: 10, gap: 2 },
+  section: { fontSize: 19, fontWeight: '800' },
+  helpRow: { paddingHorizontal: 18, gap: 10, paddingBottom: 6 },
   helpTile: {
-    width: 132,
-    height: 140,
-    borderRadius: 24,
-    padding: 14,
+    width: 116,
+    height: 116,
+    borderRadius: 22,
+    padding: 12,
     justifyContent: 'space-between',
   },
-  helpIcon: { width: 44, height: 44, borderRadius: 22 },
-  helpTitle: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#17352C',
-    lineHeight: 20,
-  },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -6 },
-  cell: { width: '50%', padding: 6 },
-  topic: { gap: 8, minHeight: 138 },
+  helpTitle: { fontSize: 15, fontWeight: '800', color: '#17352C', lineHeight: 19 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -5 },
+  cell: { width: '50%', padding: 5 },
+  topic: { gap: 6, height: 142, justifyContent: 'flex-start' },
 });

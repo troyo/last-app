@@ -33,6 +33,9 @@ export function Text({ style, ...rest }: TextProps) {
   const flat = StyleSheet.flatten(style) ?? {};
   return (
     <RNText
+      // If the phone is set to extra-large text, grow a little but never so
+      // much that words spill out of their cards.
+      maxFontSizeMultiplier={1.25}
       {...rest}
       style={[flat, { fontFamily: fontFor(flat.fontWeight), fontWeight: undefined }]}
     />
@@ -208,10 +211,10 @@ const s = StyleSheet.create({
     borderRadius: 999,
     alignItems: 'center',
   },
-  btnText: { fontSize: 17, fontWeight: '700' },
+  btnText: { fontSize: 16, fontWeight: '700', textAlign: 'center' },
   card: {
-    padding: 18,
-    borderRadius: 24,
+    padding: 16,
+    borderRadius: 22,
     // A soft lift instead of an outline.
     shadowColor: '#17352C',
     shadowOpacity: 0.07,

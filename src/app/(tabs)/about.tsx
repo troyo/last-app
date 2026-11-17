@@ -113,8 +113,8 @@ export default function About() {
 }
 
 const s = StyleSheet.create({
-  wrap: { padding: 20, gap: 14, paddingBottom: 32 },
-  h1: { fontSize: 32, fontWeight: '800' },
+  wrap: { padding: 18, gap: 12, paddingBottom: 32 },
+  h1: { fontSize: 28, fontWeight: '800' },
   h2: { fontSize: 20, fontWeight: '800', marginTop: 6 },
   row: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
   icon: {
