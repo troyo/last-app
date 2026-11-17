@@ -63,257 +63,231 @@ export default function Home() {
   const ready = !!state.pack && state.complete && remainingBytes(state.pack) === 0;
   const packName = state.pack ? state.pack[0].toUpperCase() + state.pack.slice(1) : '';
 
+  const Section = (p: { title: string; action?: string; onAction?: () => void }) => (
+    <View style={s.sectionHead}>
+      <Text style={[s.section, { color: t.text }]} numberOfLines={1}>
+        {p.title}
+      </Text>
+      {p.action && (
+        <Pressable onPress={p.onAction} hitSlop={12} accessibilityRole="button">
+          <Text style={{ color: t.accent, fontSize: 16, fontWeight: '800' }}>{p.action}</Text>
+        </Pressable>
+      )}
+    </View>
+  );
+
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: t.bg }}
-      contentContainerStyle={{ paddingBottom: 36 }}
+      contentContainerStyle={{ paddingBottom: 40 }}
     >
       {/* White clock and battery icons while the green header is showing */}
       {focused && <StatusBar style="light" />}
-      <View style={[s.header, { backgroundColor: t.header, paddingTop: insets.top + 18 }]}>
+      <View style={[s.header, { backgroundColor: t.header, paddingTop: insets.top + 22 }]}>
         <Text style={s.hello}>{greeting()}</Text>
         <Text style={s.sub}>Whatever comes up, you’ve got this.</Text>
-        {/* Looks like a search box; opens the Search tab. */}
+        {/* Looks like a search box; opens Ask. */}
         <Pressable
-          onPress={() => router.push('/search')}
+          onPress={() => router.push('/ask')}
           accessibilityRole="search"
           style={[s.search, { backgroundColor: t.card }]}
         >
-          <Ionicons name="search" size={20} color={t.muted} />
-          <Text style={{ color: t.muted, fontSize: 16 }}>What do you need help with?</Text>
+          <Ionicons name="chatbubble-ellipses" size={22} color={t.accent} />
+          <Text style={{ color: t.text, fontSize: 17, fontWeight: '600', flex: 1 }}>
+            Ask anything
+          </Text>
+          <View style={[s.searchGo, { backgroundColor: t.accent }]}>
+            <Ionicons name="arrow-forward" size={18} color={t.accentText} />
+          </View>
         </Pressable>
       </View>
 
       <View style={s.body}>
         {!state.pack ? (
-          <FadeIn>
-            <Card style={{ gap: 12 }}>
-              <View style={s.row}>
-                <Image
-                  source={require('../../../assets/illustrations/welcome.png')}
-                  style={s.heroImage}
-                  resizeMode="cover"
-                />
-                <View style={{ flex: 1, gap: 4 }}>
-                  <Text style={[s.cardTitle, { color: t.text }]}>Save your first guides</Text>
-                  <Text style={{ color: t.muted, fontSize: 14, lineHeight: 20 }}>
-                    The Small pack is free and works with no signal.
-                  </Text>
-                </View>
-              </View>
-              <Button label="Get the free pack" onPress={() => router.push('/packs')} />
+          <FadeIn style={{ marginTop: 20 }}>
+            <Card style={{ gap: 14, alignItems: 'center' }}>
+              <Image
+                source={require('../../../assets/illustrations/welcome.png')}
+                style={s.heroImage}
+                resizeMode="cover"
+              />
+              <Text style={[s.cardTitle, { color: t.text }]}>Save your first guides</Text>
+              <Text style={[s.center, { color: t.muted }]}>
+                The Small pack is free and works with no signal.
+              </Text>
+              <Button
+                label="Get the free pack"
+                onPress={() => router.push('/packs')}
+                style={{ alignSelf: 'stretch' }}
+              />
             </Card>
           </FadeIn>
         ) : !ready || downloading ? (
-          <FadeIn>
+          <FadeIn style={{ marginTop: 20 }}>
             <Card onPress={() => router.push('/packs')} style={s.row}>
               <IconTile name={downloading ? 'cloud-download' : 'clock-outline'} {...HUES.sun} />
               <View style={{ flex: 1 }}>
-                <Text style={{ color: t.text, fontWeight: '700', fontSize: 16 }}>
+                <Text style={{ color: t.text, fontWeight: '800', fontSize: 17 }}>
                   {downloading
                     ? 'Saving your guides…'
                     : state.complete
                       ? 'New guides are ready for you'
                       : 'Almost there. Tap to finish'}
                 </Text>
-                <Text style={{ color: t.muted, marginTop: 2, fontSize: 14 }} numberOfLines={1}>
+                <Text style={{ color: t.muted, marginTop: 2, fontSize: 15 }} numberOfLines={1}>
                   {downloading && progress?.currentTitle
                     ? progress.currentTitle
                     : `${packName} pack · ${onPhone.length.toLocaleString()} guides on this phone`}
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={20} color={t.muted} />
+              <Ionicons name="chevron-forward" size={20} color={t.text} />
             </Card>
           </FadeIn>
         ) : null}
 
-        <View style={s.sectionHead}>
-          <View style={s.row}>
-            <Text style={[s.section, { color: t.text, flex: 1 }]}>Right now</Text>
-            <Pressable onPress={() => router.push('/emergency')} hitSlop={10}>
-              <Text style={{ color: t.accent, fontSize: 14, fontWeight: '800' }}>See all</Text>
-            </Pressable>
-          </View>
-          <Text style={{ color: t.muted, fontSize: 14 }}>
-            What to do yourself when help can’t come.
-          </Text>
-        </View>
-      </View>
-
-      {/* Six most urgent cards in two short rows; the rest are one tap away. */}
-      <View style={s.helpGrid}>
-        {QUICK_HELP.slice(0, 6).map((h) => (
-          <View key={h.id} style={s.helpCell}>
-            <Pressable
-              onPress={() => router.push(`/help/${h.id}`)}
-              style={({ pressed }) => [
-                s.helpChip,
-                { backgroundColor: HUES[h.hue].tint },
-                pressed && { opacity: 0.8 },
-              ]}
-            >
-              <MaterialCommunityIcons
-                name={h.icon as IconName}
-                size={22}
-                color={HUES[h.hue].color}
-              />
-              <Text style={s.chipTitle} numberOfLines={2}>
-                {SHORT[h.id] ?? h.title}
-              </Text>
-            </Pressable>
-          </View>
-        ))}
-      </View>
-
-      <View style={s.body}>
-        <View style={[s.sectionHead, { marginTop: 8 }]}>
-          <View style={s.row}>
-            <Text style={[s.section, { color: t.text, flex: 1 }]} numberOfLines={1}>
-              {profile ? `For ${profile.place}` : 'For your area'}
-            </Text>
-            {profile && (
-              <Pressable onPress={() => router.push('/place')} hitSlop={10}>
-                <Text style={{ color: t.accent, fontSize: 14, fontWeight: '800' }}>Change</Text>
-              </Pressable>
-            )}
-          </View>
-          <Text style={{ color: t.muted, fontSize: 14 }}>
-            {profile
-              ? 'What can happen where you live, and how to get through it.'
-              : 'Survival isn’t one size fits all.'}
-          </Text>
-        </View>
-        {!profile && (
-          <Card onPress={() => router.push('/place')} style={s.row}>
-            <IconTile name="map-marker-radius" {...HUES.green} size={44} />
-            <View style={{ flex: 1 }}>
-              <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>
-                Make this fit where you live
-              </Text>
-              <Text style={{ color: t.muted, fontSize: 14, lineHeight: 19 }}>
-                Takes a minute. Works with no signal.
-              </Text>
-            </View>
-            <Ionicons name="chevron-forward" size={18} color={t.muted} />
-          </Card>
-        )}
-      </View>
-
-      {profile && (
-        <>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={s.helpRow}
-          >
-            {myHazards.map((h) => (
+        <Section title="Right now" action="See all" onAction={() => router.push('/emergency')} />
+        {/* Six most urgent cards in two short rows; the rest are one tap away. */}
+        <View style={s.grid}>
+          {QUICK_HELP.slice(0, 6).map((h) => (
+            <View key={h.id} style={s.third}>
               <Pressable
-                key={h.id}
-                onPress={() => router.push(`/hazard/${h.id}`)}
+                onPress={() => router.push(`/help/${h.id}`)}
                 style={({ pressed }) => [
-                  s.helpTile,
+                  s.helpChip,
                   { backgroundColor: HUES[h.hue].tint },
                   pressed && { opacity: 0.8 },
                 ]}
               >
-                <IconTile
+                <MaterialCommunityIcons
                   name={h.icon as IconName}
+                  size={24}
                   color={HUES[h.hue].color}
-                  tint={t.card}
-                  size={40}
                 />
-                <Text style={s.helpTitle} numberOfLines={2}>
-                  {h.title.replace(' and deep cold', '')}
+                <Text
+                  style={s.chipTitle}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.85}
+                >
+                  {SHORT[h.id] ?? h.title}
                 </Text>
               </Pressable>
-            ))}
-          </ScrollView>
-          <View style={[s.body, { paddingTop: 6 }]}>
-            <Card style={[s.row, { alignItems: 'flex-start', backgroundColor: t.soft }]}>
-              <IconTile
+            </View>
+          ))}
+        </View>
+
+        <Section
+          title={profile ? `For ${profile.place}` : 'For your area'}
+          action={profile ? 'Change' : undefined}
+          onAction={() => router.push('/place')}
+        />
+        {!profile ? (
+          <Card onPress={() => router.push('/place')} style={s.row}>
+            <IconTile name="map-marker-radius" {...HUES.green} size={48} />
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>
+                Make this fit where you live
+              </Text>
+              <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
+                Takes a minute. Works with no signal.
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={t.text} />
+          </Card>
+        ) : (
+          <>
+            <View style={s.grid}>
+              {myHazards.map((h) => (
+                <View key={h.id} style={s.halfGrow}>
+                  <Pressable
+                    onPress={() => router.push(`/hazard/${h.id}`)}
+                    style={({ pressed }) => [
+                      s.hazard,
+                      { backgroundColor: HUES[h.hue].tint },
+                      pressed && { opacity: 0.8 },
+                    ]}
+                  >
+                    <IconTile
+                      name={h.icon as IconName}
+                      color={HUES[h.hue].color}
+                      tint={t.card}
+                      size={42}
+                    />
+                    <Text style={s.hazardTitle} numberOfLines={2}>
+                      {h.title.replace(' and deep cold', '')}
+                    </Text>
+                  </Pressable>
+                </View>
+              ))}
+            </View>
+            <View style={[s.tip, { backgroundColor: t.header }]}>
+              <MaterialCommunityIcons
                 name={CLIMATES[profile.climate].icon as IconName}
-                color={HUES.sun.color}
-                tint={t.card}
-                size={40}
+                size={26}
+                color="#F6B93B"
               />
               <View style={{ flex: 1, gap: 2 }}>
-                <Text style={{ color: t.text, fontSize: 15, fontWeight: '800' }}>
+                <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800' }}>
                   {CLIMATES[profile.climate].title}
                 </Text>
-                <Text style={{ color: t.text, fontSize: 14, lineHeight: 20 }}>
+                <Text style={{ color: '#FFFFFF', fontSize: 15, lineHeight: 22 }}>
                   {CLIMATE_TIPS[profile.climate][0]}
                 </Text>
               </View>
-            </Card>
-          </View>
-        </>
-      )}
+            </View>
+          </>
+        )}
 
-      <View style={s.body}>
-        <View style={s.sectionHead}>
-          <Text style={[s.section, { color: t.text }]}>Get ready</Text>
-          <Text style={{ color: t.muted, fontSize: 14 }}>
-            {profile
-              ? `Lists written for your ${profile.people === 1 ? 'home' : `${profile.people} people`} in ${profile.place}.`
-              : 'How long could your home last with no power or shops?'}
-          </Text>
-        </View>
-        <Card style={{ paddingVertical: 4 }}>
-          {getChecklists().map((list, i) => {
+        <Section title="Get ready" action="Open" onAction={() => router.push('/prep')} />
+        <Card style={s.prep}>
+          {getChecklists().map((list) => {
             const p = progressOf(list);
+            const pct = p.total ? p.done / p.total : 0;
             return (
               <Pressable
                 key={list.id}
                 onPress={() => router.push(`/checklist/${list.id}`)}
-                style={[
-                  s.prepRow,
-                  i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: t.border },
-                ]}
+                accessibilityLabel={`Ready for ${list.title}, ${Math.round(pct * 100)} percent done`}
+                style={({ pressed }) => [s.prepCol, pressed && { opacity: 0.7 }]}
               >
-                <IconTile name={list.icon as IconName} {...HUES[list.hue]} size={40} />
-                <View style={{ flex: 1, gap: 6 }}>
-                  <Text style={{ color: t.text, fontSize: 16, fontWeight: '700' }}>
-                    Ready for {list.title}
+                {/* A little jar that fills up as you tick things off. */}
+                <View
+                  style={[s.jar, { backgroundColor: t.soft, borderColor: HUES[list.hue].color }]}
+                >
+                  <View
+                    style={[
+                      s.jarFill,
+                      { height: `${pct * 100}%`, backgroundColor: HUES[list.hue].tint },
+                    ]}
+                  />
+                  <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>
+                    {Math.round(pct * 100)}%
                   </Text>
-                  <View style={[s.barBg, { backgroundColor: t.soft }]}>
-                    <View
-                      style={[
-                        s.bar,
-                        { width: `${(p.done / p.total) * 100}%`, backgroundColor: t.accent },
-                      ]}
-                    />
-                  </View>
                 </View>
-                <Text style={{ color: t.muted, fontSize: 13, fontWeight: '700' }}>
-                  {p.done}/{p.total}
-                </Text>
-                <Ionicons name="chevron-forward" size={18} color={t.muted} />
+                <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>{list.title}</Text>
               </Pressable>
             );
           })}
         </Card>
+        <Text style={[s.center, { color: t.muted, marginTop: 10 }]}>
+          {profile
+            ? `Lists written for ${profile.people === 1 ? 'you' : `your ${profile.people} people`} in ${profile.place}.`
+            : 'How long could your home last with no power or shops?'}
+        </Text>
 
-        <View style={s.sectionHead}>
-          <Text style={[s.section, { color: t.text }]}>Learn</Text>
-          <Text style={{ color: t.muted, fontSize: 14 }}>
-            Every guide, sorted by what you need.
-          </Text>
-        </View>
+        <Section title="Learn" />
         <View style={s.grid}>
           {topics.map((topic, i) => {
             const count = onPhone.filter((x) => x.topic === topic.id).length;
             const look = TOPIC_LOOK[topic.id] ?? { icon: 'book-open-variant', hue: 'teal' };
             return (
-              <FadeIn key={topic.id} delay={80 + i * 35} style={s.cell}>
+              <FadeIn key={topic.id} delay={80 + i * 35} style={s.half}>
                 <Card onPress={() => router.push(`/topic/${topic.id}`)} style={s.topic}>
-                  <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={40} />
-                  <Text
-                    style={{ color: t.text, fontSize: 15, fontWeight: '700', lineHeight: 19 }}
-                    numberOfLines={2}
-                  >
+                  <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={48} />
+                  <Text style={[s.topicTitle, { color: t.text }]} numberOfLines={2}>
                     {topic.title}
                   </Text>
-                  <Text style={{ color: t.muted, fontSize: 13 }} numberOfLines={1}>
+                  <Text style={{ color: t.muted, fontSize: 15 }} numberOfLines={1}>
                     {count > 0
                       ? `${count.toLocaleString()} ${count === 1 ? 'guide' : 'guides'}`
                       : 'Not saved yet'}
@@ -323,11 +297,12 @@ export default function Home() {
             );
           })}
         </View>
+
         {ready && !downloading && (
-          <View style={[s.row, { gap: 8, marginTop: 22, justifyContent: 'center' }]}>
-            <Ionicons name="checkmark-circle" size={18} color={t.good} />
-            <Text style={{ color: t.muted, fontSize: 13 }}>
-              {onPhone.length.toLocaleString()} guides saved. Everything here works offline.
+          <View style={[s.row, { gap: 8, marginTop: 26, justifyContent: 'center' }]}>
+            <Ionicons name="checkmark-circle" size={20} color={t.good} />
+            <Text style={{ color: t.muted, fontSize: 15 }}>
+              {onPhone.length.toLocaleString()} guides saved. All of it works offline.
             </Text>
           </View>
         )}
@@ -336,54 +311,88 @@ export default function Home() {
   );
 }
 
+// Everything on Home sits on one grid: 20pt side margins, 10pt gutters.
 const s = StyleSheet.create({
   header: {
-    paddingHorizontal: 18,
-    paddingBottom: 18,
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
+    paddingHorizontal: 20,
+    paddingBottom: 22,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
   },
-  hello: { fontSize: 28, fontWeight: '800', color: '#FFFFFF' },
-  sub: { fontSize: 15, marginTop: 2, color: '#CFE6DA' },
+  hello: { fontSize: 32, fontWeight: '800', color: '#FFFFFF', lineHeight: 38 },
+  sub: { fontSize: 17, marginTop: 2, color: '#FFFFFF' },
   search: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    paddingHorizontal: 16,
+    paddingLeft: 18,
+    paddingRight: 8,
     borderRadius: 999,
-    marginTop: 14,
-    height: 48,
+    marginTop: 18,
+    height: 56,
   },
-  body: { paddingHorizontal: 18, paddingTop: 16 },
-  heroImage: { width: 84, height: 84, borderRadius: 18 },
-  cardTitle: { fontSize: 18, fontWeight: '800', lineHeight: 23 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  sectionHead: { marginTop: 22, marginBottom: 10, gap: 2 },
-  section: { fontSize: 19, fontWeight: '800' },
-  helpRow: { paddingHorizontal: 18, gap: 10, paddingBottom: 6 },
-  helpTile: {
-    width: 116,
-    height: 116,
-    borderRadius: 22,
-    padding: 12,
-    justifyContent: 'space-between',
-  },
-  helpTitle: { fontSize: 15, fontWeight: '800', color: '#17352C', lineHeight: 19 },
-  helpGrid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 14 },
-  helpCell: { width: '33.333%', padding: 4 },
-  helpChip: {
-    height: 54,
-    borderRadius: 16,
-    paddingHorizontal: 9,
-    flexDirection: 'row',
+  searchGo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  body: { paddingHorizontal: 20 },
+  heroImage: { width: 120, height: 120, borderRadius: 28 },
+  cardTitle: { fontSize: 22, fontWeight: '800', lineHeight: 27, textAlign: 'center' },
+  center: { fontSize: 15, lineHeight: 21, textAlign: 'center' },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  sectionHead: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    marginTop: 30,
+    marginBottom: 12,
+  },
+  section: { fontSize: 24, fontWeight: '800', lineHeight: 30, flex: 1 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', margin: -5 },
+  third: { width: '33.333%', padding: 5 },
+  half: { width: '50%', padding: 5 },
+  halfGrow: { flexBasis: '50%', flexGrow: 1, padding: 5 },
+  helpChip: {
+    height: 78,
+    borderRadius: 20,
+    paddingHorizontal: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: 6,
   },
-  chipTitle: { flex: 1, fontSize: 13, fontWeight: '800', color: '#17352C', lineHeight: 16 },
-  prepRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 },
-  barBg: { height: 8, borderRadius: 4, overflow: 'hidden' },
-  bar: { height: 8, borderRadius: 4 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -5 },
-  cell: { width: '50%', padding: 5 },
-  topic: { gap: 5, height: 138, justifyContent: 'flex-start' },
+  chipTitle: { fontSize: 15, fontWeight: '800', color: '#0E2A21', textAlign: 'center' },
+  hazard: {
+    height: 70,
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  hazardTitle: { flex: 1, fontSize: 17, fontWeight: '800', color: '#0E2A21', lineHeight: 21 },
+  tip: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    padding: 16,
+    borderRadius: 20,
+    marginTop: 10,
+  },
+  prep: { flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 8 },
+  prepCol: { flex: 1, alignItems: 'center', gap: 10 },
+  jar: {
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    borderWidth: 3,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  jarFill: { position: 'absolute', left: 0, right: 0, bottom: 0 },
+  topic: { gap: 6, height: 150, alignItems: 'center', justifyContent: 'center' },
+  topicTitle: { fontSize: 16, fontWeight: '800', lineHeight: 20, textAlign: 'center' },
 });

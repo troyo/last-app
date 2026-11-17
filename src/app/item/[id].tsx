@@ -155,6 +155,6 @@ function escapeHtml(s: string) {
 
 const s = StyleSheet.create({
   pad: { padding: 16 },
-  credit: { fontSize: 13, padding: 16 },
+  credit: { fontSize: 15, padding: 16 },
   btn: { padding: 15, borderRadius: 16, alignItems: 'center' },
 });

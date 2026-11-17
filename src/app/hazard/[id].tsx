@@ -47,7 +47,7 @@ export default function HazardScreen() {
                   numberOfLines={1}
                   style={{
                     color: on ? t.accentText : t.text,
-                    fontSize: 14,
+                    fontSize: 15,
                     fontWeight: on ? '800' : '600',
                   }}
                 >
@@ -89,7 +89,7 @@ export default function HazardScreen() {
           <Ionicons name="chevron-forward" size={18} color={t.muted} />
         </Card>
 
-        <Text style={{ color: t.muted, fontSize: 13, lineHeight: 19, textAlign: 'center' }}>
+        <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21, textAlign: 'center' }}>
           Steps for when you’re on your own. If officials tell you to leave, leave. General
           information, not professional advice.
         </Text>
@@ -107,7 +107,7 @@ const s = StyleSheet.create({
   step: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
   num: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   stepText: { flex: 1, fontSize: 16, lineHeight: 24, paddingTop: 3 },
-  label: { fontSize: 14, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 },
+  label: { fontSize: 15, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 },
   bullet: { flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
   more: { flexDirection: 'row', alignItems: 'center', gap: 10 },
 });

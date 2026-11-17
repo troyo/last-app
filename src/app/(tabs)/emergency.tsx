@@ -33,7 +33,7 @@ export default function Emergency() {
             <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={46} />
             <View style={{ flex: 1 }}>
               <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>{h.title}</Text>
-              <Text style={{ color: t.muted, fontSize: 14, lineHeight: 19 }} numberOfLines={2}>
+              <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }} numberOfLines={2}>
                 {h.when}
               </Text>
             </View>
@@ -50,7 +50,7 @@ export default function Emergency() {
             <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={46} />
             <View style={{ flex: 1 }}>
               <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>{h.title}</Text>
-              <Text style={{ color: t.muted, fontSize: 14, lineHeight: 19 }} numberOfLines={2}>
+              <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }} numberOfLines={2}>
                 {h.blurb}
               </Text>
             </View>

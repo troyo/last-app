@@ -33,20 +33,20 @@ export default function Prep() {
                 <Text style={{ color: t.text, fontSize: 19, fontWeight: '800' }}>
                   Ready for {list.title}
                 </Text>
-                <Text style={{ color: t.muted, fontSize: 14, lineHeight: 19 }}>{list.blurb}</Text>
+                <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>{list.blurb}</Text>
               </View>
               <Ionicons name="chevron-forward" size={18} color={t.muted} />
             </View>
             <View style={[s.barBg, { backgroundColor: t.soft }]}>
               <View style={[s.bar, { width: `${pct}%`, backgroundColor: t.accent }]} />
             </View>
-            <Text style={{ color: t.muted, fontSize: 13, fontWeight: '700' }}>
+            <Text style={{ color: t.muted, fontSize: 15, fontWeight: '700' }}>
               {p.done === p.total ? 'All done. Nice work.' : `${p.done} of ${p.total} done`}
             </Text>
           </Card>
         );
       })}
-      <Text style={{ color: t.muted, fontSize: 13, lineHeight: 19 }}>
+      <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
         General guidelines. Tap “Why?” on any line for a plain explanation. Set your place and
         household under More to get amounts that fit your home.
       </Text>

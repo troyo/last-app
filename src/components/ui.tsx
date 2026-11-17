@@ -70,7 +70,7 @@ export function Button(props: {
           {
             color: kind === 'primary' ? t.accentText : kind === 'secondary' ? t.text : t.muted,
           },
-          kind === 'quiet' && { fontWeight: '600', fontSize: 15 },
+          kind === 'quiet' && { fontWeight: '700', fontSize: 16 },
         ]}
       >
         {props.label}
@@ -211,14 +211,14 @@ const s = StyleSheet.create({
     borderRadius: 999,
     alignItems: 'center',
   },
-  btnText: { fontSize: 16, fontWeight: '700', textAlign: 'center' },
+  btnText: { fontSize: 17, fontWeight: '800', textAlign: 'center' },
   card: {
     padding: 16,
     borderRadius: 22,
     // A soft lift instead of an outline.
     shadowColor: '#17352C',
-    shadowOpacity: 0.07,
-    shadowRadius: 14,
+    shadowOpacity: 0.09,
+    shadowRadius: 16,
     shadowOffset: { width: 0, height: 6 },
     elevation: 2,
   },

@@ -9,7 +9,7 @@ import { Hazard, HAZARDS } from './hazards';
 import { QUICK_HELP, QuickHelp } from './quick-help';
 
 // Everyday word -> the words guides actually use.
-const SYNONYMS: Record<string, string[]> = {
+export const SYNONYMS: Record<string, string[]> = {
   cut: ['bleeding', 'wound', 'laceration'],
   blood: ['bleeding', 'wound'],
   bleed: ['bleeding', 'tourniquet'],
@@ -101,13 +101,13 @@ function ensureIndex() {
 
 // Filler words that say nothing about the topic.
 const STOP = new Set(
-  'a an the to of in on for my is are i we and or with without how do does can what when if it no not need get make have has out'.split(
+  'a an the to of in on for my me our your his her their friend someone somebody person bad really very please help should would could is are i we and or with without how do does can what when if it no not need get make have has out'.split(
     ' ',
   ),
 );
 
 /** Split what was typed into words, with plurals trimmed ("burns" -> "burn"). */
-function wordsOf(query: string): string[] {
+export function wordsOf(query: string): string[] {
   return query
     .toLowerCase()
     .split(/[^a-z0-9-]+/)

@@ -115,17 +115,17 @@ export default function Packs() {
                   style={{
                     color: p.id === 'small' || !locked ? t.accent : '#7A5200',
                     fontWeight: '700',
-                    fontSize: 13,
+                    fontSize: 15,
                   }}
                 >
                   {p.id === 'small' ? 'Free' : locked ? 'Premium' : 'Unlocked'}
                 </Text>
               </View>
             </View>
-            <Text style={{ color: t.muted, fontSize: 14, lineHeight: 20 }} numberOfLines={3}>
+            <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }} numberOfLines={3}>
               {p.summary}
             </Text>
-            <Text style={{ color: t.muted, fontSize: 13 }}>
+            <Text style={{ color: t.muted, fontSize: 15 }}>
               {count.toLocaleString()} guides · about {formatBytes(packBytes(p.id))}
             </Text>
 
@@ -180,7 +180,7 @@ export default function Packs() {
 
       {!unlocked && (
         <>
-          <Text style={{ color: t.muted, fontSize: 14, lineHeight: 20 }}>
+          <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
             Small is free forever. One payment of {PRICE_LABEL} unlocks Medium and Large, including
             future updates. No subscription, ever.
           </Text>

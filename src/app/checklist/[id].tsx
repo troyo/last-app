@@ -29,7 +29,7 @@ export default function ChecklistScreen() {
             style={[s.bar, { width: `${(p.done / p.total) * 100}%`, backgroundColor: t.accent }]}
           />
         </View>
-        <Text style={{ color: t.muted, fontSize: 13, fontWeight: '700' }}>
+        <Text style={{ color: t.muted, fontSize: 15, fontWeight: '700' }}>
           {p.done} of {p.total} done
         </Text>
 
@@ -39,12 +39,12 @@ export default function ChecklistScreen() {
           style={[s.fit, { backgroundColor: t.soft }]}
         >
           <Ionicons name="location" size={18} color={t.accent} />
-          <Text style={{ color: t.text, fontSize: 14, lineHeight: 19, flex: 1 }}>
+          <Text style={{ color: t.text, fontSize: 15, lineHeight: 21, flex: 1 }}>
             {profile
               ? `Written for ${profile.people} ${profile.people === 1 ? 'person' : 'people'} in ${profile.place}.`
               : 'Tell us where you live and this list will fit your home.'}
           </Text>
-          <Text style={{ color: t.accent, fontSize: 14, fontWeight: '800' }}>
+          <Text style={{ color: t.accent, fontSize: 15, fontWeight: '800' }}>
             {profile ? 'Change' : 'Set up'}
           </Text>
         </Pressable>
@@ -60,7 +60,7 @@ export default function ChecklistScreen() {
               )}
             </View>
             {g.note && (
-              <Text style={{ color: t.muted, fontSize: 14, lineHeight: 20 }}>{g.note}</Text>
+              <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>{g.note}</Text>
             )}
             <Card style={{ paddingVertical: 4 }}>
               {g.items.map((item, i) => {
@@ -113,7 +113,7 @@ export default function ChecklistScreen() {
                         accessibilityLabel={`Why: ${item.text}`}
                         style={s.whyRow}
                       >
-                        <Text style={{ color: t.accent, fontSize: 14, fontWeight: '700' }}>
+                        <Text style={{ color: t.accent, fontSize: 15, fontWeight: '700' }}>
                           {showWhy ? 'Hide' : 'Why?'}
                         </Text>
                         <Ionicons
@@ -136,7 +136,7 @@ export default function ChecklistScreen() {
             </Card>
           </View>
         ))}
-        <Text style={{ color: t.muted, fontSize: 13, lineHeight: 19 }}>
+        <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
           General guidelines. Adjust for children, health needs and what you already have.
         </Text>
       </ScrollView>

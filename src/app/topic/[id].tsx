@@ -1,7 +1,7 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { FlatList, Image, StyleSheet, TextInput, View } from 'react-native';
+import { FlatList, Image, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { Button, Card, IconName, IconTile, Text } from '../../components/ui';
 import { findTopic, getCatalog, itemsForPack } from '../../lib/catalog';
 import { isDownloaded } from '../../lib/library';
@@ -26,10 +26,25 @@ export default function TopicScreen() {
   );
   // Big packs put hundreds of guides in one topic, so let people narrow it down.
   const [filter, setFilter] = useState('');
+  // 'all', 'easy' (plain-language versions), 'manual' (PDF books), or one letter.
+  const [pick, setPick] = useState('all');
+  const sorted = useMemo(() => [...items].sort((x, y) => x.title.localeCompare(y.title)), [items]);
+  const letters = useMemo(
+    () => [...new Set(sorted.map((i) => i.title[0]?.toUpperCase()).filter((c) => /[A-Z]/.test(c)))],
+    [sorted],
+  );
+  const hasEasy = useMemo(() => items.some((i) => i.title.includes('simple words')), [items]);
+  const hasManuals = useMemo(() => items.some((i) => i.type === 'pdf'), [items]);
   const shown = useMemo(() => {
     const f = filter.trim().toLowerCase();
-    return f ? items.filter((i) => i.title.toLowerCase().includes(f)) : items;
-  }, [items, filter]);
+    return sorted.filter((i) => {
+      if (f && !i.title.toLowerCase().includes(f)) return false;
+      if (pick === 'easy') return i.title.includes('simple words');
+      if (pick === 'manual') return i.type === 'pdf';
+      if (pick !== 'all') return i.title[0]?.toUpperCase() === pick;
+      return true;
+    });
+  }, [sorted, filter, pick]);
   const look = TOPIC_LOOK[id] ?? { icon: 'book-open-variant', hue: 'teal' as const };
   // Is there more for this topic in a bigger pack?
   const inAnyPack = getCatalog().items.filter((i) => i.topic === id).length;
@@ -52,7 +67,7 @@ export default function TopicScreen() {
                   <Text style={{ color: t.text, fontSize: 24, fontWeight: '800', lineHeight: 29 }}>
                     {topic?.title}
                   </Text>
-                  <Text style={{ color: t.muted, fontSize: 14 }}>
+                  <Text style={{ color: t.muted, fontSize: 15 }}>
                     {items.length.toLocaleString()} {items.length === 1 ? 'guide' : 'guides'} on
                     this phone
                   </Text>
@@ -72,9 +87,54 @@ export default function TopicScreen() {
                   />
                 </View>
               )}
+              {items.length > 12 && (
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={{ marginHorizontal: -18 }}
+                  contentContainerStyle={{ paddingHorizontal: 18, gap: 8 }}
+                >
+                  {[
+                    ['all', 'All'],
+                    ...(hasEasy ? [['easy', 'Easy reads']] : []),
+                    ...(hasManuals ? [['manual', 'Full manuals']] : []),
+                    ...letters.map((l) => [l, l]),
+                  ].map(([key, label]) => {
+                    const on = pick === key;
+                    return (
+                      <Pressable
+                        key={key}
+                        onPress={() => setPick(key)}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: on }}
+                        style={[
+                          s.pick,
+                          { backgroundColor: on ? t.accent : t.card },
+                          label.length === 1 && { width: 44, paddingHorizontal: 0 },
+                        ]}
+                      >
+                        <Text
+                          style={{
+                            color: on ? t.accentText : t.text,
+                            fontSize: 16,
+                            fontWeight: '800',
+                          }}
+                        >
+                          {label}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </ScrollView>
+              )}
+              {items.length > 12 && (
+                <Text style={{ color: t.text, fontSize: 15, fontWeight: '700' }}>
+                  {shown.length.toLocaleString()} {shown.length === 1 ? 'guide' : 'guides'}, A to Z
+                </Text>
+              )}
               {shown.length === 0 && (
                 <Text style={{ color: t.muted, fontSize: 15 }}>
-                  Nothing here matches “{filter.trim()}”.
+                  Nothing here matches. Try “All” or a shorter word.
                 </Text>
               )}
             </View>
@@ -117,7 +177,7 @@ export default function TopicScreen() {
                 {item.title}
               </Text>
               {!!item.summary && (
-                <Text style={{ color: t.muted, fontSize: 14, lineHeight: 19 }} numberOfLines={2}>
+                <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }} numberOfLines={2}>
                   {item.summary}
                 </Text>
               )}
@@ -150,6 +210,13 @@ const s = StyleSheet.create({
     borderWidth: 1,
   },
   input: { flex: 1, fontSize: 16, paddingVertical: 0, fontFamily: 'Nunito_400Regular' },
+  pick: {
+    height: 44,
+    paddingHorizontal: 16,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   kind: {
     flexDirection: 'row',
     alignItems: 'center',

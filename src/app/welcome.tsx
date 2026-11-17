@@ -1,16 +1,18 @@
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { useRef, useState } from 'react';
 import {
   Image,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Pressable,
   ScrollView,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { DawnScene } from '../components/DawnScene';
 import { Button, FadeIn, Float, Text } from '../components/ui';
 import { hasAgreed } from '../lib/agreement';
 import { useTheme } from '../lib/theme';
@@ -18,9 +20,9 @@ import { markWelcomeSeen } from '../lib/welcome';
 
 const SLIDES = [
   {
-    image: null, // the first page gets the animated sunrise instead of a picture
+    image: null, // the first page is the full-screen opening film instead of a picture
     title: 'Ready for anything',
-    body: 'Last App is the guide you’ll want when the power, the phones and the shops are all down. Calm, clear steps for a bad night or a bad year.',
+    body: 'The guide you’ll want when the power, the phones and the shops are all down. Calm, clear steps for a bad night or a bad year.',
   },
   {
     image: require('../../assets/illustrations/offline.png'),
@@ -34,7 +36,11 @@ const SLIDES = [
   },
 ];
 
-// The first-launch explainer: three swipeable pages.
+const NIGHT = '#1B3A4E'; // shown for the split second before the film starts
+
+// The first-launch explainer: three swipeable pages. Page one plays a short
+// film of night turning to morning over a cabin, full screen, with the words
+// on top. It ships inside the app, so it plays with no internet.
 export default function Welcome() {
   const t = useTheme();
   const { width } = useWindowDimensions();
@@ -42,6 +48,13 @@ export default function Welcome() {
   const [page, setPage] = useState(0);
   const [tall, setTall] = useState(0); // height of the swiping area, so pages can center
   const last = page === SLIDES.length - 1;
+  const film = page === 0;
+
+  const player = useVideoPlayer(require('../../assets/video/opening.mp4'), (p) => {
+    p.loop = true;
+    p.muted = true;
+    p.play();
+  });
 
   const finish = () => {
     markWelcomeSeen();
@@ -56,64 +69,144 @@ export default function Welcome() {
     setPage(Math.round(e.nativeEvent.contentOffset.x / width));
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: t.bg }}>
-      <View style={s.skipRow}>
-        {!last && <Button label="Skip" kind="quiet" onPress={finish} />}
-      </View>
-      <ScrollView
-        ref={scroller}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        onLayout={(e) => setTall(e.nativeEvent.layout.height)}
-        style={{ flex: 1 }}
-      >
-        {SLIDES.map((slide, i) => (
-          <View key={slide.title} style={[s.slide, { width, minHeight: tall }]}>
-            {slide.image ? (
-              <Float>
-                <Image
-                  source={slide.image}
-                  style={{ width: width - 48, height: (width - 48) * 0.8 }}
-                  resizeMode="contain"
-                />
-              </Float>
-            ) : (
-              <DawnScene width={width - 48} />
-            )}
-            <FadeIn delay={i === 0 ? 900 : 0}>
-              <Text style={[s.title, { color: t.text }]}>{slide.title}</Text>
-              <Text style={[s.body, { color: t.muted }]}>{slide.body}</Text>
-            </FadeIn>
-          </View>
-        ))}
-      </ScrollView>
-      <View style={s.dots}>
-        {SLIDES.map((slide, i) => (
-          <View
-            key={slide.title}
-            style={[
-              s.dot,
-              { backgroundColor: i === page ? t.accent : t.border, width: i === page ? 22 : 8 },
-            ]}
+    <View style={{ flex: 1, backgroundColor: film ? NIGHT : t.bg }}>
+      <StatusBar style={film ? 'light' : 'auto'} />
+      {film && (
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+          <VideoView
+            player={player}
+            style={StyleSheet.absoluteFill}
+            contentFit="cover"
+            nativeControls={false}
+            allowsPictureInPicture={false}
+            playsInline
           />
-        ))}
-      </View>
-      <View style={s.footer}>
-        <Button label={last ? 'Let’s get you set up' : 'Next'} onPress={next} />
-      </View>
-    </SafeAreaView>
+          {/* Darkens the lower half so the white words are easy to read. */}
+          <View style={s.shadeSoft} />
+          <View style={s.shade} />
+        </View>
+      )}
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={s.skipRow}>
+          {!last && (
+            <Pressable onPress={finish} hitSlop={12} accessibilityRole="button">
+              <Text style={{ color: film ? '#FFFFFF' : t.text, fontSize: 17, fontWeight: '700' }}>
+                Skip
+              </Text>
+            </Pressable>
+          )}
+        </View>
+        <ScrollView
+          ref={scroller}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          onLayout={(e) => setTall(e.nativeEvent.layout.height)}
+          style={{ flex: 1 }}
+        >
+          {SLIDES.map((slide, i) => (
+            <View
+              key={slide.title}
+              style={[
+                s.slide,
+                { width, minHeight: tall },
+                !slide.image && { justifyContent: 'flex-end', paddingBottom: 8 },
+              ]}
+            >
+              {slide.image && (
+                <Float>
+                  <Image
+                    source={slide.image}
+                    style={{ width: width - 48, height: (width - 48) * 0.8 }}
+                    resizeMode="contain"
+                  />
+                </Float>
+              )}
+              <FadeIn delay={i === 0 ? 600 : 0}>
+                <Text
+                  style={[
+                    s.title,
+                    { color: slide.image ? t.text : '#FFFFFF' },
+                    !slide.image && { fontSize: 38, lineHeight: 44 },
+                  ]}
+                >
+                  {slide.title}
+                </Text>
+                <Text style={[s.body, { color: slide.image ? t.text : '#FFFFFF' }]}>
+                  {slide.body}
+                </Text>
+              </FadeIn>
+            </View>
+          ))}
+        </ScrollView>
+        <View style={s.dots}>
+          {SLIDES.map((slide, i) => (
+            <View
+              key={slide.title}
+              style={[
+                s.dot,
+                {
+                  backgroundColor:
+                    i === page ? (film ? '#FFFFFF' : t.accent) : film ? '#FFFFFF66' : t.border,
+                  width: i === page ? 22 : 8,
+                },
+              ]}
+            />
+          ))}
+        </View>
+        <View style={s.footer}>
+          {film ? (
+            <Pressable
+              onPress={next}
+              accessibilityRole="button"
+              style={({ pressed }) => [s.lightBtn, pressed && { opacity: 0.85 }]}
+            >
+              <Text style={{ color: '#0E2A21', fontSize: 17, fontWeight: '800' }}>Get started</Text>
+            </Pressable>
+          ) : (
+            <Button label={last ? 'Let’s get you set up' : 'Next'} onPress={next} />
+          )}
+        </View>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
-  skipRow: { height: 48, alignItems: 'flex-end', paddingHorizontal: 12 },
+  skipRow: {
+    height: 48,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingHorizontal: 22,
+  },
   slide: { paddingHorizontal: 24, alignItems: 'center', justifyContent: 'center', gap: 8 },
-  title: { fontSize: 28, fontWeight: '800', textAlign: 'center', marginTop: 12 },
-  body: { fontSize: 17, lineHeight: 25, textAlign: 'center', marginTop: 10 },
+  title: { fontSize: 30, fontWeight: '800', lineHeight: 36, textAlign: 'center', marginTop: 12 },
+  body: { fontSize: 18, lineHeight: 26, textAlign: 'center', marginTop: 10 },
   dots: { flexDirection: 'row', justifyContent: 'center', gap: 6, paddingVertical: 16 },
   dot: { height: 8, borderRadius: 4 },
   footer: { paddingHorizontal: 24, paddingBottom: 12 },
+  lightBtn: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 999,
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  shadeSoft: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '56%',
+    backgroundColor: 'rgba(10, 32, 25, 0.35)',
+  },
+  shade: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '42%',
+    backgroundColor: 'rgba(10, 32, 25, 0.45)',
+  },
 });

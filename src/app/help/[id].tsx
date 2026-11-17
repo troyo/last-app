@@ -80,8 +80,8 @@ export default function QuickHelpScreen() {
         <Text
           style={{
             color: t.muted,
-            fontSize: 13,
-            lineHeight: 19,
+            fontSize: 15,
+            lineHeight: 21,
             textAlign: 'center',
           }}
         >
@@ -115,7 +115,7 @@ const s = StyleSheet.create({
   },
   stepText: { flex: 1, fontSize: 17, lineHeight: 25, paddingTop: 3 },
   label: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '800',
     textTransform: 'uppercase',
     letterSpacing: 0.5,

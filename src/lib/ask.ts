@@ -1,0 +1,192 @@
+// "Ask anything": answers a plain question using only what is on the phone.
+//
+// There is no AI model and no internet here. It works like a very fast
+// librarian: find the guides most likely to help, open them, and pull out the
+// few sentences that best match the question. Because every answer is copied
+// from a guide, it can't make things up, and each one links to its source.
+
+import { getChecklists } from './checklists';
+import { HAZARDS } from './hazards';
+import { fileFor, isDownloaded } from './library';
+import { QUICK_HELP } from './quick-help';
+import { search, SYNONYMS, wordsOf } from './search';
+
+export type Answer = {
+  key: string;
+  /** Where it came from, shown above the text. */
+  from: string;
+  title: string;
+  /** Numbered steps, when the source is a how-to. */
+  steps?: string[];
+  /** Or a short passage of plain text. */
+  text?: string;
+  /** Where "Read the full guide" goes. */
+  href: string;
+  linkLabel: string;
+};
+
+const clean = (html: string) =>
+  html
+    .replace(/<(script|style|table|figure|sup)\b[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;|&#160;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&[a-z]+;|&#\d+;/gi, ' ')
+    .replace(/\[\s*\d+\s*\]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+/** How many of the question's words (or their everyday synonyms) a text mentions. */
+function hits(words: string[], text: string): number {
+  const hay = text.toLowerCase();
+  let n = 0;
+  for (const w of words) {
+    if (hay.includes(w)) n += 2;
+    else if ((SYNONYMS[w] ?? []).some((alt) => hay.includes(alt))) n += 1;
+  }
+  return n;
+}
+
+type Passage = { heading: string; text: string; score: number };
+
+/** Split a guide into its paragraphs and list items, remembering the heading above each. */
+function passagesOf(html: string, words: string[]): Passage[] {
+  const out: Passage[] = [];
+  let heading = '';
+  const blocks = html.match(/<(h[2-4]|p|li)\b[^>]*>[\s\S]*?<\/\1>/gi) ?? [];
+  for (const block of blocks) {
+    const text = clean(block);
+    if (/^<h/i.test(block)) {
+      heading = text;
+      continue;
+    }
+    if (text.length < 50) continue;
+    let score = hits(words, text) + hits(words, heading) * 0.75;
+    if (score === 0) continue;
+    // Prefer instructions over background, and skip walls of text.
+    if (
+      /\b(should|must|do not|don't|never|always|use|keep|place|apply|boil|wash|cover)\b/i.test(text)
+    )
+      score += 0.75;
+    if (/^(see also|references|external links|further reading|history)/i.test(heading)) score -= 3;
+    if (text.length > 900) score -= 0.5;
+    out.push({ heading, text, score });
+  }
+  return out;
+}
+
+/** Trim a passage to a few whole sentences. */
+function shorten(text: string, max = 420): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('? '), cut.lastIndexOf('! '));
+  return end > 120 ? cut.slice(0, end + 1) : cut.replace(/\s\S*$/, '') + '…';
+}
+
+export async function ask(question: string): Promise<Answer[]> {
+  const words = wordsOf(question);
+  if (words.length === 0) return [];
+  const answers: (Answer & { score: number })[] = [];
+  const need = 2; // at least one of the question's words, said outright
+
+  // 1. Emergency cards: the most carefully written steps we have.
+  for (const h of QUICK_HELP) {
+    const about = hits(words, `${h.title} ${h.when}`); // the card is about this
+    const inside = hits(words, h.steps.join(' ')); // or its steps mention it a lot
+    if (about < 2 && inside < 4) continue;
+    answers.push({
+      key: `help-${h.id}`,
+      from: 'Emergency steps',
+      title: h.title,
+      steps: h.steps,
+      href: `/help/${h.id}`,
+      linkLabel: 'Open the full card',
+      score: about * 3 + inside * 0.5 + 2,
+    });
+  }
+
+  // 2. Disaster guides.
+  for (const h of HAZARDS) {
+    if (hits(words, `${h.title} ${h.search}`) < 2) continue;
+    answers.push({
+      key: `hazard-${h.id}`,
+      from: 'Disaster guide',
+      title: `${h.title}: if it’s happening now`,
+      steps: h.during,
+      href: `/hazard/${h.id}`,
+      linkLabel: 'See before, during and after',
+      score: hits(words, `${h.title} ${h.search}`) * 2 + 2,
+    });
+  }
+
+  // 3. The "why" notes on the get-ready lists: short and practical.
+  for (const list of getChecklists())
+    for (const g of list.groups)
+      for (const item of g.items) {
+        if (!item.why) continue;
+        const score = hits(words, `${item.text} ${item.why}`);
+        if (score < 4) continue;
+        answers.push({
+          key: `list-${list.id}-${item.id}`,
+          from: `Get ready for ${list.title}`,
+          title: item.text,
+          text: item.why,
+          href: `/checklist/${list.id}`,
+          linkLabel: 'Open the checklist',
+          score: score * 0.9,
+        });
+      }
+
+  // 4. The saved guides: open the best few and pull out the matching passages.
+  const guides = search(question, 40)
+    .guides.map((g) => g.item)
+    .filter((item) => item.type === 'article' && isDownloaded(item))
+    .slice(0, 8);
+  const read = await Promise.all(
+    guides.map(async (item, rank) => {
+      try {
+        const html = await fileFor(item).text();
+        const best = passagesOf(html, words).sort((a, b) => b.score - a.score)[0];
+        return best ? { item, best, rank } : null;
+      } catch {
+        return null;
+      }
+    }),
+  );
+  for (const r of read) {
+    if (!r || r.best.score < need) continue;
+    answers.push({
+      key: `guide-${r.item.id}`,
+      from: r.best.heading ? `${r.item.title} · ${r.best.heading}` : r.item.title,
+      title: r.item.title,
+      text: shorten(r.best.text),
+      href: `/item/${r.item.id}`,
+      linkLabel: 'Read the full guide',
+      score: r.best.score + (8 - r.rank) * 0.3,
+    });
+  }
+
+  // Best first, one answer per source, and never a wall of cards.
+  const seen = new Set<string>();
+  return answers
+    .sort((a, b) => b.score - a.score)
+    .filter((a) => {
+      // A guide and its plain-language twin say the same thing: keep whichever ranked higher.
+      const base = a.title.replace(' (in simple words)', '');
+      if (seen.has(base)) return false;
+      seen.add(base);
+      return true;
+    })
+    .slice(0, 4);
+}
+
+export const ASK_IDEAS = [
+  'How do I make water safe to drink?',
+  'What do I do for a deep cut?',
+  'How do I stay warm with no power?',
+  'How long does food last in the fridge?',
+  'How do I start a fire?',
+  'What should be in a first aid kit?',
+];

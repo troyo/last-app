@@ -3,11 +3,12 @@ import { useColorScheme } from 'react-native';
 // Calm and warm, like a friend who has your back. Cream paper, deep green,
 // a little sunshine. Nothing alarming: red is saved for real problems.
 const light = {
-  bg: '#FBF7EF', // warm cream
+  bg: '#F8F5EE', // warm cream
   card: '#FFFFFF',
   soft: '#EAF3EC', // pale sage, for gentle highlights
-  text: '#17352C', // deep green-black
-  muted: '#5F7269',
+  text: '#0E2A21', // deep green-black
+  // Secondary text. Dark on purpose: nothing in this app should be faint or hard to read.
+  muted: '#35483F',
   border: '#E6E0D2',
   accent: '#1F5C4A', // deep green: buttons and links
   accentText: '#FFFFFF',
@@ -25,7 +26,7 @@ const dark: typeof light = {
   card: '#1B3129',
   soft: '#223B32',
   text: '#F4EFE3',
-  muted: '#A9BBB1',
+  muted: '#D2DED7',
   border: '#2B4439',
   accent: '#8FD3B3',
   accentText: '#10221C',

@@ -86,7 +86,7 @@ export default function More() {
             <IconTile name={r.icon} {...HUES[r.hue]} size={44} />
             <View style={{ flex: 1 }}>
               <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>{r.title}</Text>
-              <Text style={{ color: t.muted, fontSize: 14, lineHeight: 19 }} numberOfLines={1}>
+              <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }} numberOfLines={1}>
                 {r.sub}
               </Text>
             </View>

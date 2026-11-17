@@ -128,7 +128,7 @@ export default function Place() {
       <IconTile name={p.icon} {...(p.on ? HUES.green : HUES.teal)} size={42} />
       <View style={{ flex: 1 }}>
         <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>{p.title}</Text>
-        {!!p.sub && <Text style={{ color: t.muted, fontSize: 14, lineHeight: 19 }}>{p.sub}</Text>}
+        {!!p.sub && <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>{p.sub}</Text>}
       </View>
       <Ionicons
         name={
@@ -262,7 +262,7 @@ export default function Place() {
               onPress={() => go('quiz')}
             />
             {!!note && <Text style={{ color: t.warn, fontSize: 15, lineHeight: 21 }}>{note}</Text>}
-            <Text style={{ color: t.muted, fontSize: 13, lineHeight: 19 }}>
+            <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
               Your answers stay on this phone. Nothing is sent anywhere.
             </Text>
           </>
@@ -332,13 +332,13 @@ export default function Place() {
                 <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>
                   {CLIMATES[climate].title}
                 </Text>
-                <Text style={{ color: t.muted, fontSize: 14, lineHeight: 19 }}>
+                <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
                   {CLIMATES[climate].blurb}
                 </Text>
               </View>
             </Card>
             <Text style={[s.q, { color: t.text }]}>What can happen where you live?</Text>
-            <Text style={{ color: t.muted, fontSize: 14, lineHeight: 20, marginTop: -6 }}>
+            <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21, marginTop: -6 }}>
               We ticked the likely ones{state ? ` for ${findState(state)?.name}` : ''}. Add or
               remove any. You know your area best.
             </Text>

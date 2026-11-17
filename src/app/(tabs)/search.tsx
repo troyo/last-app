@@ -91,7 +91,7 @@ export default function Search() {
           )}
           <Text style={[s.label, { color: t.muted }]}>People often look for</Text>
           <View style={s.chips}>{SUGGESTED.map(chip)}</View>
-          <Text style={{ color: t.muted, fontSize: 14, lineHeight: 20, marginTop: 8 }}>
+          <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21, marginTop: 8 }}>
             Use everyday words. Search looks through every guide and the emergency steps, and works
             with no signal.
           </Text>
@@ -110,7 +110,7 @@ export default function Search() {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
           ListHeaderComponent={
-            <Text style={{ color: t.muted, fontSize: 14, marginBottom: 2 }}>
+            <Text style={{ color: t.muted, fontSize: 15, marginBottom: 2 }}>
               {rows.length === 0
                 ? ''
                 : `${found.toLocaleString()} ${found === 1 ? 'result' : 'results'}`}
@@ -129,7 +129,7 @@ export default function Search() {
                   <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={42} />
                   <View style={{ flex: 1 }}>
                     <Text style={[s.title, { color: t.text }]}>{h.title}</Text>
-                    <Text style={{ color: t.bad, fontSize: 13, fontWeight: '700' }}>
+                    <Text style={{ color: t.bad, fontSize: 15, fontWeight: '700' }}>
                       Emergency steps
                     </Text>
                   </View>
@@ -144,7 +144,7 @@ export default function Search() {
                   <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={42} />
                   <View style={{ flex: 1 }}>
                     <Text style={[s.title, { color: t.text }]}>{h.title}</Text>
-                    <Text style={{ color: t.accent, fontSize: 13, fontWeight: '700' }}>
+                    <Text style={{ color: t.accent, fontSize: 15, fontWeight: '700' }}>
                       Before, during and after
                     </Text>
                   </View>
@@ -167,13 +167,13 @@ export default function Search() {
                   </Text>
                   {!!item.summary && (
                     <Text
-                      style={{ color: t.muted, fontSize: 14, lineHeight: 19 }}
+                      style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}
                       numberOfLines={2}
                     >
                       {item.summary}
                     </Text>
                   )}
-                  <Text style={{ color: saved ? t.good : t.warn, fontSize: 13, fontWeight: '700' }}>
+                  <Text style={{ color: saved ? t.good : t.warn, fontSize: 15, fontWeight: '700' }}>
                     {saved
                       ? 'On this phone'
                       : `In the ${PACK_NAME[item.tier]} pack · tap to get it`}
@@ -206,7 +206,7 @@ const s = StyleSheet.create({
   },
   input: { flex: 1, fontSize: 16, paddingVertical: 0, fontFamily: 'Nunito_400Regular' },
   idle: { padding: 18, gap: 10 },
-  label: { fontSize: 13, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 },
+  label: { fontSize: 15, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
   chip: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 999 },
   list: { padding: 18, gap: 10, paddingBottom: 32 },

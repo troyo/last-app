@@ -224,7 +224,7 @@ export function MapsScreen() {
                         <Text style={{ color: t.text, fontSize: 16, fontWeight: '700' }}>
                           {a.name}
                         </Text>
-                        <Text style={{ color: t.muted, fontSize: 13 }}>
+                        <Text style={{ color: t.muted, fontSize: 15 }}>
                           Saved{a.megabytes ? ` · about ${a.megabytes} MB` : ''} · tap to view
                         </Text>
                       </View>
@@ -248,7 +248,7 @@ export function MapsScreen() {
         ) : (
           <>
             <Text style={[s.title, { color: t.text }]}>Save this area</Text>
-            <Text style={{ color: t.muted, fontSize: 14, lineHeight: 20 }}>
+            <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
               Move the map so the green box covers the place you want, then pick a size.
             </Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }}>
@@ -281,7 +281,7 @@ export function MapsScreen() {
                 })}
               </View>
             </ScrollView>
-            <Text style={{ color: t.muted, fontSize: 13, lineHeight: 19 }}>
+            <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
               About {plan.megabytes} MB ·{' '}
               {plan.streetLevel ? 'street-level detail' : 'main roads and towns (less detail)'}
             </Text>
@@ -290,7 +290,7 @@ export function MapsScreen() {
                 <View style={[s.barBg, { backgroundColor: t.soft }]}>
                   <View style={[s.bar, { width: `${progress}%`, backgroundColor: t.accent }]} />
                 </View>
-                <Text style={{ color: t.text, fontSize: 14 }}>
+                <Text style={{ color: t.text, fontSize: 15 }}>
                   Saving the map… {progress}%. Keep the app open.
                 </Text>
               </>
