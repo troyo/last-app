@@ -96,7 +96,7 @@ export async function refreshCatalog(): Promise<boolean> {
 
 export function freeSpaceBytes(): number {
   try {
-    return Paths.availableDiskSpace;
+    return Number(Paths.availableDiskSpace); // may be a BigInt on iOS
   } catch {
     return Number.POSITIVE_INFINITY; // not available on web
   }
@@ -196,7 +196,11 @@ export async function downloadPack(
       const task = File.createDownloadTask(d.url, partial, {
         onProgress: ({ bytesWritten, totalBytes }) => {
           try {
-            report(label, bytesWritten, totalBytes > 0 ? totalBytes : d.bytes);
+            // On iOS these arrive as BigInt, which crashes ordinary maths
+            // (Math.round etc.), so turn them into plain numbers first.
+            const written = Number(bytesWritten);
+            const total = Number(totalBytes);
+            report(label, written, total > 0 ? total : d.bytes);
           } catch {
             // a progress hiccup must never stop the download
           }
