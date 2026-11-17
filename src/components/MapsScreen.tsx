@@ -12,7 +12,7 @@ import {
   UserLocation,
 } from '@maplibre/maplibre-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   AREA_SIZES,
@@ -81,6 +81,8 @@ export function MapsScreen() {
   const [shown, setShown] = useState<PlaceCategoryId[]>(DEFAULT_PLACES);
   const [nearby, setNearby] = useState<NearbyPlace[] | null>(null); // null = list closed
   const [finding, setFinding] = useState(false);
+  const [ready, setReady] = useState(false); // has the map drawn its first full view?
+  const moved = useRef(false); // has GPS already sent the map somewhere useful?
   const filter = useMemo(() => placesFilter(shown), [shown]);
 
   const size = AREA_SIZES.find((s) => s.id === sizeId)!;
@@ -107,6 +109,25 @@ export function MapsScreen() {
     refreshSaved();
   }, [refreshSaved]);
 
+  // Open on a saved area rather than the whole country, until GPS finds you.
+  const opened = useRef(false);
+  useEffect(() => {
+    if (opened.current || moved.current || !saved.length) return;
+    opened.current = true;
+    const b = saved[0].bounds;
+    setCenter([(b[0] + b[2]) / 2, (b[1] + b[3]) / 2]);
+    setTimeout(() => {
+      if (!moved.current) show(b, 0);
+    }, 50);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [saved]);
+
+  // Never leave the spinner up for good if the map can't say it's finished.
+  useEffect(() => {
+    const timer = setTimeout(() => setReady(true), 15000);
+    return () => clearTimeout(timer);
+  }, []);
+
   // ----- Where am I -----
   const goToMe = useCallback(async (quiet = false) => {
     const fix = await locate();
@@ -119,6 +140,7 @@ export function MapsScreen() {
       return;
     }
     setLocated(true);
+    moved.current = true;
     const here: [number, number] = [fix.lon, fix.lat];
     setMe(here);
     setCenter(here);
@@ -225,91 +247,101 @@ export function MapsScreen() {
     camera.current?.flyTo({ center: p.coord, zoom: 16, duration: 900 });
 
   // Leave room for the clock at the top so the box is never hidden under it.
-  const show = (b: Bounds) =>
+  const show = (b: Bounds, duration = 900) =>
     camera.current?.fitBounds(b, {
-      duration: 900,
+      duration,
       padding: { top: insets.top + 24, right: 24, bottom: 24, left: 24 },
     });
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
-      <Map
-        ref={map}
-        style={{ flex: 1 }}
-        mapStyle={MAP_STYLE}
-        logo={false}
-        attribution={false} // the credit line is written out in the panel below instead
-        onRegionDidChange={onMoved}
-      >
-        <Camera ref={camera} initialViewState={start} />
-        {/* Emergency places, drawn from the same tiles a saved area keeps offline. */}
-        <Layer
-          id={PLACES_LAYER}
-          type="circle"
-          source={PLACES_SOURCE}
-          source-layer={PLACES_SOURCE_LAYER}
-          minzoom={PLACES_MIN_ZOOM}
-          filter={filter}
-          paint={{
-            'circle-color': PLACE_COLOR_EXPR,
-            'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 7, 14, 12, 16, 15],
-            'circle-stroke-color': '#FFFFFF',
-            'circle-stroke-width': 2.5,
-          }}
-        />
-        <Layer
-          id={PLACES_LABEL_LAYER}
-          type="symbol"
-          source={PLACES_SOURCE}
-          source-layer={PLACES_SOURCE_LAYER}
-          minzoom={PLACES_MIN_ZOOM + 1}
-          filter={filter}
-          layout={{
-            'text-field': PLACE_LETTER_EXPR,
-            'text-font': ['Noto Sans Bold'],
-            'text-size': ['interpolate', ['linear'], ['zoom'], 13, 10, 16, 14],
-            'text-allow-overlap': true,
-            'text-ignore-placement': true,
-          }}
-          paint={{ 'text-color': '#FFFFFF' }}
-        />
-        <Layer
-          id={`${PLACES_LABEL_LAYER}-name`}
-          type="symbol"
-          source={PLACES_SOURCE}
-          source-layer={PLACES_SOURCE_LAYER}
-          minzoom={14.5}
-          filter={filter}
-          layout={{
-            'text-field': ['coalesce', ['get', 'name'], ''],
-            'text-font': ['Noto Sans Bold'],
-            'text-size': ['interpolate', ['linear'], ['zoom'], 14.5, 13, 17, 16],
-            'text-anchor': 'top',
-            'text-offset': [0, 1.1],
-            'text-max-width': 9,
-          }}
-          paint={{
-            'text-color': '#14231D',
-            'text-halo-color': '#FFFFFF',
-            'text-halo-width': 2,
-          }}
-        />
-        {located && <UserLocation />}
-        {picking && (
-          <GeoJSONSource id="area-outline" data={outlineOf(bounds)}>
-            <Layer
-              id="area-fill"
-              type="fill"
-              paint={{ 'fill-color': '#1F5C4A', 'fill-opacity': 0.12 }}
-            />
-            <Layer
-              id="area-line"
-              type="line"
-              paint={{ 'line-color': '#1F5C4A', 'line-width': 3 }}
-            />
-          </GeoJSONSource>
+      <View style={{ flex: 1 }}>
+        <Map
+          ref={map}
+          style={{ flex: 1 }}
+          mapStyle={MAP_STYLE}
+          logo={false}
+          attribution={false} // the credit line is written out in the panel below instead
+          onRegionDidChange={onMoved}
+          onDidFinishRenderingMapFully={() => setReady(true)}
+          onDidFailLoadingMap={() => setReady(true)}
+        >
+          <Camera ref={camera} initialViewState={start} />
+          {/* Emergency places, drawn from the same tiles a saved area keeps offline. */}
+          <Layer
+            id={PLACES_LAYER}
+            type="circle"
+            source={PLACES_SOURCE}
+            source-layer={PLACES_SOURCE_LAYER}
+            minzoom={PLACES_MIN_ZOOM}
+            filter={filter}
+            paint={{
+              'circle-color': PLACE_COLOR_EXPR,
+              'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 7, 14, 12, 16, 15],
+              'circle-stroke-color': '#FFFFFF',
+              'circle-stroke-width': 2.5,
+            }}
+          />
+          <Layer
+            id={PLACES_LABEL_LAYER}
+            type="symbol"
+            source={PLACES_SOURCE}
+            source-layer={PLACES_SOURCE_LAYER}
+            minzoom={PLACES_MIN_ZOOM + 1}
+            filter={filter}
+            layout={{
+              'text-field': PLACE_LETTER_EXPR,
+              'text-font': ['Noto Sans Bold'],
+              'text-size': ['interpolate', ['linear'], ['zoom'], 13, 10, 16, 14],
+              'text-allow-overlap': true,
+              'text-ignore-placement': true,
+            }}
+            paint={{ 'text-color': '#FFFFFF' }}
+          />
+          <Layer
+            id={`${PLACES_LABEL_LAYER}-name`}
+            type="symbol"
+            source={PLACES_SOURCE}
+            source-layer={PLACES_SOURCE_LAYER}
+            minzoom={14.5}
+            filter={filter}
+            layout={{
+              'text-field': ['coalesce', ['get', 'name'], ''],
+              'text-font': ['Noto Sans Bold'],
+              'text-size': ['interpolate', ['linear'], ['zoom'], 14.5, 13, 17, 16],
+              'text-anchor': 'top',
+              'text-offset': [0, 1.1],
+              'text-max-width': 9,
+            }}
+            paint={{
+              'text-color': '#14231D',
+              'text-halo-color': '#FFFFFF',
+              'text-halo-width': 2,
+            }}
+          />
+          {located && <UserLocation />}
+          {picking && (
+            <GeoJSONSource id="area-outline" data={outlineOf(bounds)}>
+              <Layer
+                id="area-fill"
+                type="fill"
+                paint={{ 'fill-color': '#1F5C4A', 'fill-opacity': 0.12 }}
+              />
+              <Layer
+                id="area-line"
+                type="line"
+                paint={{ 'line-color': '#1F5C4A', 'line-width': 3 }}
+              />
+            </GeoJSONSource>
+          )}
+        </Map>
+        {!ready && (
+          <View pointerEvents="none" style={[s.loading, { backgroundColor: t.bg }]}>
+            <ActivityIndicator size="large" color={t.accent} />
+            <Text style={{ color: t.text, fontSize: 16, marginTop: 10 }}>Loading the map…</Text>
+          </View>
         )}
-      </Map>
+      </View>
 
       {/* "Find me" button */}
       <Pressable
@@ -346,8 +378,9 @@ export function MapsScreen() {
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ gap: 8, paddingRight: 8 }}
-              style={{ flexGrow: 0 }}
+              // Edge to edge, so chips scroll off the screen, not into the panel's padding.
+              contentContainerStyle={{ gap: 8, paddingHorizontal: 16 }}
+              style={{ flexGrow: 0, marginHorizontal: -16 }}
             >
               {PLACE_CATEGORIES.map((c) => {
                 const on = shown.includes(c.id);
@@ -545,6 +578,16 @@ const s = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 3 },
     elevation: 4,
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingBottom: 20, // the panel overlaps the bottom of the map
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   panel: {
     padding: 16,
