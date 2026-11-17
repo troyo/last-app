@@ -3,7 +3,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, IconName, IconTile, Text } from '../components/ui';
-import { CHECKLISTS, progressOf } from '../lib/checklists';
+import { getChecklists, progressOf } from '../lib/checklists';
 import { HUES, useTheme } from '../lib/theme';
 
 // "Get ready": three checklists that build on each other. Progress is saved.
@@ -18,7 +18,7 @@ export default function Prep() {
       <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21, marginBottom: 4 }}>
         How long could your home run with no power, taps or shops? Tick things off as you get them.
       </Text>
-      {CHECKLISTS.map((list) => {
+      {getChecklists().map((list) => {
         const p = progressOf(list);
         const pct = Math.round((p.done / p.total) * 100);
         return (
@@ -47,8 +47,8 @@ export default function Prep() {
         );
       })}
       <Text style={{ color: t.muted, fontSize: 13, lineHeight: 19 }}>
-        Amounts are per person and are general guidelines. Adjust for children, health needs, pets
-        and your climate.
+        General guidelines. Tap “Why?” on any line for a plain explanation. Set your place and
+        household under More to get amounts that fit your home.
       </Text>
     </ScrollView>
   );

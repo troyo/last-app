@@ -45,6 +45,8 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Home' }} />
         <Stack.Screen name="welcome" options={{ headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="agree" options={{ headerShown: false, gestureEnabled: false }} />
+        <Stack.Screen name="place" options={{ headerShown: false }} />
+        <Stack.Screen name="hazard/[id]" options={{ title: '' }} />
         <Stack.Screen name="prep" options={{ title: 'Get ready' }} />
         <Stack.Screen name="packs" options={{ title: 'My packs' }} />
         <Stack.Screen name="about" options={{ title: 'How Last App works' }} />

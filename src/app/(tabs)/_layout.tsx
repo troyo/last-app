@@ -18,9 +18,10 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: t.card,
           borderTopColor: t.border,
-          height: 60 + insets.bottom,
-          paddingTop: 6,
-          paddingBottom: Math.max(insets.bottom, 8),
+          // Room for a 28pt icon and a 15pt label on every phone, with or without a home bar.
+          height: 64 + insets.bottom,
+          paddingTop: 4,
+          paddingBottom: Math.max(insets.bottom, 6),
         },
         tabBarAllowFontScaling: false,
         tabBarLabelStyle: { fontSize: 11, lineHeight: 15, fontFamily: 'Nunito_700Bold' },

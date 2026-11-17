@@ -1,7 +1,16 @@
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Image, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import {
+  Image,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { DawnScene } from '../components/DawnScene';
 import { Button, FadeIn, Float, Text } from '../components/ui';
 import { hasAgreed } from '../lib/agreement';
 import { useTheme } from '../lib/theme';
@@ -9,9 +18,9 @@ import { markWelcomeSeen } from '../lib/welcome';
 
 const SLIDES = [
   {
-    image: require('../../assets/illustrations/welcome.png'),
-    title: 'Hi, glad you’re here',
-    body: 'Last App is a friendly pocket guide for when things go sideways: a power cut, a storm, a scraped knee on a hike. Clear, calm steps, right when you need them.',
+    image: null, // the first page gets the animated sunrise instead of a picture
+    title: 'Ready for anything',
+    body: 'Last App is the guide you’ll want when the power, the phones and the shops are all down. Calm, clear steps for a bad night or a bad year.',
   },
   {
     image: require('../../assets/illustrations/offline.png'),
@@ -31,6 +40,7 @@ export default function Welcome() {
   const { width } = useWindowDimensions();
   const scroller = useRef<React.ComponentRef<typeof ScrollView>>(null);
   const [page, setPage] = useState(0);
+  const [tall, setTall] = useState(0); // height of the swiping area, so pages can center
   const last = page === SLIDES.length - 1;
 
   const finish = () => {
@@ -57,17 +67,23 @@ export default function Welcome() {
         showsHorizontalScrollIndicator={false}
         onScroll={onScroll}
         scrollEventThrottle={16}
-        style={{ flex: 1 }}>
+        onLayout={(e) => setTall(e.nativeEvent.layout.height)}
+        style={{ flex: 1 }}
+      >
         {SLIDES.map((slide, i) => (
-          <View key={slide.title} style={[s.slide, { width }]}>
-            <Float>
-              <Image
-                source={slide.image}
-                style={{ width: width - 48, height: (width - 48) * 0.8 }}
-                resizeMode="contain"
-              />
-            </Float>
-            <FadeIn delay={i === 0 ? 150 : 0}>
+          <View key={slide.title} style={[s.slide, { width, minHeight: tall }]}>
+            {slide.image ? (
+              <Float>
+                <Image
+                  source={slide.image}
+                  style={{ width: width - 48, height: (width - 48) * 0.8 }}
+                  resizeMode="contain"
+                />
+              </Float>
+            ) : (
+              <DawnScene width={width - 48} />
+            )}
+            <FadeIn delay={i === 0 ? 900 : 0}>
               <Text style={[s.title, { color: t.text }]}>{slide.title}</Text>
               <Text style={[s.body, { color: t.muted }]}>{slide.body}</Text>
             </FadeIn>

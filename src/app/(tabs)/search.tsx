@@ -1,17 +1,21 @@
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card, IconName, IconTile, Text } from '../../components/ui';
 import { findTopic } from '../../lib/catalog';
+import { Hazard } from '../../lib/hazards';
 import { isDownloaded } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
 import { QuickHelp } from '../../lib/quick-help';
 import { GuideHit, recentSearches, rememberSearch, search, SUGGESTED } from '../../lib/search';
 import { HUES, TOPIC_LOOK, useTheme } from '../../lib/theme';
 
-type Row = { kind: 'help'; help: QuickHelp } | { kind: 'guide'; hit: GuideHit };
+type Row =
+  | { kind: 'help'; help: QuickHelp }
+  | { kind: 'hazard'; hazard: Hazard }
+  | { kind: 'guide'; hit: GuideHit };
 const PACK_NAME = { small: 'Small', medium: 'Medium', large: 'Large' } as const;
 
 // Search everything: emergency cards first, then every guide in every pack.
@@ -21,6 +25,11 @@ export default function Search() {
   const { version } = useLibrary();
   const [query, setQuery] = useState('');
   const [, bump] = useState(0);
+  // Other screens can open Search with words already typed in.
+  const { q } = useLocalSearchParams<{ q?: string }>();
+  useEffect(() => {
+    if (q) setQuery(q);
+  }, [q]);
 
   const results = useMemo(
     () => search(query),
@@ -29,9 +38,11 @@ export default function Search() {
   );
   const rows: Row[] = [
     ...results.help.map((help) => ({ kind: 'help', help }) as Row),
+    ...results.hazards.map((hazard) => ({ kind: 'hazard', hazard }) as Row),
     ...results.guides.map((hit) => ({ kind: 'guide', hit }) as Row),
   ];
   const typing = query.trim().length > 1;
+  const found = results.total + results.help.length + results.hazards.length;
   const recent = recentSearches();
 
   const open = (go: () => void) => {
@@ -88,7 +99,13 @@ export default function Search() {
       ) : (
         <FlatList
           data={rows}
-          keyExtractor={(r) => (r.kind === 'help' ? `h-${r.help.id}` : r.hit.item.id)}
+          keyExtractor={(r) =>
+            r.kind === 'help'
+              ? `h-${r.help.id}`
+              : r.kind === 'hazard'
+                ? `z-${r.hazard.id}`
+                : r.hit.item.id
+          }
           contentContainerStyle={s.list}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
@@ -96,9 +113,7 @@ export default function Search() {
             <Text style={{ color: t.muted, fontSize: 14, marginBottom: 2 }}>
               {rows.length === 0
                 ? ''
-                : `${(results.total + results.help.length).toLocaleString()} ${
-                    results.total + results.help.length === 1 ? 'result' : 'results'
-                  }`}
+                : `${found.toLocaleString()} ${found === 1 ? 'result' : 'results'}`}
             </Text>
           }
           ListEmptyComponent={
@@ -116,6 +131,21 @@ export default function Search() {
                     <Text style={[s.title, { color: t.text }]}>{h.title}</Text>
                     <Text style={{ color: t.bad, fontSize: 13, fontWeight: '700' }}>
                       Emergency steps
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={18} color={t.muted} />
+                </Card>
+              );
+            }
+            if (row.kind === 'hazard') {
+              const h = row.hazard;
+              return (
+                <Card onPress={() => open(() => router.push(`/hazard/${h.id}`))} style={s.row}>
+                  <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={42} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={[s.title, { color: t.text }]}>{h.title}</Text>
+                    <Text style={{ color: t.accent, fontSize: 13, fontWeight: '700' }}>
+                      Before, during and after
                     </Text>
                   </View>
                   <Ionicons name="chevron-forward" size={18} color={t.muted} />

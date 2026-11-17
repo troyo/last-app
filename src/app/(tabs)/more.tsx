@@ -1,22 +1,28 @@
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card, IconName, IconTile, Text } from '../../components/ui';
 import { formatBytes, packBytes } from '../../lib/catalog';
+import { getProfile } from '../../lib/place';
 import { useLibrary } from '../../lib/LibraryContext';
 import { HUES, Hue, useTheme } from '../../lib/theme';
 
 // Everything you set up once and rarely touch: your packs, and the fine print.
 export default function More() {
   const t = useTheme();
+  // Your place may have changed while this tab was out of view.
+  const [, refresh] = useState(0);
+  useFocusEffect(useCallback(() => refresh((n) => n + 1), []));
   const { state, downloading } = useLibrary();
+  const profile = getProfile();
   const packName = state.pack ? state.pack[0].toUpperCase() + state.pack.slice(1) : '';
 
   const rows: { icon: IconName; hue: Hue; title: string; sub: string; to: string }[] = [
     {
       icon: 'bag-personal',
-      hue: 'green',
+      hue: 'brown',
       title: 'My packs',
       sub: downloading
         ? 'Saving your guides…'
@@ -24,6 +30,15 @@ export default function More() {
           ? `${packName} pack · ${formatBytes(packBytes(state.pack))} on this phone`
           : 'Nothing saved yet. Get the free pack',
       to: '/packs',
+    },
+    {
+      icon: 'map-marker-radius',
+      hue: 'green',
+      title: 'My place and household',
+      sub: profile
+        ? `${profile.place[0].toUpperCase()}${profile.place.slice(1)} · ${profile.people} ${profile.people === 1 ? 'person' : 'people'}`
+        : 'Make the guides fit where you live',
+      to: '/place',
     },
     {
       icon: 'clipboard-check',

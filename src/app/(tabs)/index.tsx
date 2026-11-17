@@ -7,15 +7,23 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, FadeIn, IconName, IconTile, Text } from '../../components/ui';
 import { hasAgreed } from '../../lib/agreement';
 import { getCatalog, itemsForPack } from '../../lib/catalog';
-import { CHECKLISTS, progressOf } from '../../lib/checklists';
+import { getChecklists, progressOf } from '../../lib/checklists';
+import { CLIMATE_TIPS, HAZARDS } from '../../lib/hazards';
 import { isDownloaded, remainingBytes } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
+import { CLIMATES, getProfile, placeAsked } from '../../lib/place';
 import { QUICK_HELP } from '../../lib/quick-help';
 import { HUES, TOPIC_LOOK, useTheme } from '../../lib/theme';
 import { hasSeenWelcome } from '../../lib/welcome';
 
+function greeting() {
+  const h = new Date().getHours();
+  return h < 5 ? 'Hi there' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+}
+
 // Home, laid out the way a prepper thinks:
 //   Right now  -> emergency steps
+//   Your area  -> what can happen where you live, and how to get through it
 //   Get ready  -> checklists for 3 days, 2 weeks, 1 year
 //   Learn      -> every topic in the library
 export default function Home() {
@@ -36,6 +44,10 @@ export default function Home() {
 
   if (!hasSeenWelcome()) return <Redirect href="/welcome" />;
   if (!hasAgreed()) return <Redirect href="/agree" />;
+  if (!placeAsked()) return <Redirect href="/place" />;
+
+  const profile = getProfile();
+  const myHazards = profile ? HAZARDS.filter((h) => profile.hazards.includes(h.id)) : [];
 
   const topics = getCatalog().topics;
   const ready = !!state.pack && state.complete && remainingBytes(state.pack) === 0;
@@ -49,7 +61,7 @@ export default function Home() {
       {/* White clock and battery icons while the green header is showing */}
       {focused && <StatusBar style="light" />}
       <View style={[s.header, { backgroundColor: t.header, paddingTop: insets.top + 18 }]}>
-        <Text style={s.hello}>Hi there</Text>
+        <Text style={s.hello}>{greeting()}</Text>
         <Text style={s.sub}>Whatever comes up, you’ve got this.</Text>
         {/* Looks like a search box; opens the Search tab. */}
         <Pressable
@@ -146,13 +158,99 @@ export default function Home() {
 
       <View style={s.body}>
         <View style={[s.sectionHead, { marginTop: 8 }]}>
+          <View style={s.row}>
+            <Text style={[s.section, { color: t.text, flex: 1 }]} numberOfLines={1}>
+              {profile ? `For ${profile.place}` : 'For your area'}
+            </Text>
+            {profile && (
+              <Pressable onPress={() => router.push('/place')} hitSlop={10}>
+                <Text style={{ color: t.accent, fontSize: 14, fontWeight: '800' }}>Change</Text>
+              </Pressable>
+            )}
+          </View>
+          <Text style={{ color: t.muted, fontSize: 14 }}>
+            {profile
+              ? 'What can happen where you live, and how to get through it.'
+              : 'Survival isn’t one size fits all.'}
+          </Text>
+        </View>
+        {!profile && (
+          <Card onPress={() => router.push('/place')} style={s.row}>
+            <IconTile name="map-marker-radius" {...HUES.green} size={44} />
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>
+                Make this fit where you live
+              </Text>
+              <Text style={{ color: t.muted, fontSize: 14, lineHeight: 19 }}>
+                Takes a minute. Works with no signal.
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={t.muted} />
+          </Card>
+        )}
+      </View>
+
+      {profile && (
+        <>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={s.helpRow}
+          >
+            {myHazards.map((h) => (
+              <Pressable
+                key={h.id}
+                onPress={() => router.push(`/hazard/${h.id}`)}
+                style={({ pressed }) => [
+                  s.helpTile,
+                  { backgroundColor: HUES[h.hue].tint },
+                  pressed && { opacity: 0.8 },
+                ]}
+              >
+                <IconTile
+                  name={h.icon as IconName}
+                  color={HUES[h.hue].color}
+                  tint={t.card}
+                  size={40}
+                />
+                <Text style={s.helpTitle} numberOfLines={2}>
+                  {h.title.replace(' and deep cold', '')}
+                </Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+          <View style={[s.body, { paddingTop: 6 }]}>
+            <Card style={[s.row, { alignItems: 'flex-start', backgroundColor: t.soft }]}>
+              <IconTile
+                name={CLIMATES[profile.climate].icon as IconName}
+                color={HUES.sun.color}
+                tint={t.card}
+                size={40}
+              />
+              <View style={{ flex: 1, gap: 2 }}>
+                <Text style={{ color: t.text, fontSize: 15, fontWeight: '800' }}>
+                  {CLIMATES[profile.climate].title}
+                </Text>
+                <Text style={{ color: t.text, fontSize: 14, lineHeight: 20 }}>
+                  {CLIMATE_TIPS[profile.climate][0]}
+                </Text>
+              </View>
+            </Card>
+          </View>
+        </>
+      )}
+
+      <View style={s.body}>
+        <View style={s.sectionHead}>
           <Text style={[s.section, { color: t.text }]}>Get ready</Text>
           <Text style={{ color: t.muted, fontSize: 14 }}>
-            How long could your home last with no power or shops?
+            {profile
+              ? `Lists written for your ${profile.people === 1 ? 'home' : `${profile.people} people`} in ${profile.place}.`
+              : 'How long could your home last with no power or shops?'}
           </Text>
         </View>
         <Card style={{ paddingVertical: 4 }}>
-          {CHECKLISTS.map((list, i) => {
+          {getChecklists().map((list, i) => {
             const p = progressOf(list);
             return (
               <Pressable
@@ -199,7 +297,7 @@ export default function Home() {
             return (
               <FadeIn key={topic.id} delay={80 + i * 35} style={s.cell}>
                 <Card onPress={() => router.push(`/topic/${topic.id}`)} style={s.topic}>
-                  <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={42} />
+                  <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={40} />
                   <Text
                     style={{ color: t.text, fontSize: 15, fontWeight: '700', lineHeight: 19 }}
                     numberOfLines={2}
@@ -259,5 +357,5 @@ const s = StyleSheet.create({
   bar: { height: 8, borderRadius: 4 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -5 },
   cell: { width: '50%', padding: 5 },
-  topic: { gap: 6, height: 142, justifyContent: 'flex-start' },
+  topic: { gap: 5, height: 138, justifyContent: 'flex-start' },
 });

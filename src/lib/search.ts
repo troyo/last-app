@@ -5,6 +5,7 @@
 
 import { Catalog, getCatalog, Item, PackId } from './catalog';
 import { File, Paths } from './fs';
+import { Hazard, HAZARDS } from './hazards';
 import { QUICK_HELP, QuickHelp } from './quick-help';
 
 // Everyday word -> the words guides actually use.
@@ -75,7 +76,12 @@ const SYNONYMS: Record<string, string[]> = {
 const PACK_ORDER: PackId[] = ['small', 'medium', 'large'];
 
 export type GuideHit = { item: Item; score: number };
-export type SearchResults = { help: QuickHelp[]; guides: GuideHit[]; total: number };
+export type SearchResults = {
+  help: QuickHelp[];
+  hazards: Hazard[];
+  guides: GuideHit[];
+  total: number;
+};
 
 // One lowercase "haystack" per guide, built once per catalog.
 let indexedFor: Catalog | null = null;
@@ -124,11 +130,16 @@ function wordScore(word: string, title: string, rest: string): number {
 
 export function search(query: string, limit = 60): SearchResults {
   const words = wordsOf(query);
-  if (words.length === 0) return { help: [], guides: [], total: 0 };
+  if (words.length === 0) return { help: [], hazards: [], guides: [], total: 0 };
   ensureIndex();
 
   const help = QUICK_HELP.filter((h) => {
     const hay = `${h.title} ${h.when}`.toLowerCase();
+    return words.every((w) => wordScore(w, hay, '') > 0);
+  });
+
+  const hazards = HAZARDS.filter((h) => {
+    const hay = `${h.title} ${h.blurb} ${h.search}`.toLowerCase();
     return words.every((w) => wordScore(w, hay, '') > 0);
   });
 
@@ -158,7 +169,7 @@ export function search(query: string, limit = 60): SearchResults {
   let hits = collect(true);
   if (hits.length === 0 && words.length > 1) hits = collect(false);
   hits.sort((a, b) => b.score - a.score || a.item.title.localeCompare(b.item.title));
-  return { help, guides: hits.slice(0, limit), total: hits.length };
+  return { help, hazards, guides: hits.slice(0, limit), total: hits.length };
 }
 
 // ---------- Recent searches ----------
