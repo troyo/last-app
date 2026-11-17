@@ -1,7 +1,16 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { FlatList, Image, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import {
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { Button, Card, IconName, IconTile, Text } from '../../components/ui';
 import { findTopic, getCatalog, itemsForPack } from '../../lib/catalog';
 import { isDownloaded } from '../../lib/library';
@@ -14,6 +23,7 @@ const TYPE_ICON = { pdf: 'book-open-page-variant', video: 'play-circle' } as con
 
 export default function TopicScreen() {
   const t = useTheme();
+  const { width } = useWindowDimensions();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { state, version } = useLibrary();
   const topic = findTopic(id);
@@ -91,7 +101,9 @@ export default function TopicScreen() {
                 <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  style={{ marginHorizontal: -18 }}
+                  // A fixed screen width: a stretched header row inside a list keeps the
+                  // list's width, so negative margins alone left the chips clipped.
+                  style={{ width, marginLeft: -18 }}
                   contentContainerStyle={{ paddingHorizontal: 18, gap: 8 }}
                 >
                   {[
