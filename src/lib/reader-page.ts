@@ -90,7 +90,11 @@ const css = (px: number, c: ReaderColors) => `
 // browser understands it.
 const SCRIPT = String.raw`
 (function () {
+  var t0 = Date.now();
   var root = document.getElementById('doc');
+  // The same clutter the stylesheet hides. Checked by name, because asking the
+  // browser "is this visible?" thousands of times is what makes a page slow.
+  var HIDDEN = '.mw-ref,.reference,.mw-editsection,.navbox,.hatnote,.ambox,.metadata,.reflist,.mw-references-wrap,.infobox,.sidebar,.toc,.noprint,.shortdescription,.mw-empty-elt,.mw-jump-link,.portal,.portalbox,.sistersitebox,.side-box,.stub,.catlinks,.authority-control,.navigation-not-searchable,.mbox-small,.magnify,.mw-cite-backlink,.nomobile,.tmbox,.ombox,.cmbox,.fmbox,.Inline-Template,.asof-tag,audio,video,.listen,.haudio,.refbegin,.citation,.printfooter';
   var inner = root.querySelector('.mw-parser-output') || root;
   // Some guides wrap everything in one extra box; step inside it.
   while (inner.children.length === 1 && inner.firstElementChild.tagName === 'DIV' &&
@@ -104,7 +108,8 @@ const SCRIPT = String.raw`
 
   // ---- 1. Short paragraphs instead of walls of text ----
   var splitLong = function (p) {
-    if (p.textContent.length < 420) return;
+    var total = p.textContent.length;
+    if (total < 420) return;
     var run = 0, node = p.firstChild;
     while (node) {
       var next = node.nextSibling;
@@ -112,7 +117,7 @@ const SCRIPT = String.raw`
         var t = node.nodeValue, re = /[.!?]["')\]]?\s+(?=[A-Z])/g, m;
         while ((m = re.exec(t))) {
           var at = m.index + m[0].length;
-          if (run + at > 230 && p.textContent.length - (run + at) > 120) {
+          if (run + at > 230 && total - (run + at) > 120) {
             var rest = node.splitText(at);
             var fresh = document.createElement('p');
             while (rest) { var n = rest.nextSibling; fresh.appendChild(rest); rest = n; }
@@ -133,7 +138,7 @@ const SCRIPT = String.raw`
   var tables = inner.querySelectorAll('table');
   for (i = 0; i < tables.length; i++) {
     var tb = tables[i];
-    if (tb.closest('.scroll') || getComputedStyle(tb).display === 'none') continue;
+    if (tb.closest('.scroll') || tb.closest(HIDDEN)) continue;
     var wrap = document.createElement('div');
     wrap.className = 'scroll';
     tb.parentNode.insertBefore(wrap, tb);
@@ -192,7 +197,7 @@ const SCRIPT = String.raw`
     holder.appendChild(box);
     inner.appendChild(holder);
     // Skip sections with nothing left once the clutter is hidden.
-    if (box.innerText.replace(/\s+/g, '').length < 25 && !box.querySelector('img')) {
+    if (box.textContent.replace(/\s+/g, '').length < 25 && !box.querySelector('img')) {
       inner.removeChild(holder);
       continue;
     }
@@ -285,12 +290,7 @@ const SCRIPT = String.raw`
       if (!el || /^(SCRIPT|STYLE|MARK)$/.test(el.tagName)) continue;
       if (el.closest('.jump') || !node.nodeValue.trim()) continue;
       // Skip anything hidden as clutter (but not text inside a folded section).
-      var hidden = false;
-      for (var p = el; p && p !== root; p = p.parentNode) {
-        if (p.classList && p.classList.contains('in')) continue;
-        if (getComputedStyle(p).display === 'none') { hidden = true; break; }
-      }
-      if (!hidden && node.nodeValue.toLowerCase().indexOf(q) >= 0) texts.push(node);
+      if (node.nodeValue.toLowerCase().indexOf(q) >= 0 && !el.closest(HIDDEN)) texts.push(node);
     }
     for (var k = 0; k < texts.length && marks.length < 400; k++) {
       var tn = texts[k], idx;
@@ -307,6 +307,7 @@ const SCRIPT = String.raw`
     else send({ type: 'find', count: 0, at: 0 });
   };
 
+  window.__readerMs = Date.now() - t0;
   window.__reader = function (cmd) {
     if (cmd.type === 'find') find(cmd.query);
     else if (cmd.type === 'next') show(at + 1);

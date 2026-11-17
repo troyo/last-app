@@ -20,6 +20,7 @@ export const HtmlView = forwardRef<
     dark: boolean;
     onOpenItem: (id: string) => void;
     onMessage?: (msg: ReaderMessage) => void;
+    onReady?: () => void;
   }
 >(function HtmlView(props, ref) {
   const web = useRef<{ injectJavaScript: (code: string) => void } | null>(null);
@@ -38,6 +39,7 @@ export const HtmlView = forwardRef<
       source={{ html: props.html }}
       style={{ backgroundColor: props.background }}
       forceDarkOn={props.dark}
+      onLoadEnd={props.onReady}
       onMessage={(e) => {
         try {
           props.onMessage?.(JSON.parse(e.nativeEvent.data));

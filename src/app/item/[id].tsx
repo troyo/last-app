@@ -3,6 +3,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -65,6 +66,7 @@ function Article({ item }: { item: Item }) {
   const [finding, setFinding] = useState(false);
   const [query, setQuery] = useState('');
   const [found, setFound] = useState<{ count: number; at: number } | null>(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     fileFor(item).text().then(setHtml);
@@ -101,7 +103,7 @@ function Article({ item }: { item: Item }) {
     view.current?.send({ type: 'clear' });
   };
 
-  if (page === null) return <View style={{ flex: 1, backgroundColor: t.bg }} />;
+  if (page === null) return <Opening />;
   const typed = query.trim().length > 1;
 
   return (
@@ -141,12 +143,18 @@ function Article({ item }: { item: Item }) {
         html={page}
         background={t.bg}
         dark={dark}
+        onReady={() => setReady(true)}
         onMessage={(m) => m.type === 'find' && setFound({ count: m.count, at: m.at })}
         onOpenItem={(id) => {
           const target = findItem(id);
           if (target && fileFor(target).exists) router.push(`/item/${id}`);
         }}
       />
+      {!ready && (
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+          <Opening />
+        </View>
+      )}
       {finding && (
         <View
           style={[
@@ -206,6 +214,17 @@ function Article({ item }: { item: Item }) {
   );
 }
 
+// Shown for the moment a long guide takes to open, so the screen is never blank.
+function Opening() {
+  const t = useTheme();
+  return (
+    <View style={[s.opening, { backgroundColor: t.bg }]}>
+      <ActivityIndicator size="large" color={t.accent} />
+      <Text style={{ color: t.text, fontSize: 17, fontWeight: '700' }}>Opening the guide…</Text>
+    </View>
+  );
+}
+
 function Video({ item }: { item: Item }) {
   const t = useTheme();
   const player = useVideoPlayer(fileFor(item).uri);
@@ -242,6 +261,7 @@ function Pdf({ item }: { item: Item }) {
 const s = StyleSheet.create({
   pad: { padding: 16 },
   credit: { fontSize: 15, padding: 16 },
+  opening: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14 },
   btn: { padding: 15, borderRadius: 16, alignItems: 'center' },
   findBar: {
     flexDirection: 'row',

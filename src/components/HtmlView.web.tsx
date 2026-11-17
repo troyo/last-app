@@ -20,6 +20,7 @@ export const HtmlView = forwardRef<
     dark: boolean;
     onOpenItem: (id: string) => void;
     onMessage?: (msg: ReaderMessage) => void;
+    onReady?: () => void;
   }
 >(function HtmlView(props, ref) {
   const frame = useRef<HTMLIFrameElement>(null);
@@ -48,6 +49,7 @@ export const HtmlView = forwardRef<
       sandbox="allow-same-origin allow-scripts"
       srcDoc={props.html}
       onLoad={(e) => {
+        props.onReady?.();
         const doc = (e.target as HTMLIFrameElement).contentDocument;
         doc?.addEventListener('click', (ev) => {
           const a = (ev.target as HTMLElement).closest('a');

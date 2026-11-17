@@ -167,7 +167,12 @@ export function MapsScreen() {
       },
     ]);
 
-  const show = (b: Bounds) => camera.current?.fitBounds(b, { duration: 900 });
+  // Leave room for the clock at the top so the box is never hidden under it.
+  const show = (b: Bounds) =>
+    camera.current?.fitBounds(b, {
+      duration: 900,
+      padding: { top: insets.top + 24, right: 24, bottom: 24, left: 24 },
+    });
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
@@ -357,7 +362,7 @@ const s = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   savedMain: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 },
-  sizes: { flexDirection: 'row', gap: 8 },
+  sizes: { flexDirection: 'row', gap: 8, paddingRight: 16 },
   size: { paddingHorizontal: 14, paddingVertical: 10, borderRadius: 16 },
   barBg: { height: 10, borderRadius: 5, overflow: 'hidden' },
   bar: { height: 10, borderRadius: 5 },
