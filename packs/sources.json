@@ -768,6 +768,13 @@
       "tier": "large",
       "topic": "diy",
       "limit": 20000
+    },
+    {
+      "wiki": "wikibooks",
+      "tier": "large",
+      "topic": "books",
+      "prefix": "Emergency Medicine",
+      "limit": 500
     }
   ],
   "pdfs": [

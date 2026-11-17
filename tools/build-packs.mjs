@@ -221,7 +221,9 @@ function usableOffGrid(wiki, title) {
   }
   if (wiki === 'wikibooks') {
     if (/^Cookbook:/.test(title)) return COOK_OK.test(title) && !NEEDS_GEAR.test(title);
-    if (/^(Electronics|Emergency Medicine)/.test(title)) return false;
+    if (/^Electronics/.test(title)) return false;
+    // Hospital-level medicine stays: you may end up near a hospital or a nurse.
+    if (/^Emergency Medicine/.test(title)) return true;
     if (/^Horticulture\//.test(title)) return GROW_OK.test(title.replace(/^Horticulture\//, ''));
     return !NEEDS_GEAR.test(title);
   }
