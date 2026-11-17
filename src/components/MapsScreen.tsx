@@ -262,8 +262,8 @@ export function MapsScreen() {
             <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
               Move the map so the green box covers the place you want, then pick a size.
             </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }}>
-              <View style={s.sizes}>
+            {/* A 2x2 grid of sizes, so none is cut off at the screen edge. */}
+            <View style={s.sizes}>
                 {AREA_SIZES.map((opt) => {
                   const on = opt.id === sizeId;
                   return (
@@ -281,17 +281,18 @@ export function MapsScreen() {
                           fontSize: 15,
                           fontWeight: '700',
                         }}
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
                       >
                         {opt.label}
                       </Text>
                       <Text style={{ color: on ? t.accentText : t.text, fontSize: 13 }}>
-                        {opt.miles} mi each way
+                        {opt.miles} mi around
                       </Text>
                     </Pressable>
                   );
                 })}
-              </View>
-            </ScrollView>
+            </View>
             <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
               About {plan.megabytes} MB ·{' '}
               {plan.streetLevel ? 'street-level detail' : 'main roads and towns (less detail)'}
@@ -362,8 +363,8 @@ const s = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   savedMain: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 },
-  sizes: { flexDirection: 'row', gap: 8, paddingRight: 16 },
-  size: { paddingHorizontal: 14, paddingVertical: 10, borderRadius: 16 },
+  sizes: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  size: { width: '48.5%', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 16 },
   barBg: { height: 10, borderRadius: 5, overflow: 'hidden' },
   bar: { height: 10, borderRadius: 5 },
 });
