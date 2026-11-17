@@ -1,13 +1,13 @@
-import { router, Stack, useLocalSearchParams } from "expo-router";
-import { useVideoPlayer, VideoView } from "expo-video";
-import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, useColorScheme, View } from "react-native";
-import { Text } from "../../components/ui";
-import { HtmlView } from "../../components/HtmlView";
-import { findItem, Item } from "../../lib/catalog";
-import { fileFor } from "../../lib/library";
-import { getTextSize, nextTextSize, TEXT_SIZES } from "../../lib/text-size";
-import { useTheme } from "../../lib/theme";
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useVideoPlayer, VideoView } from 'expo-video';
+import { useEffect, useState } from 'react';
+import { Pressable, StyleSheet, useColorScheme, View } from 'react-native';
+import { Text } from '../../components/ui';
+import { HtmlView } from '../../components/HtmlView';
+import { findItem, Item } from '../../lib/catalog';
+import { fileFor } from '../../lib/library';
+import { getTextSize, nextTextSize, TEXT_SIZES } from '../../lib/text-size';
+import { useTheme } from '../../lib/theme';
 
 export default function ItemScreen() {
   const t = useTheme();
@@ -18,8 +18,7 @@ export default function ItemScreen() {
     return (
       <View style={[s.pad, { backgroundColor: t.bg, flex: 1 }]}>
         <Text style={{ color: t.text, fontSize: 17 }}>
-          This guide isn’t saved on your phone yet. You can get it from My
-          packs.
+          This guide isn’t saved on your phone yet. You can get it from My packs.
         </Text>
       </View>
     );
@@ -27,10 +26,10 @@ export default function ItemScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ title: "" }} />
-      {item.type === "article" && <Article item={item} />}
-      {item.type === "video" && <Video item={item} />}
-      {item.type === "pdf" && <Pdf item={item} />}
+      <Stack.Screen options={{ title: '' }} />
+      {item.type === 'article' && <Article item={item} />}
+      {item.type === 'video' && <Video item={item} />}
+      {item.type === 'pdf' && <Pdf item={item} />}
     </>
   );
 }
@@ -46,7 +45,7 @@ function Credit({ item }: { item: Item }) {
 
 function Article({ item }: { item: Item }) {
   const t = useTheme();
-  const dark = useColorScheme() === "dark";
+  const dark = useColorScheme() === 'dark';
   const [html, setHtml] = useState<string | null>(null);
   const [size, setSize] = useState(getTextSize);
 
@@ -96,11 +95,7 @@ General information, not medical advice. If you can reach emergency services, pl
               hitSlop={12}
               accessibilityLabel="Change text size"
             >
-              <Text
-                style={{ color: t.accent, fontSize: 20, fontWeight: "800" }}
-              >
-                Aa
-              </Text>
+              <Text style={{ color: t.accent, fontSize: 20, fontWeight: '800' }}>Aa</Text>
             </Pressable>
           ),
         }}
@@ -123,11 +118,7 @@ function Video({ item }: { item: Item }) {
   const player = useVideoPlayer(fileFor(item).uri);
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
-      <VideoView
-        player={player}
-        style={{ width: "100%", aspectRatio: 16 / 9 }}
-        nativeControls
-      />
+      <VideoView player={player} style={{ width: '100%', aspectRatio: 16 / 9 }} nativeControls />
       <Credit item={item} />
     </View>
   );
@@ -148,9 +139,7 @@ function Pdf({ item }: { item: Item }) {
   return (
     <View style={[s.pad, { flex: 1, backgroundColor: t.bg, gap: 12 }]}>
       <Pressable onPress={open} style={[s.btn, { backgroundColor: t.accent }]}>
-        <Text style={{ color: t.accentText, fontWeight: "700", fontSize: 16 }}>
-          Open PDF
-        </Text>
+        <Text style={{ color: t.accentText, fontWeight: '700', fontSize: 16 }}>Open PDF</Text>
       </Pressable>
       <Credit item={item} />
     </View>
@@ -160,12 +149,12 @@ function Pdf({ item }: { item: Item }) {
 function escapeHtml(s: string) {
   return s.replace(
     /[&<>"]/g,
-    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!,
   );
 }
 
 const s = StyleSheet.create({
   pad: { padding: 16 },
   credit: { fontSize: 13, padding: 16 },
-  btn: { padding: 15, borderRadius: 16, alignItems: "center" },
+  btn: { padding: 15, borderRadius: 16, alignItems: 'center' },
 });

@@ -1,3 +1,5 @@
+import type { Hue } from './theme';
+
 // "What do I do right now?" cards. These ship inside the app, so they work
 // the moment it's installed, with no download and no internet.
 //
@@ -7,7 +9,8 @@
 
 export type QuickHelp = {
   id: string;
-  icon: string;
+  icon: string; // a MaterialCommunityIcons name
+  hue: Hue;
   title: string;
   /** One line under the title: how to know this is the right card. */
   when: string;
@@ -22,7 +25,8 @@ export type QuickHelp = {
 export const QUICK_HELP: QuickHelp[] = [
   {
     id: 'bleeding',
-    icon: '🩸',
+    icon: 'water',
+    hue: 'red',
     title: 'Bad bleeding',
     when: 'Blood is flowing, spurting or soaking through.',
     call: 'Call 911 or have someone call while you help.',
@@ -37,7 +41,8 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'cpr',
-    icon: '❤️',
+    icon: 'heart-pulse',
+    hue: 'red',
     title: 'Not breathing (CPR)',
     when: 'They won’t wake up and are not breathing normally.',
     call: 'Call 911 first. Put the phone on speaker.',
@@ -53,7 +58,8 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'choking',
-    icon: '😮',
+    icon: 'account-alert',
+    hue: 'coral',
     title: 'Choking',
     when: 'They can’t talk, cough or breathe.',
     steps: [
@@ -68,7 +74,8 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'burn',
-    icon: '🔥',
+    icon: 'fire',
+    hue: 'coral',
     title: 'Burns',
     when: 'Skin burned by heat, hot liquid or steam.',
     steps: [
@@ -83,7 +90,8 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'broken-bone',
-    icon: '🦴',
+    icon: 'bone',
+    hue: 'brown',
     title: 'Broken bone or bad sprain',
     when: 'Strong pain, swelling, or it looks bent.',
     steps: [
@@ -97,7 +105,8 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'heat',
-    icon: '🥵',
+    icon: 'white-balance-sunny',
+    hue: 'sun',
     title: 'Overheating',
     when: 'Very hot, confused, dizzy, or stopped sweating.',
     call: 'Confused or passing out? Call 911. This is an emergency.',
@@ -112,7 +121,8 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'cold',
-    icon: '🥶',
+    icon: 'snowflake',
+    hue: 'blue',
     title: 'Too cold',
     when: 'Hard shivering, slurred words, clumsy or sleepy.',
     steps: [
@@ -127,7 +137,8 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'water',
-    icon: '💧',
+    icon: 'cup-water',
+    hue: 'blue',
     title: 'Make water safe to drink',
     when: 'Tap is off or you’re not sure the water is clean.',
     steps: [
@@ -142,7 +153,8 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'lost',
-    icon: '🧭',
+    icon: 'compass',
+    hue: 'green',
     title: 'Lost outdoors',
     when: 'You don’t know the way back.',
     steps: [
@@ -155,7 +167,8 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'power',
-    icon: '🔦',
+    icon: 'flashlight',
+    hue: 'violet',
     title: 'Power is out',
     when: 'No electricity and you don’t know for how long.',
     steps: [

@@ -13,7 +13,11 @@ const TYPE_ICON = {
   pdf: 'book-outline',
   video: 'play-circle-outline',
 } as const;
-const TYPE_LABEL = { article: 'Guide', pdf: 'Manual (PDF)', video: 'Video' } as const;
+const TYPE_LABEL = {
+  article: 'Guide',
+  pdf: 'Manual (PDF)',
+  video: 'Video',
+} as const;
 
 export default function TopicScreen() {
   const t = useTheme();
@@ -87,8 +91,19 @@ export default function TopicScreen() {
 const s = StyleSheet.create({
   list: { padding: 20, gap: 10 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  icon: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  icon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   empty: { alignItems: 'center', gap: 10, paddingTop: 12 },
   emptyTitle: { fontSize: 22, fontWeight: '800' },
-  emptyBody: { fontSize: 16, lineHeight: 23, textAlign: 'center', marginBottom: 8 },
+  emptyBody: {
+    fontSize: 16,
+    lineHeight: 23,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
 });

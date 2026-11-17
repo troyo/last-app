@@ -2,6 +2,12 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 // Palette
 const G = '#1F5C4A', G2 = '#2F7A63', SAGE = '#BFD8C8', SAGE2 = '#DCEBDD', CREAM = '#FBF7EF', SUN = '#F6B93B', SUN2 = '#FBD98A', CORAL = '#F08A6B', INK = '#17352C', SKIN = '#F2C7A5', WHITE = '#FFFFFF';
+const SKY = '#E3F1EC';
+// A scene sits in a soft rounded frame with its own sky, so it never shows a hard edge.
+const scene = (w, h, body) =>
+  svg(w, h, `<defs><clipPath id="frame"><rect width="${w}" height="${h}" rx="72"/></clipPath>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${SKY}"/><stop offset="1" stop-color="#F3F8EE"/></linearGradient></defs>
+  <g clip-path="url(#frame)"><rect width="${w}" height="${h}" fill="url(#sky)"/>${body}</g>`);
 const svg = (w, h, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`;
 
 const dog = (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})">
@@ -46,10 +52,10 @@ const tree = (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><
 const cloud = (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})" fill="${WHITE}"><circle r="34"/><circle cx="40" cy="8" r="26"/><circle cx="-38" cy="10" r="24"/><rect x="-60" y="10" width="124" height="26" rx="13"/></g>`;
 
 // 1. Welcome: person reading with dog under a tree
-const welcome = svg(1000, 800, `${hills(1000, 800)}${cloud(220, 150)}${cloud(520, 90, 0.7)}${tree(190, 400, 1.3)}${person(520, 520)}${dog(790, 590, 1.15)}`);
+const welcome = scene(1000, 800, `${hills(1000, 800)}${cloud(220, 150)}${cloud(520, 90, 0.7)}${tree(190, 400, 1.3)}${person(520, 520)}${dog(790, 590, 1.15)}`);
 
 // 2. Offline: phone that works with no signal, tent and mountains
-const offline = svg(1000, 800, `
+const offline = scene(1000, 800, `
   <path d="M120 620 L360 250 L520 500 L620 380 L880 620 Z" fill="${SAGE}"/><path d="M360 250 L420 344 L380 330 L350 362 L318 316 Z" fill="${WHITE}"/>
   <circle cx="800" cy="190" r="100" fill="${SUN2}" opacity=".5"/><circle cx="800" cy="190" r="60" fill="${SUN}"/>
   ${cloud(200, 170, 0.9)}
@@ -76,9 +82,12 @@ const pack = (x, y, s, c, c2) => `<g transform="translate(${x} ${y}) scale(${s})
   <rect x="-60" y="10" width="120" height="84" rx="22" fill="${c2}"/>
   <rect x="-12" y="-44" width="24" height="34" rx="8" fill="${CREAM}"/>
   <rect x="-30" y="34" width="60" height="10" rx="5" fill="${CREAM}" opacity=".9"/></g>`;
-const packs = svg(1000, 800, `${hills(1000, 800)}${cloud(240, 160)}
+const packs = scene(1000, 800, `${hills(1000, 800)}${cloud(240, 160)}
   ${pack(230, 560, 0.72, SUN, '#E5A422')}${pack(480, 520, 0.98, CORAL, '#DD7355')}${pack(770, 470, 1.28, G2, G)}
   <g fill="${CREAM}" font-family="-apple-system,Helvetica,Arial" font-weight="800" text-anchor="middle"></g>`);
+
+// One backpack on its own, for each pack card.
+const onePack = (c, c2) => svg(300, 320, pack(150, 175, 1.05, c, c2));
 
 // Icon: sunrise over an open book on deep green.
 const icon = (pad = 1) => svg(1024, 1024, `
@@ -114,6 +123,9 @@ const iconBg = svg(1024, 1024, `<defs><linearGradient id="bg" x1="0" y1="0" x2="
   await shot('out/illustrations/welcome.png', welcome, 1000, 800, true, 1.2);
   await shot('out/illustrations/offline.png', offline, 1000, 800, true, 1.2);
   await shot('out/illustrations/packs.png', packs, 1000, 800, true, 1.2);
+  await shot('out/illustrations/pack-small.png', onePack(SUN, '#E5A422'), 300, 320, true, 1);
+  await shot('out/illustrations/pack-medium.png', onePack(CORAL, '#DD7355'), 300, 320, true, 1);
+  await shot('out/illustrations/pack-large.png', onePack(G2, G), 300, 320, true, 1);
   await shot('out/icon.png', icon(1), 1024, 1024, false);
   await shot('out/android-icon-foreground.png', iconFg(false), 1024, 1024, true);
   await shot('out/android-icon-monochrome.png', iconFg(true), 1024, 1024, true);

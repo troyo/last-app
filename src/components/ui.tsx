@@ -11,6 +11,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../lib/theme';
 
 // One friendly, rounded typeface everywhere. Each weight is its own font file,
@@ -58,13 +59,17 @@ export function Button(props: {
         kind === 'secondary' && { backgroundColor: t.soft },
         (pressed || props.disabled) && { opacity: props.disabled ? 0.4 : 0.8 },
         props.style,
-      ]}>
+      ]}
+    >
       <Text
         style={[
           s.btnText,
-          { color: kind === 'primary' ? t.accentText : kind === 'secondary' ? t.text : t.muted },
+          {
+            color: kind === 'primary' ? t.accentText : kind === 'secondary' ? t.text : t.muted,
+          },
           kind === 'quiet' && { fontWeight: '600', fontSize: 15 },
-        ]}>
+        ]}
+      >
         {props.label}
       </Text>
     </Pressable>
@@ -77,7 +82,7 @@ export function Card(props: {
   onPress?: () => void;
 }) {
   const t = useTheme();
-  const style = [s.card, { backgroundColor: t.card, borderColor: t.border }, props.style];
+  const style = [s.card, { backgroundColor: t.card }, props.style];
   if (!props.onPress) return <View style={style}>{props.children}</View>;
   return (
     <Pressable
@@ -85,9 +90,32 @@ export function Card(props: {
       style={({ pressed }) => [
         ...style,
         pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-      ]}>
+      ]}
+    >
       {props.children}
     </Pressable>
+  );
+}
+
+export type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
+
+/** A drawn icon on a soft colored circle. Used instead of emoji so everything matches. */
+export function IconTile(props: { name: IconName; color: string; tint: string; size?: number }) {
+  const size = props.size ?? 48;
+  return (
+    <View
+      style={[
+        s.tile,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: props.tint,
+        },
+      ]}
+    >
+      <MaterialCommunityIcons name={props.name} size={size * 0.54} color={props.color} />
+    </View>
   );
 }
 
@@ -113,9 +141,17 @@ export function FadeIn(props: {
         props.style,
         {
           opacity: v,
-          transform: [{ translateY: v.interpolate({ inputRange: [0, 1], outputRange: [14, 0] }) }],
+          transform: [
+            {
+              translateY: v.interpolate({
+                inputRange: [0, 1],
+                outputRange: [14, 0],
+              }),
+            },
+          ],
         },
-      ]}>
+      ]}
+    >
       {props.children}
     </Animated.View>
   );
@@ -149,16 +185,39 @@ export function Float(props: { children: ReactNode; style?: StyleProp<ViewStyle>
       style={[
         props.style,
         {
-          transform: [{ translateY: v.interpolate({ inputRange: [0, 1], outputRange: [0, -8] }) }],
+          transform: [
+            {
+              translateY: v.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, -8],
+              }),
+            },
+          ],
         },
-      ]}>
+      ]}
+    >
       {props.children}
     </Animated.View>
   );
 }
 
 const s = StyleSheet.create({
-  btn: { paddingVertical: 15, paddingHorizontal: 20, borderRadius: 16, alignItems: 'center' },
+  btn: {
+    paddingVertical: 16,
+    paddingHorizontal: 22,
+    borderRadius: 999,
+    alignItems: 'center',
+  },
   btnText: { fontSize: 17, fontWeight: '700' },
-  card: { padding: 16, borderRadius: 20, borderWidth: 1 },
+  card: {
+    padding: 18,
+    borderRadius: 24,
+    // A soft lift instead of an outline.
+    shadowColor: '#17352C',
+    shadowOpacity: 0.07,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 2,
+  },
+  tile: { alignItems: 'center', justifyContent: 'center' },
 });

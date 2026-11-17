@@ -66,7 +66,14 @@ export default function About() {
               <Text style={{ color: t.text, fontSize: 17, fontWeight: '700' }}>
                 {i + 1}. {step.title}
               </Text>
-              <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21, marginTop: 2 }}>
+              <Text
+                style={{
+                  color: t.muted,
+                  fontSize: 15,
+                  lineHeight: 21,
+                  marginTop: 2,
+                }}
+              >
                 {step.body}
               </Text>
             </View>
@@ -110,5 +117,11 @@ const s = StyleSheet.create({
   h1: { fontSize: 32, fontWeight: '800' },
   h2: { fontSize: 20, fontWeight: '800', marginTop: 6 },
   row: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
-  icon: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  icon: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

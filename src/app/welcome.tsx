@@ -20,7 +20,7 @@ const SLIDES = [
   {
     image: require('../../assets/illustrations/packs.png'),
     title: 'Start free, grow when you like',
-    body: 'The Small pack is free forever and covers the essentials. Want manuals, handbooks and a medical encyclopedia too? Unlock the bigger packs any time.',
+    body: 'The Small pack is free forever and covers the essentials. Want field manuals, handbooks and thousands more guides? Unlock the bigger packs any time.',
   },
 ];
 

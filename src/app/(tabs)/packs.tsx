@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Card, Text } from '../../components/ui';
 import { formatBytes, getCatalog, itemsForPack, packBytes, PackId } from '../../lib/catalog';
@@ -16,6 +16,12 @@ import {
   useUnlocked,
 } from '../../lib/purchases';
 import { useTheme } from '../../lib/theme';
+
+const PACK_ART = {
+  small: require('../../../assets/illustrations/pack-small.png'),
+  medium: require('../../../assets/illustrations/pack-medium.png'),
+  large: require('../../../assets/illustrations/pack-large.png'),
+} as const;
 
 // Leave some room so the phone itself keeps working after the download.
 const SAFETY_MARGIN = 500 * 1024 * 1024;
@@ -82,20 +88,40 @@ export default function Packs() {
           return (
             <Card
               key={p.id}
-              style={[s.card, isCurrent && { borderColor: t.accent, borderWidth: 2 }]}>
+              style={[
+                s.card,
+                {
+                  borderWidth: 2,
+                  borderColor: isCurrent ? t.accent : 'transparent',
+                },
+              ]}
+            >
               <View style={s.cardHead}>
-                <Text style={[s.title, { color: t.text }]}>{p.title}</Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 10,
+                  }}
+                >
+                  <Image source={PACK_ART[p.id]} style={{ width: 46, height: 49 }} />
+                  <Text style={[s.title, { color: t.text }]}>{p.title}</Text>
+                </View>
                 <View
                   style={[
                     s.pill,
-                    { backgroundColor: p.id === 'small' ? t.soft : locked ? '#FCEFC9' : t.soft },
-                  ]}>
+                    {
+                      backgroundColor: p.id === 'small' ? t.soft : locked ? '#FCEFC9' : t.soft,
+                    },
+                  ]}
+                >
                   <Text
                     style={{
                       color: p.id === 'small' || !locked ? t.accent : '#7A5200',
                       fontWeight: '700',
                       fontSize: 13,
-                    }}>
+                    }}
+                  >
                     {p.id === 'small' ? 'Free' : locked ? 'Premium' : 'Unlocked'}
                   </Text>
                 </View>
@@ -111,7 +137,8 @@ export default function Packs() {
                     <View style={[s.bar, { width: `${pct}%`, backgroundColor: t.accent }]} />
                   </View>
                   <Text style={{ color: t.text }} numberOfLines={1}>
-                    {pct}% saved{progress.currentTitle ? ` · ${progress.currentTitle}` : ''}
+                    {pct}% saved
+                    {progress.currentTitle ? ` · ${progress.currentTitle}` : ''}
                   </Text>
                   <Button label="Pause" onPress={pause} kind="secondary" />
                 </View>
@@ -145,7 +172,7 @@ export default function Packs() {
         })}
 
         {lastFailed.length > 0 && !downloading && (
-          <Card style={{ backgroundColor: t.soft, borderColor: t.soft }}>
+          <Card style={{ backgroundColor: t.soft }}>
             <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
               A few guides didn’t make it this time, probably a shaky connection. Nothing is lost.
               Tap “Finish saving” when you have signal again.
@@ -170,7 +197,8 @@ export default function Packs() {
         {TEST_MODE && (
           <Text
             style={{ color: t.warn, fontSize: 12 }}
-            onPress={unlocked ? resetForTesting : undefined}>
+            onPress={unlocked ? resetForTesting : undefined}
+          >
             Test mode: unlocking is free and nobody is charged.
             {unlocked ? ' Tap here to lock the packs again.' : ''}
           </Text>
@@ -197,10 +225,19 @@ const s = StyleSheet.create({
   wrap: { padding: 20, gap: 14, paddingBottom: 32 },
   h1: { fontSize: 32, fontWeight: '800' },
   card: { gap: 10 },
-  cardHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  cardHead: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   title: { fontSize: 22, fontWeight: '800' },
   pill: { paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999 },
   barBg: { height: 12, borderRadius: 6, overflow: 'hidden' },
   bar: { height: 12, borderRadius: 6 },
-  doneRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 4 },
+  doneRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 4,
+  },
 });
