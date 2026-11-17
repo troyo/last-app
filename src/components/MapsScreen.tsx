@@ -24,6 +24,22 @@ import {
   planDownload,
 } from '../lib/map-areas';
 import { locate } from '../lib/locate';
+import {
+  DEFAULT_PLACES,
+  formatMiles,
+  NearbyPlace,
+  nearestPlaces,
+  PLACE_CATEGORIES,
+  PLACE_COLOR_EXPR,
+  PLACE_LETTER_EXPR,
+  PlaceCategoryId,
+  PLACES_LABEL_LAYER,
+  PLACES_LAYER,
+  PLACES_MIN_ZOOM,
+  PLACES_SOURCE,
+  PLACES_SOURCE_LAYER,
+  placesFilter,
+} from '../lib/map-places';
 import { findState, getProfile } from '../lib/place';
 import { useTheme } from '../lib/theme';
 import { Button, Text } from './ui';
@@ -61,6 +77,11 @@ export function MapsScreen() {
   const [saved, setSaved] = useState<Saved[]>([]);
   const [progress, setProgress] = useState<number | null>(null); // 0-100 while saving
   const [located, setLocated] = useState(false);
+  const [me, setMe] = useState<[number, number] | null>(null); // last GPS fix
+  const [shown, setShown] = useState<PlaceCategoryId[]>(DEFAULT_PLACES);
+  const [nearby, setNearby] = useState<NearbyPlace[] | null>(null); // null = list closed
+  const [finding, setFinding] = useState(false);
+  const filter = useMemo(() => placesFilter(shown), [shown]);
 
   const size = AREA_SIZES.find((s) => s.id === sizeId)!;
   const bounds = useMemo(() => boundsAround(center[0], center[1], size.miles), [center, size]);
@@ -99,6 +120,7 @@ export function MapsScreen() {
     }
     setLocated(true);
     const here: [number, number] = [fix.lon, fix.lat];
+    setMe(here);
     setCenter(here);
     camera.current?.flyTo({ center: here, zoom: 11, duration: 1200 });
   }, []);
@@ -167,6 +189,41 @@ export function MapsScreen() {
       },
     ]);
 
+  // ----- Emergency places -----
+  const toggle = (id: PlaceCategoryId) =>
+    setShown((cur) => (cur.includes(id) ? cur.filter((c) => c !== id) : [...cur, id]));
+
+  // The nearest places on the map right now. Places only draw from zoom 12, so
+  // zoom in first if we're further out, then read what the map is showing.
+  const findNearby = async () => {
+    if (finding) return;
+    setFinding(true);
+    try {
+      const zoom = (await map.current?.getZoom()) ?? 0;
+      const from = me ?? center;
+      if (zoom < 13.5) {
+        camera.current?.flyTo({ center: from, zoom: 14, duration: 900 });
+        await new Promise((r) => setTimeout(r, 1800)); // let the new tiles draw
+      }
+      // Tiles can still be drawing just after the zoom, so look again a couple of times.
+      let list: NearbyPlace[] = [];
+      for (let tries = 0; tries < 3 && list.length === 0; tries++) {
+        if (tries) await new Promise((r) => setTimeout(r, 1200));
+        const features =
+          (await map.current?.queryRenderedFeatures({ layers: [PLACES_LAYER] })) ?? [];
+        list = nearestPlaces(features, from);
+      }
+      setNearby(list);
+    } catch {
+      setNearby([]);
+    } finally {
+      setFinding(false);
+    }
+  };
+
+  const goTo = (p: NearbyPlace) =>
+    camera.current?.flyTo({ center: p.coord, zoom: 16, duration: 900 });
+
   // Leave room for the clock at the top so the box is never hidden under it.
   const show = (b: Bounds) =>
     camera.current?.fitBounds(b, {
@@ -185,6 +242,58 @@ export function MapsScreen() {
         onRegionDidChange={onMoved}
       >
         <Camera ref={camera} initialViewState={start} />
+        {/* Emergency places, drawn from the same tiles a saved area keeps offline. */}
+        <Layer
+          id={PLACES_LAYER}
+          type="circle"
+          source={PLACES_SOURCE}
+          source-layer={PLACES_SOURCE_LAYER}
+          minzoom={PLACES_MIN_ZOOM}
+          filter={filter}
+          paint={{
+            'circle-color': PLACE_COLOR_EXPR,
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 7, 14, 12, 16, 15],
+            'circle-stroke-color': '#FFFFFF',
+            'circle-stroke-width': 2.5,
+          }}
+        />
+        <Layer
+          id={PLACES_LABEL_LAYER}
+          type="symbol"
+          source={PLACES_SOURCE}
+          source-layer={PLACES_SOURCE_LAYER}
+          minzoom={PLACES_MIN_ZOOM + 1}
+          filter={filter}
+          layout={{
+            'text-field': PLACE_LETTER_EXPR,
+            'text-font': ['Noto Sans Bold'],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 13, 10, 16, 14],
+            'text-allow-overlap': true,
+            'text-ignore-placement': true,
+          }}
+          paint={{ 'text-color': '#FFFFFF' }}
+        />
+        <Layer
+          id={`${PLACES_LABEL_LAYER}-name`}
+          type="symbol"
+          source={PLACES_SOURCE}
+          source-layer={PLACES_SOURCE_LAYER}
+          minzoom={14.5}
+          filter={filter}
+          layout={{
+            'text-field': ['coalesce', ['get', 'name'], ''],
+            'text-font': ['Noto Sans Bold'],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 14.5, 13, 17, 16],
+            'text-anchor': 'top',
+            'text-offset': [0, 1.1],
+            'text-max-width': 9,
+          }}
+          paint={{
+            'text-color': '#14231D',
+            'text-halo-color': '#FFFFFF',
+            'text-halo-width': 2,
+          }}
+        />
         {located && <UserLocation />}
         {picking && (
           <GeoJSONSource id="area-outline" data={outlineOf(bounds)}>
@@ -215,46 +324,138 @@ export function MapsScreen() {
       <View style={[s.panel, { backgroundColor: t.card }]}>
         {!picking ? (
           <>
-            <Text style={[s.title, { color: t.text }]}>Offline maps</Text>
-            {saved.length === 0 ? (
-              <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
-                Save the places that matter to you (home, family, your way out of town) and they’ll
-                work with no signal.
-              </Text>
-            ) : (
-              <ScrollView style={{ maxHeight: 150 }}>
-                {saved.map((a) => (
-                  <View key={a.id} style={[s.savedRow, { borderBottomColor: t.border }]}>
-                    <Pressable onPress={() => show(a.bounds)} style={s.savedMain}>
-                      <Ionicons name="checkmark-circle" size={22} color={t.good} />
+            <View style={s.placesHead}>
+              <Text style={[s.title, { color: t.text, flex: 1 }]}>Emergency places</Text>
+              <Pressable
+                onPress={nearby ? () => setNearby(null) : findNearby}
+                style={[s.nearBtn, { backgroundColor: nearby ? t.soft : t.accent }]}
+                accessibilityRole="button"
+              >
+                <Ionicons
+                  name={nearby ? 'close' : 'navigate'}
+                  size={16}
+                  color={nearby ? t.text : t.accentText}
+                />
+                <Text
+                  style={{ color: nearby ? t.text : t.accentText, fontSize: 15, fontWeight: '700' }}
+                >
+                  {nearby ? 'Close' : finding ? 'Looking…' : 'Near me'}
+                </Text>
+              </Pressable>
+            </View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 8, paddingRight: 8 }}
+              style={{ flexGrow: 0 }}
+            >
+              {PLACE_CATEGORIES.map((c) => {
+                const on = shown.includes(c.id);
+                return (
+                  <Pressable
+                    key={c.id}
+                    onPress={() => toggle(c.id)}
+                    style={[
+                      s.chip,
+                      { backgroundColor: on ? c.color : t.soft, borderColor: c.color },
+                    ]}
+                    accessibilityRole="switch"
+                    accessibilityState={{ checked: on }}
+                  >
+                    <View style={[s.chipDot, { backgroundColor: on ? '#FFFFFF' : c.color }]} />
+                    <Text
+                      style={{ color: on ? '#FFFFFF' : t.text, fontSize: 15, fontWeight: '700' }}
+                    >
+                      {c.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+            {nearby && (
+              <ScrollView style={{ maxHeight: 220 }}>
+                {nearby.length === 0 ? (
+                  <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
+                    No places in view. Move the map to a town, zoom in, or switch on more types
+                    above.
+                  </Text>
+                ) : (
+                  nearby.map((p) => (
+                    <Pressable
+                      key={p.key}
+                      onPress={() => goTo(p)}
+                      style={[s.nearRow, { borderBottomColor: t.border }]}
+                    >
+                      <View style={[s.pin, { backgroundColor: p.category.color }]}>
+                        <Text style={s.pinText}>{p.category.letter}</Text>
+                      </View>
                       <View style={{ flex: 1 }}>
-                        <Text style={{ color: t.text, fontSize: 16, fontWeight: '700' }}>
-                          {a.name}
+                        <Text
+                          style={{ color: t.text, fontSize: 16, fontWeight: '700' }}
+                          numberOfLines={1}
+                        >
+                          {p.name}
                         </Text>
-                        <Text style={{ color: t.muted, fontSize: 15 }}>
-                          Saved{a.megabytes ? ` · about ${a.megabytes} MB` : ''} · tap to view
+                        <Text style={{ color: t.text, fontSize: 14 }}>
+                          {p.category.one} · {formatMiles(p.miles)}
                         </Text>
                       </View>
+                      <Ionicons name="chevron-forward" size={18} color={t.text} />
                     </Pressable>
-                    <Pressable
-                      onPress={() => remove(a)}
-                      hitSlop={10}
-                      accessibilityLabel="Remove saved map"
-                    >
-                      <Ionicons name="trash-outline" size={20} color={t.muted} />
-                    </Pressable>
-                  </View>
-                ))}
+                  ))
+                )}
               </ScrollView>
             )}
-            <Button
-              label={saved.length ? 'Save another area' : 'Save an area'}
-              onPress={() => {
-                setPicking(true);
-                // Zoom so the green box fills the screen instead of being a dot.
-                show(bounds);
-              }}
-            />
+            <Text style={{ color: t.text, fontSize: 13, lineHeight: 18 }}>
+              From OpenStreetMap and may be out of date. Official storm shelters are announced
+              locally; schools and community centres are the usual sites.
+            </Text>
+            {/* While the places list is open, give it the room and keep the map visible. */}
+            {!nearby && (
+              <>
+                <Text style={[s.title, { color: t.text }]}>Offline maps</Text>
+                {saved.length === 0 ? (
+                  <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
+                    Save the places that matter to you (home, family, your way out of town) and
+                    they’ll work with no signal.
+                  </Text>
+                ) : (
+                  <ScrollView style={{ maxHeight: 150 }}>
+                    {saved.map((a) => (
+                      <View key={a.id} style={[s.savedRow, { borderBottomColor: t.border }]}>
+                        <Pressable onPress={() => show(a.bounds)} style={s.savedMain}>
+                          <Ionicons name="checkmark-circle" size={22} color={t.good} />
+                          <View style={{ flex: 1 }}>
+                            <Text style={{ color: t.text, fontSize: 16, fontWeight: '700' }}>
+                              {a.name}
+                            </Text>
+                            <Text style={{ color: t.muted, fontSize: 15 }}>
+                              Saved{a.megabytes ? ` · about ${a.megabytes} MB` : ''} · tap to view
+                            </Text>
+                          </View>
+                        </Pressable>
+                        <Pressable
+                          onPress={() => remove(a)}
+                          hitSlop={10}
+                          accessibilityLabel="Remove saved map"
+                        >
+                          <Ionicons name="trash-outline" size={20} color={t.muted} />
+                        </Pressable>
+                      </View>
+                    ))}
+                  </ScrollView>
+                )}
+                <Button
+                  label={saved.length ? 'Save another area' : 'Save an area'}
+                  onPress={() => {
+                    setPicking(true);
+                    // Zoom so the green box fills the screen instead of being a dot. Wait a
+                    // moment for the panel to switch, or the camera ignores the request.
+                    setTimeout(() => show(bounds), 150);
+                  }}
+                />
+              </>
+            )}
           </>
         ) : (
           <>
@@ -264,38 +465,41 @@ export function MapsScreen() {
             </Text>
             {/* A 2x2 grid of sizes, so none is cut off at the screen edge. */}
             <View style={s.sizes}>
-                {AREA_SIZES.map((opt) => {
-                  const on = opt.id === sizeId;
-                  return (
-                    <Pressable
-                      key={opt.id}
-                      onPress={() => {
-                        setSizeId(opt.id);
-                        show(boundsAround(center[0], center[1], opt.miles));
+              {AREA_SIZES.map((opt) => {
+                const on = opt.id === sizeId;
+                return (
+                  <Pressable
+                    key={opt.id}
+                    onPress={() => {
+                      setSizeId(opt.id);
+                      show(boundsAround(center[0], center[1], opt.miles));
+                    }}
+                    style={[s.size, { backgroundColor: on ? t.accent : t.soft }]}
+                  >
+                    <Text
+                      style={{
+                        color: on ? t.accentText : t.text,
+                        fontSize: 15,
+                        fontWeight: '700',
                       }}
-                      style={[s.size, { backgroundColor: on ? t.accent : t.soft }]}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
                     >
-                      <Text
-                        style={{
-                          color: on ? t.accentText : t.text,
-                          fontSize: 15,
-                          fontWeight: '700',
-                        }}
-                        numberOfLines={1}
-                        adjustsFontSizeToFit
-                      >
-                        {opt.label}
-                      </Text>
-                      <Text style={{ color: on ? t.accentText : t.text, fontSize: 13 }}>
-                        {opt.miles} mi around
-                      </Text>
-                    </Pressable>
-                  );
-                })}
+                      {opt.label}
+                    </Text>
+                    <Text style={{ color: on ? t.accentText : t.text, fontSize: 13 }}>
+                      {opt.miles} mi around
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
             <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
               About {plan.megabytes} MB ·{' '}
               {plan.streetLevel ? 'street-level detail' : 'main roads and towns (less detail)'}
+              {plan.places
+                ? ' · includes emergency places'
+                : '. Emergency places are only saved in Neighborhood and Town sizes.'}
             </Text>
             {progress !== null ? (
               <>
@@ -365,6 +569,42 @@ const s = StyleSheet.create({
   savedMain: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 },
   sizes: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   size: { width: '48.5%', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 16 },
+  placesHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  nearBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 18,
+    borderWidth: 2,
+  },
+  chipDot: { width: 10, height: 10, borderRadius: 5 },
+  nearRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  pin: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  pinText: { color: '#FFFFFF', fontSize: 14, fontWeight: '800' },
   barBg: { height: 10, borderRadius: 5, overflow: 'hidden' },
   bar: { height: 10, borderRadius: 5 },
 });

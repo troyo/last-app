@@ -67,6 +67,8 @@ export function planDownload(b: Bounds) {
     tiles,
     megabytes: Math.max(1, Math.round((tiles * AVG_TILE_BYTES) / (1024 * 1024))),
     streetLevel: maxZoom >= 13,
+    // Emergency places (hospitals, shelters...) are only in the zoom-14 tiles.
+    places: maxZoom >= MAX_DETAIL,
   };
 }
 
