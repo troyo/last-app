@@ -100,11 +100,75 @@ async function pool(items, n, fn) {
 
 // Collect the article list (tier = the smallest pack that includes it).
 const wanted = new Map(); // key wiki|title -> {wiki, title, tier, topic}
-const want = (wiki, title, tier, topic) => {
+// bulk = came from a "take every page" list rather than being hand-picked.
+const want = (wiki, title, tier, topic, bulk = false) => {
   const key = `${wiki}|${title.replace(/ /g, '_')}`;
   const prev = wanted.get(key);
-  if (!prev || tierRank(tier) < tierRank(prev.tier)) wanted.set(key, { wiki, title, tier, topic });
+  if (!prev || tierRank(tier) < tierRank(prev.tier))
+    wanted.set(key, { wiki, title, tier, topic, bulk: bulk && (prev ? prev.bulk : true) });
 };
+
+// ---------- English only ----------
+// Some wikis keep machine translations next to the English pages (Appropedia
+// has thousands). The app is English, so anything else is left out.
+const EN_WORDS = new Set(
+  'the of and to in is for that with as are on be by it this or from an can at which not have you your when if will should was these'.split(
+    ' ',
+  ),
+);
+const OTHER_WORDS = new Set(
+  'el la los las del que y en un una por para con es se le les des et est une du pour dans der die das und ist nicht ein eine von mit zu den auf o os do da em um uma não com il di che per è della sono van het een op te zijn na się w z jest nie și în'.split(
+    ' ',
+  ),
+);
+const NON_LATIN = /[\u0370-\u03FF\u0400-\u052F\u0590-\u08FF\u0900-\u0DFF\u0E00-\u0FFF\u1100-\u11FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]/g;
+const plainText = (html) =>
+  html
+    .replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&[a-z]+;|&#\d+;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+/** How English some text looks: share of its words that are common English words. */
+function englishShare(text) {
+  const words = text.toLowerCase().match(/[a-zà-ÿąćęłńóśźżșț']+/g) || [];
+  if (words.length < 8) return { share: 1, other: 0, words: words.length };
+  let en = 0;
+  let other = 0;
+  for (const w of words) {
+    if (EN_WORDS.has(w)) en++;
+    else if (OTHER_WORDS.has(w)) other++;
+  }
+  return { share: en / words.length, other: other / words.length, words: words.length };
+}
+function isEnglish(title, html) {
+  if (/\/[a-z]{2,3}(-[a-z]+)?$/.test(title)) return false; // "Page/ru" style translations
+  const text = plainText(html).slice(0, 6000);
+  const letters = (text.match(/\p{L}/gu) || []).length || 1;
+  const foreign = ((title + text).match(NON_LATIN) || []).length;
+  if (foreign / letters > 0.05 || (title.match(NON_LATIN) || []).length > 1) return false;
+  const { share, other } = englishShare(text);
+  return share >= 0.1 && other < share;
+}
+
+// Bulk pages arrive unsorted. Put each under the topic it is about, so
+// "DIY" isn't one pile of thousands. First match wins; the rest stay put.
+const TOPIC_WORDS = [
+  ['water', /\b(water|rainwater|well|pump|filter|filtration|chlorin|desalinat|irrigation)\b/i],
+  ['sanitation', /\b(toilet|latrine|sanitation|compost(ing)? toilet|sewage|greywater|soap|hygiene|waste)\b/i],
+  ['grow', /\b(garden|gardening|crop|seed|soil|compost|farming|agricultur|permaculture|greenhouse|aquaponic|livestock|poultry|beekeeping)\b/i],
+  ['food', /\b(food|cook|cooking|stove|oven|recipe|preserv|canning|drying|ferment|nutrition)\b/i],
+  ['power', /\b(solar|photovoltaic|wind turbine|battery|batteries|generator|electric|biogas|hydro|energy|lighting|lamp)\b/i],
+  ['shelter', /\b(shelter|house|housing|building|construction|insulation|roof|earthbag|adobe|cob|heating|rocket mass)\b/i],
+  ['first-aid', /\b(health|medical|medicine|first aid|disease|malaria|wound|hospital|clinic)\b/i],
+];
+function topicFor(title, fallback) {
+  for (const [topic, re] of TOPIC_WORDS) if (re.test(title)) return topic;
+  return fallback;
+}
+// Pages that are about a university class, a conference or the wiki itself.
+const NOT_A_GUIDE =
+  /^(\d{4}\b|[A-Z]{2,5}\d{2,4}\b)|\b(conference|symposium|semester|syllabus|course|class project|team|meeting|minutes|literature review|protocol:|category|template|portal)\b/i;
 for (const group of sources.articles) {
   const titles = QUICK ? group.titles.slice(0, 2) : group.titles;
   for (const t of titles) want(group.wiki, t, group.tier, group.topic);
@@ -141,8 +205,13 @@ if (!QUICK) {
       }
       const data = JSON.parse(r.body);
       for (const p of data.query?.allpages || []) {
-        if (count++ >= bulk.limit) break;
-        want(bulk.wiki, p.title, bulk.tier, bulk.topic);
+        if (count >= bulk.limit) break;
+        // Skip translations and non-guides before spending a download on them.
+        if ((p.title.match(NON_LATIN) || []).length > 1) continue;
+        if (/\/[a-z]{2,3}(-[a-z]+)?$/.test(p.title)) continue;
+        if (bulk.wiki === 'appropedia' && NOT_A_GUIDE.test(p.title)) continue;
+        count++;
+        want(bulk.wiki, p.title, bulk.tier, bulk.topic, true);
       }
       if (!data.continue) break;
       cont = data.continue;
@@ -282,7 +351,16 @@ const fetched = await pool(articleList, 4, async (a) => {
     return null;
   }
   const title =
-    (data.parse.displaytitle?.replace(/<[^>]+>/g, '') || a.title) + (wiki.titleSuffix || '');
+    decodeEntities(data.parse.displaytitle?.replace(/<[^>]+>/g, '') || a.title) +
+    (wiki.titleSuffix || '');
+  if (!isEnglish(title, html)) {
+    report.skipped.push(`Article "${a.title}" (${a.wiki}): not in English`);
+    return null;
+  }
+  if (a.bulk && plainText(html).length < 600) {
+    report.skipped.push(`Article "${a.title}" (${a.wiki}): too short to be useful`);
+    return null;
+  }
   const seenKey = `${a.wiki}|${title}`;
   if (seenTitles.has(seenKey)) {
     report.skipped.push(`Article "${a.title}" (${a.wiki}): same page as "${title}"`);
@@ -291,11 +369,22 @@ const fetched = await pool(articleList, 4, async (a) => {
   seenTitles.add(seenKey);
   return {
     ...a,
+    topic: a.bulk && a.wiki === 'appropedia' ? topicFor(title, a.topic) : a.topic,
     title,
     html,
     sourceUrl: wiki.pageBase + encodeURIComponent(a.title.replace(/ /g, '_')),
   };
 });
+
+function decodeEntities(text) {
+  return text
+    .replace(/&nbsp;|&#160;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;|&apos;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+}
 
 // The first real sentence or two of an article, as plain text. The app
 // shows it under search results and searches inside it.
@@ -312,6 +401,8 @@ function summaryOf(html) {
       .replace(/&[a-z]+;|&#\d+;/gi, ' ')
       .replace(/\s+/g, ' ')
       .trim();
+    // Skip menus and link lists: real sentences have plenty of small common words.
+    if (text.length >= 60 && englishShare(text).share < 0.12) continue;
     if (text.length >= 60) return text.length > 170 ? text.slice(0, 167).replace(/\s\S*$/, '') + '…' : text;
   }
   return undefined;

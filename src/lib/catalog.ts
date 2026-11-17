@@ -63,8 +63,44 @@ export const DEMO_CATALOG = demoCatalog as Catalog;
 let current: Catalog = DEMO_CATALOG;
 export const getCatalog = () => current;
 export const setCatalog = (c: Catalog) => {
-  current = c;
+  current = { ...c, items: c.items.filter(looksEnglish).map(tidyTitle) };
 };
+
+// A safety net on the phone: packs are built English-only, but an older pack
+// may still list translated pages. Hide anything that isn't English.
+const NON_LATIN =
+  /[\u0370-\u03FF\u0400-\u052F\u0590-\u08FF\u0900-\u0DFF\u0E00-\u0FFF\u1100-\u11FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]/;
+const EN_WORDS = new Set(
+  'the of and to in is for that with as are on be by it this or from an can at which not have you your when if will should was these'.split(
+    ' ',
+  ),
+);
+const OTHER_WORDS = new Set(
+  'el la los las del que y en un una por para con es se le les des et est une du pour dans der die das und ist nicht ein eine von mit zu den auf o os do da em um uma não com il di che per è della sono van het een op te zijn na się w z jest nie și în'.split(
+    ' ',
+  ),
+);
+function looksEnglish(item: Item): boolean {
+  const text = `${item.title} ${item.summary ?? ''}`;
+  if (NON_LATIN.test(text) || /\/[a-z]{2,3}$/.test(item.title)) return false;
+  let en = 0;
+  let other = 0;
+  for (const w of text.toLowerCase().match(/[a-zà-ÿ']+/g) ?? []) {
+    if (EN_WORDS.has(w)) en++;
+    else if (OTHER_WORDS.has(w)) other++;
+  }
+  return !(other >= 3 && other > en);
+}
+const tidyTitle = (item: Item): Item =>
+  item.title.includes('&')
+    ? {
+        ...item,
+        title: item.title
+          .replace(/&amp;/g, '&')
+          .replace(/&#0?39;/g, "'")
+          .replace(/&quot;/g, '"'),
+      }
+    : item;
 
 const ORDER: PackId[] = ['small', 'medium', 'large'];
 const inPack = (tier: PackId, pack: PackId) => ORDER.indexOf(tier) <= ORDER.indexOf(pack);
