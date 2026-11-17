@@ -82,7 +82,11 @@ const OTHER_WORDS = new Set(
 );
 function looksEnglish(item: Item): boolean {
   const text = `${item.title} ${item.summary ?? ''}`;
-  if (NON_LATIN.test(text) || /\/[a-z]{2,3}$/.test(item.title)) return false;
+  if (NON_LATIN.test(item.title) || /\/[a-z]{2,3}$/.test(item.title)) return false;
+  // English guides often quote a foreign word or two ("from Greek ..."), so
+  // only a summary that is mostly in another script counts.
+  const odd = (item.summary ?? '').match(new RegExp(NON_LATIN.source, 'g'))?.length ?? 0;
+  if (odd > (item.summary ?? '').length * 0.2) return false;
   let en = 0;
   let other = 0;
   for (const w of text.toLowerCase().match(/[a-zà-ÿ']+/g) ?? []) {

@@ -60,8 +60,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # Release notes = the summary part of the report (the full list is attached).
-          sed '/^## Included/,$d' dist/REPORT.md > notes.md
+          # Release notes = the top of the report. GitHub caps notes at 125,000
+          # characters and the skipped list can run to thousands of lines, so the
+          # full report is attached as a file instead.
+          sed '/^## Skipped/,$d' dist/REPORT.md | head -c 60000 > notes.md
           gh release create "${{ steps.tag.outputs.tag }}" \
             dist/catalog.json dist/REPORT.md dist/files/* \
             --title "Content packs ${{ steps.tag.outputs.tag }}" \
