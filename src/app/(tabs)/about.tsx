@@ -92,11 +92,12 @@ export default function About() {
 
         <Card style={{ backgroundColor: t.soft, borderColor: t.soft }}>
           <Text style={{ color: t.text, fontSize: 15, lineHeight: 22 }}>
-            A gentle note: these guides are general information, not a replacement for a doctor or
-            emergency services. If you can reach help, please do that first.
+            These guides are general information for when help can’t reach you. They are not a
+            replacement for a doctor or emergency services, and you use them at your own risk.
           </Text>
         </Card>
 
+        <Button label="Safety and terms" kind="secondary" onPress={() => router.push('/legal')} />
         <Button
           label="Where the guides come from"
           kind="secondary"

@@ -21,12 +21,7 @@ export default function QuickHelpScreen() {
         </View>
         <Text style={[s.when, { color: t.muted }]}>{h.when}</Text>
 
-        {h.call && (
-          <View style={[s.call, { backgroundColor: t.bad }]}>
-            <Text style={s.callText}>{h.call}</Text>
-          </View>
-        )}
-
+        <Text style={[s.label, { color: t.accent, marginTop: 4 }]}>Do this now</Text>
         {h.steps.map((step, i) => (
           <Card key={i} style={s.step}>
             <View style={[s.num, { backgroundColor: t.accent }]}>
@@ -47,10 +42,38 @@ export default function QuickHelpScreen() {
           </Card>
         )}
 
-        {h.getHelp && (
-          <Card style={{ gap: 6, backgroundColor: t.soft, borderColor: t.soft }}>
+        {h.next && (
+          <Card style={{ gap: 8 }}>
+            <Text style={[s.label, { color: t.accent }]}>Over the next hours and days</Text>
+            {h.next.map((n) => (
+              <View key={n} style={s.bullet}>
+                <View style={[s.dot, { backgroundColor: t.accent }]} />
+                <Text style={[s.body, { color: t.text, flex: 1 }]}>{n}</Text>
+              </View>
+            ))}
+          </Card>
+        )}
+
+        {h.danger && (
+          <Card style={{ gap: 8, backgroundColor: t.dangerTint }}>
+            <Text style={[s.label, { color: t.bad }]}>This needs more than home care</Text>
+            <Text style={{ color: t.text, fontSize: 15, lineHeight: 22 }}>
+              Do everything you can to reach trained help (a neighbor with medical training, a
+              clinic, a radio, or travel to find signal) if you see:
+            </Text>
+            {h.danger.map((d) => (
+              <View key={d} style={s.bullet}>
+                <View style={[s.dot, { backgroundColor: t.bad }]} />
+                <Text style={[s.body, { color: t.text, flex: 1 }]}>{d}</Text>
+              </View>
+            ))}
+          </Card>
+        )}
+
+        {h.know && (
+          <Card style={{ gap: 6, backgroundColor: t.soft }}>
             <Text style={[s.label, { color: t.accent }]}>Good to know</Text>
-            <Text style={[s.body, { color: t.text }]}>{h.getHelp}</Text>
+            <Text style={[s.body, { color: t.text }]}>{h.know}</Text>
           </Card>
         )}
 
@@ -62,7 +85,8 @@ export default function QuickHelpScreen() {
             textAlign: 'center',
           }}
         >
-          Quick steps for when help is far away. They don’t replace a doctor or emergency services.
+          Steps for when you’re on your own. If phones work or help is nearby, get help first.
+          General information, not medical advice.
         </Text>
       </ScrollView>
     </>
@@ -96,5 +120,7 @@ const s = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
-  body: { fontSize: 17, lineHeight: 25 },
+  body: { fontSize: 16, lineHeight: 24 },
+  bullet: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
+  dot: { width: 7, height: 7, borderRadius: 4, marginTop: 9 },
 });

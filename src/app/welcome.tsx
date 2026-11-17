@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { Image, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, FadeIn, Float, Text } from '../components/ui';
+import { hasAgreed } from '../lib/agreement';
 import { useTheme } from '../lib/theme';
 import { markWelcomeSeen } from '../lib/welcome';
 
@@ -34,7 +35,8 @@ export default function Welcome() {
 
   const finish = () => {
     markWelcomeSeen();
-    router.replace('/');
+    // Next stop: the safety terms. Home sends people there until they agree.
+    router.replace(hasAgreed() ? '/' : '/agree');
   };
   const next = () => {
     if (last) return finish();

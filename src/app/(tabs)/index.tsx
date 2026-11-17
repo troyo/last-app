@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, FadeIn, IconName, IconTile, Text } from '../../components/ui';
+import { hasAgreed } from '../../lib/agreement';
 import { getCatalog, itemsForPack } from '../../lib/catalog';
 import { isDownloaded, remainingBytes } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
@@ -29,6 +30,7 @@ export default function Home() {
   );
 
   if (!hasSeenWelcome()) return <Redirect href="/welcome" />;
+  if (!hasAgreed()) return <Redirect href="/agree" />;
 
   const topics = getCatalog().topics;
   const q = query.trim().toLowerCase();
@@ -148,7 +150,7 @@ export default function Home() {
             <View style={s.sectionHead}>
               <Text style={[s.section, { color: t.text }]}>Need help right now?</Text>
               <Text style={{ color: t.muted, fontSize: 14 }}>
-                Simple steps. Always on this phone.
+                What to do yourself when help can’t come.
               </Text>
             </View>
           </>

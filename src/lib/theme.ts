@@ -12,6 +12,7 @@ const light = {
   accent: '#1F5C4A', // deep green: buttons and links
   accentText: '#FFFFFF',
   header: '#1F5C4A', // the green band at the top of home
+  dangerTint: '#FBE9E4', // soft red behind "needs more than home care"
   sun: '#F6B93B', // highlights
   coral: '#F08A6B',
   good: '#1F7A55',
@@ -29,6 +30,7 @@ const dark: typeof light = {
   accent: '#8FD3B3',
   accentText: '#10221C',
   header: '#1B3F33',
+  dangerTint: '#3A2622',
   sun: '#F6B93B',
   coral: '#F4A088',
   good: '#8FD3B3',
