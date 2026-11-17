@@ -36,13 +36,8 @@ const SLIDES = [
   },
 ];
 
-// A smooth dark fade behind the words, built from thin strips (clear at the top,
-// darkest at the bottom) so there is no visible edge across the film.
-const FADE = Array.from({ length: 48 }, (_, i) => {
-  const x = (i + 1) / 48;
-  return (0.78 * x * x * (3 - 2 * x)).toFixed(3);
-});
-
+// A smooth dark fade behind the words is one stretched picture (assets/illustrations/fade-dark.png),
+// clear at the top and darkest at the bottom, so there is no edge across the film.
 const NIGHT = '#1B3A4E'; // shown for the split second before the film starts
 
 // The first-launch explainer: three swipeable pages. Page one plays a short
@@ -93,11 +88,11 @@ export default function Welcome() {
             playsInline
           />
           {/* Darkens the lower half so the white words are easy to read. */}
-          <View style={s.fade}>
-            {FADE.map((alpha, i) => (
-              <View key={i} style={{ flex: 1, backgroundColor: `rgba(8, 28, 22, ${alpha})` }} />
-            ))}
-          </View>
+          <Image
+            source={require('../../assets/illustrations/fade-dark.png')}
+            style={s.fade}
+            resizeMode="stretch"
+          />
         </View>
       )}
       <SafeAreaView style={{ flex: 1 }}>
@@ -213,7 +208,7 @@ const s = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
   },
-  fade: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '70%' },
+  fade: { position: 'absolute', left: 0, right: 0, bottom: 0, width: '100%', height: '70%' },
   skipPill: {
     backgroundColor: 'rgba(8, 28, 22, 0.45)',
     paddingHorizontal: 16,

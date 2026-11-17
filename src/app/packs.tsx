@@ -62,9 +62,9 @@ export default function Packs() {
 
   const pct = progress
     ? Math.round(
-        ((progress.doneItems +
-          (progress.currentTotal ? progress.currentBytes / progress.currentTotal : 0)) /
-          Math.max(progress.totalItems, 1)) *
+        // By size, not by file count, so one big manual doesn't make the bar look stuck.
+        (Math.min(progress.doneBytes + progress.currentBytes, progress.totalBytes) /
+          Math.max(progress.totalBytes, 1)) *
           100,
       )
     : 0;
@@ -132,9 +132,9 @@ export default function Packs() {
                 <View style={[s.barBg, { backgroundColor: t.soft }]}>
                   <View style={[s.bar, { width: `${pct}%`, backgroundColor: t.accent }]} />
                 </View>
-                <Text style={{ color: t.text }} numberOfLines={1}>
-                  {pct}% saved
-                  {progress.currentTitle ? ` · ${progress.currentTitle}` : ''}
+                <Text style={{ color: t.text, fontSize: 15, fontWeight: '700' }} numberOfLines={1}>
+                  {pct}% saved · {formatBytes(progress.doneBytes + progress.currentBytes)} of{' '}
+                  {formatBytes(progress.totalBytes)}
                 </Text>
                 <Button label="Pause" onPress={pause} kind="secondary" />
               </View>

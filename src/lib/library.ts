@@ -130,6 +130,8 @@ export type Progress = {
   currentTitle: string | null;
   currentBytes: number; // bytes of the current file
   currentTotal: number;
+  doneBytes: number; // size of the finished downloads
+  totalBytes: number; // size of the whole pack
   failed: string[]; // downloads that failed this run (will retry next time)
 };
 
@@ -170,6 +172,8 @@ export async function downloadPack(
   const items = itemsForPack(pack);
   const failed: string[] = [];
   let done = downloads.filter(isDownloadDone).length;
+  let doneBytes = downloads.filter(isDownloadDone).reduce((n, d) => n + d.bytes, 0);
+  const totalBytes = downloads.reduce((n, d) => n + d.bytes, 0);
   const report = (title: string | null, cur = 0, tot = 0) =>
     onProgress({
       doneItems: done,
@@ -177,6 +181,8 @@ export async function downloadPack(
       currentTitle: title,
       currentBytes: cur,
       currentTotal: tot,
+      doneBytes,
+      totalBytes,
       failed: [...failed],
     });
   report(null);
@@ -242,6 +248,7 @@ export async function downloadPack(
       }
       markerFor(d).writeSync('ok');
       done++;
+      doneBytes += d.bytes;
       report(label, d.bytes, d.bytes);
     } catch {
       onTask?.(null);
