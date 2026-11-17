@@ -3171,6 +3171,591 @@
       "urls": [
         "https://files.eric.ed.gov/fulltext/ED307465.pdf"
       ]
+    },
+    {
+      "id": "army-fm-21-10-field-hygiene",
+      "title": "Field Hygiene and Sanitation, FM 21-10 (US Army)",
+      "topic": "sanitation",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/UsJointServicesFm21-10FieldHygiene2000.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-4-25-12-field-sanitation-team",
+      "title": "Unit Field Sanitation Team, FM 4-25.12 (US Army)",
+      "topic": "sanitation",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/Fm4-25-12UnitFieldSanitationTeam.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-21-11-first-aid",
+      "title": "First Aid for Soldiers, FM 21-11 (US Army)",
+      "topic": "first-aid",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/Fm21-11FirstAid.pdf"
+      ]
+    },
+    {
+      "id": "usmc-mwtc-wilderness-medicine",
+      "title": "Wilderness Medicine Course (USMC Mountain Warfare Training Center)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Marine Corps",
+      "urls": [
+        "https://archive.org/download/MManuals/UsMarinesMwtcWildernessMedicineCourse2002.pdf"
+      ]
+    },
+    {
+      "id": "usmc-mwtc-cold-weather-medicine",
+      "title": "Cold Weather Medicine Course (USMC Mountain Warfare Training Center)",
+      "topic": "first-aid",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Marine Corps",
+      "urls": [
+        "https://archive.org/download/MManuals/Fmst07-18UsMarinesMwtcColdWeatherMedicineCourse2001.pdf"
+      ]
+    },
+    {
+      "id": "army-treating-fractures-field",
+      "title": "Treating Fractures in the Field (US Army Medical Dept.)",
+      "topic": "first-aid",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyMedicalTreatingFracturesInTheField2006.pdf"
+      ]
+    },
+    {
+      "id": "army-wound-care",
+      "title": "Wound Care (US Army Medical Dept.)",
+      "topic": "first-aid",
+      "tier": "small",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyMedicalWoundCareEd.100.pdf"
+      ]
+    },
+    {
+      "id": "army-snakebite-treatment",
+      "title": "Poisonous Snakebite Treatment (US Army)",
+      "topic": "first-aid",
+      "tier": "small",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyMedicalPoisonousSnakebiteTreatment1990.pdf"
+      ]
+    },
+    {
+      "id": "army-taking-vital-signs",
+      "title": "Taking Vital Signs (US Army Medical Dept.)",
+      "topic": "first-aid",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyMedicalTakingVitalSignsE200.pdf"
+      ]
+    },
+    {
+      "id": "army-intro-practical-nursing",
+      "title": "Introduction to Practical Nursing (US Army Medical Dept.)",
+      "topic": "first-aid",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyMedicalIntroductionToPracticalNursing.pdf"
+      ]
+    },
+    {
+      "id": "army-pharmacology-1",
+      "title": "Pharmacology I, MD0804 (US Army Medical Dept.)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/Md-0804MedicalCourse-PharmacologyIMd0804.pdf"
+      ]
+    },
+    {
+      "id": "army-environmental-injuries",
+      "title": "Environmental Injuries: Heat, Cold and Altitude (US Army Medical Dept.)",
+      "topic": "first-aid",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyMedicalEnvironmentalInjuries2006.pdf"
+      ]
+    },
+    {
+      "id": "army-basic-human-anatomy",
+      "title": "Basic Human Anatomy (US Army Medical Dept.)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyMedicalBasicHumanAnatomyEd100.pdf"
+      ]
+    },
+    {
+      "id": "army-parasitology-1",
+      "title": "Parasitology I: Worms and Parasites (US Army Medical Dept.)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyMedicalParasitologyI2006.pdf"
+      ]
+    },
+    {
+      "id": "army-communicable-diseases-sanitation",
+      "title": "Communicable Diseases and Field Sanitation, MD0535 (US Army)",
+      "topic": "sanitation",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/CommunicableDiseasesAndFieldSanitationSubcourseMd0535Edition100.pdf"
+      ]
+    },
+    {
+      "id": "army-rodent-control",
+      "title": "Rodent Biology and Control (US Army Medical Dept.)",
+      "topic": "sanitation",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyMedical0172RodentBiologyControls.pdf"
+      ]
+    },
+    {
+      "id": "army-ranger-medic-handbook",
+      "title": "Ranger Medic Handbook 2007 (75th Ranger Regiment)",
+      "topic": "first-aid",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/rangermedichandbook2007.pdf"
+      ]
+    },
+    {
+      "id": "navy-preventive-medicine-manual",
+      "title": "Manual of Naval Preventive Medicine (US Navy)",
+      "topic": "sanitation",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Navy",
+      "urls": [
+        "https://archive.org/download/MManuals/UsNavyManualOfNavalPreventiveMedicine2004.pdf"
+      ]
+    },
+    {
+      "id": "army-tc-21-3-cold-weather-survival",
+      "title": "Survival in Cold Weather, Soldier Handbook TC 21-3 (US Army)",
+      "topic": "prep",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/Tc21-3UsArmySurvivalInColdWeather1986.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-31-70-cold-weather",
+      "title": "Basic Cold Weather Manual, FM 31-70 (US Army)",
+      "topic": "prep",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/Fm31-70BasicColdWeatherManual.pdf"
+      ]
+    },
+    {
+      "id": "usmc-mwtc-winter-survival",
+      "title": "Winter Survival Course Handbook (USMC Mountain Warfare Training Center)",
+      "topic": "prep",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Marine Corps",
+      "urls": [
+        "https://archive.org/download/MManuals/UsMarinesMwtcWinterSurvivalCourse2002.pdf"
+      ]
+    },
+    {
+      "id": "usmc-mwtc-summer-survival",
+      "title": "Summer Survival Course Handbook (USMC Mountain Warfare Training Center)",
+      "topic": "prep",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Marine Corps",
+      "urls": [
+        "https://archive.org/download/MManuals/UsMarinesMwtcSummerSurvivalCourse2002.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-3-97-mountaineering",
+      "title": "Military Mountaineering, FM 3-97.61 (US Army)",
+      "topic": "prep",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/Fm3-97UsArmyMilitaryMountaineering2002.pdf"
+      ]
+    },
+    {
+      "id": "army-mountaineering-basic",
+      "title": "Basic Mountaineering Techniques, IN0486 (US Army)",
+      "topic": "prep",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/MountaineeringTechniquesbasicSubcourseNo.In0486.pdf"
+      ]
+    },
+    {
+      "id": "army-survival-1-mind-medicine",
+      "title": "Survival Part 1: Survival Mindset and Survival Medicine (US Army)",
+      "topic": "prep",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/AviationSurvivalPart1SurvivalElementsPsychologicalAspectsAndSurvivalMedicine.pdf"
+      ]
+    },
+    {
+      "id": "army-survival-2-environment",
+      "title": "Survival Part 2: Protection from the Environment (US Army)",
+      "topic": "prep",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/AviationSurvivalPart2ProtectionFromTheEnvironment.pdf"
+      ]
+    },
+    {
+      "id": "army-survival-3-food-water",
+      "title": "Survival Part 3: Finding Food and Water (US Army)",
+      "topic": "prep",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/AviationSurvivalPart3Sustenance.pdf"
+      ]
+    },
+    {
+      "id": "army-survival-4-direction-signaling",
+      "title": "Survival Part 4: Finding Direction and Signaling (US Army)",
+      "topic": "prep",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/AviationSurvivalPart4DirectionFindingSignalingAndRecovery.pdf"
+      ]
+    },
+    {
+      "id": "army-tc-21-21-water-survival",
+      "title": "Water Survival Training, TC 21-21 (US Army)",
+      "topic": "prep",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/WaterSurvivalTrainingTc21-21.pdf"
+      ]
+    },
+    {
+      "id": "usmc-mcrp-3-02c-water-survival",
+      "title": "Water Survival, MCRP 3-02C (US Marine Corps)",
+      "topic": "prep",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Marine Corps",
+      "urls": [
+        "https://archive.org/download/MManuals/UsmcWaterSurvivalCourseMcrp3-02c.pdf"
+      ]
+    },
+    {
+      "id": "usmc-land-navigation",
+      "title": "Land Navigation (US Marine Corps)",
+      "topic": "prep",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Marine Corps",
+      "urls": [
+        "https://archive.org/download/MManuals/UsMarinesLandNavigation2001.pdf"
+      ]
+    },
+    {
+      "id": "army-carpentry-1",
+      "title": "Carpentry I (US Army Engineer School)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyEngineerCarpentryI1995.pdf"
+      ]
+    },
+    {
+      "id": "army-carpentry-2",
+      "title": "Carpentry II (US Army Engineer School)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyEngineerCarpentryIi1995.pdf"
+      ]
+    },
+    {
+      "id": "army-carpentry-3",
+      "title": "Carpentry III (US Army Engineer School)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyEngineerCarpentryIii1995.pdf"
+      ]
+    },
+    {
+      "id": "army-plumbing-2-water-supply",
+      "title": "Plumbing II: Water Supply (US Army Engineer School)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyPlumbingIiWaterSupply.pdf"
+      ]
+    },
+    {
+      "id": "army-plumbing-3-waste-systems",
+      "title": "Plumbing III: Waste Systems (US Army Engineer School)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyPlumbingIiiWasteSystems.pdf"
+      ]
+    },
+    {
+      "id": "army-plumbing-4-fixtures",
+      "title": "Plumbing IV: Fixtures (US Army Engineer School)",
+      "topic": "diy",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyPlumbingIvPlumbingFixtures.pdf"
+      ]
+    },
+    {
+      "id": "army-plumbing-5-repair-valves",
+      "title": "Plumbing V: Repairing Valves and Fixture Controls (US Army)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyPlumbingVRepairValveFixtureControlDevices.pdf"
+      ]
+    },
+    {
+      "id": "army-plumbing-6-clear-stoppages",
+      "title": "Plumbing VI: Clearing Drain Stoppages (US Army)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyPlumbingViClearWasteSys.Stoppages.pdf"
+      ]
+    },
+    {
+      "id": "navy-expedient-utility-repair",
+      "title": "Expedient Repair of Utility Systems (US Navy)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Navy",
+      "urls": [
+        "https://archive.org/download/MManuals/UsNavyExpedientRepairOfUtilitySystems1994.pdf"
+      ]
+    },
+    {
+      "id": "dod-passive-solar-buildings",
+      "title": "Passive Solar Buildings: Heating and Cooling Without Power (US DoD)",
+      "topic": "shelter",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Department of Defense",
+      "urls": [
+        "https://archive.org/download/MManuals/UsdodPassiveSolarBuildings2004.pdf"
+      ]
+    },
+    {
+      "id": "army-tm-5-813-water-sources",
+      "title": "Water Supply Sources, TM 5-813-1 (US Army)",
+      "topic": "water",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/Tm5-813usArmyWaterSupplySourcesGeneralConsider1987.pdf"
+      ]
+    },
+    {
+      "id": "usace-small-water-systems",
+      "title": "Small Water Systems (US Army Corps of Engineers)",
+      "topic": "water",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Corps of Engineers",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyCorpsOfEngineersSmallWaterSystems1999.pdf"
+      ]
+    },
+    {
+      "id": "army-preservation-of-foods",
+      "title": "Preservation of Foods (US Army Medical Dept.)",
+      "topic": "food",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army Medical Department",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyPreservationOfFoodsEd.100.pdf"
+      ]
+    },
+    {
+      "id": "army-basic-food-preparation",
+      "title": "Basic Food Preparation (US Army)",
+      "topic": "food",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/MManuals/UsArmyBasicFoodPreparation.pdf"
+      ]
+    },
+    {
+      "id": "navy-food-safety",
+      "title": "Food Safety (US Navy)",
+      "topic": "food",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Navy",
+      "urls": [
+        "https://archive.org/download/MManuals/UsNavyFoodSafety1998.pdf"
+      ]
+    },
+    {
+      "id": "navy-hospital-corpsman-1c",
+      "title": "Hospital Corpsman 1 & C (US Navy)",
+      "topic": "first-aid",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Navy (via ERIC)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED206910.pdf"
+      ]
+    },
+    {
+      "id": "navy-builder-3-2",
+      "title": "Builder 3 & 2: Building Construction (US Navy Seabees)",
+      "topic": "shelter",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Navy (via ERIC)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED210471.pdf"
+      ]
+    },
+    {
+      "id": "navy-tools-and-their-uses",
+      "title": "Tools and Their Uses (US Navy)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "US Navy (via ERIC)",
+      "urls": [
+        "https://files.eric.ed.gov/fulltext/ED132362.pdf"
+      ]
+    },
+    {
+      "id": "usda-home-tanning-fb1334",
+      "title": "Home Tanning of Leather and Small Fur Skins (USDA Farmers Bulletin 1334)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA",
+      "urls": [
+        "https://archive.org/download/CAT87206834/farmbul1334rev1962.pdf",
+        "https://archive.org/download/CAT31295344/farmbul1334rev1930.pdf"
+      ]
+    },
+    {
+      "id": "usda-pork-on-the-farm-fb1186",
+      "title": "Pork on the Farm: Killing, Curing and Canning (USDA Farmers Bulletin 1186)",
+      "topic": "food",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA",
+      "urls": [
+        "https://archive.org/download/farmbul1186rev1921/farmbul1186rev1921.pdf"
+      ]
+    },
+    {
+      "id": "usfs-trail-construction-notebook",
+      "title": "Trail Construction and Maintenance Notebook (USDA Forest Service)",
+      "topic": "diy",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA Forest Service",
+      "urls": [
+        "https://www.fs.usda.gov/t-d/pubs/pdfpubs/pdf07232806/pdf07232806dpi72.pdf"
+      ]
+    },
+    {
+      "id": "epa-emergency-disinfection-water",
+      "title": "Emergency Disinfection of Drinking Water (EPA)",
+      "topic": "water",
+      "tier": "small",
+      "license": "Public domain (US federal government work)",
+      "source": "EPA",
+      "urls": [
+        "https://www.epa.gov/sites/default/files/2017-09/documents/emergency_disinfection_of_drinking_water_sept2017.pdf",
+        "https://archive.org/download/MManuals/Epa_emergency-disinfection-drinkingWater-2006.pdf"
+      ]
     }
   ],
   "simpleVersionsOf": {
