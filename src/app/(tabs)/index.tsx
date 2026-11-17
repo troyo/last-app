@@ -12,6 +12,7 @@ import { CLIMATE_TIPS, HAZARDS } from '../../lib/hazards';
 import { isDownloaded, remainingBytes } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
 import { CLIMATES, getProfile, placeAsked } from '../../lib/place';
+import { packOffered } from '../../lib/first-pack';
 import { QUICK_HELP } from '../../lib/quick-help';
 import { HUES, TOPIC_LOOK, useTheme } from '../../lib/theme';
 import { hasSeenWelcome } from '../../lib/welcome';
@@ -64,6 +65,8 @@ export default function Home() {
   if (!hasSeenWelcome()) return <Redirect href="/welcome" />;
   if (!hasAgreed()) return <Redirect href="/agree" />;
   if (!placeAsked()) return <Redirect href="/place" />;
+  // Last step of setup: get the free guides onto the phone while there is internet.
+  if (!state.pack && !packOffered()) return <Redirect href="/first-pack" />;
 
   const profile = getProfile();
   const myHazards = profile ? HAZARDS.filter((h) => profile.hazards.includes(h.id)) : [];
@@ -250,7 +253,7 @@ export default function Home() {
           </>
         )}
 
-        <Section title="Get ready" action="Open" onAction={() => router.push('/prep')} />
+        <Section title="Get ready" action="See lists" onAction={() => router.push('/prep')} />
         <Card style={s.prep}>
           {getChecklists().map((list) => {
             const p = progressOf(list);

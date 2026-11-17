@@ -91,6 +91,27 @@ export default function Search() {
 
       {!typing ? (
         <ScrollView contentContainerStyle={s.idle} keyboardShouldPersistTaps="handled">
+          {/* Search finds guides by a word. Ask answers a whole question. Offer both here. */}
+          <Pressable
+            onPress={() => router.push('/ask')}
+            accessibilityRole="button"
+            style={({ pressed }) => [
+              s.topic,
+              { backgroundColor: t.accent, marginBottom: 8 },
+              pressed && { opacity: 0.8 },
+            ]}
+          >
+            <Ionicons name="chatbubble-ellipses" size={24} color={t.accentText} />
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: t.accentText, fontSize: 17, fontWeight: '800' }}>
+                Ask a question instead
+              </Text>
+              <Text style={{ color: t.accentText, fontSize: 15 }}>
+                In your own words. Works with no signal.
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={t.accentText} />
+          </Pressable>
           {recent.length > 0 && (
             <>
               <Text style={[s.label, { color: t.muted }]}>Recent</Text>
