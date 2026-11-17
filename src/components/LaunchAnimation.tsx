@@ -96,22 +96,24 @@ export function LaunchAnimation({ onDone }: { onDone: () => void }) {
               position: 'absolute',
               width: S,
               height: S,
-              opacity: span(0, 0.18, 0, 1),
-              transform: [{ scale: span(0, 0.25, 0.92, 1) }],
             }}
           />
         </View>
-        <Animated.View
-          style={{
-            opacity: span(0.5, 0.75, 0, 1),
-            transform: [{ translateY: span(0.5, 0.75, 14, 0) }],
-          }}
-        >
-          <Text style={s.name}>Last App</Text>
-        </Animated.View>
-        <Animated.View style={{ opacity: span(0.68, 0.95, 0, 1) }}>
-          <Text style={s.line}>Ready when nothing else works</Text>
-        </Animated.View>
+        {/* The words hang below the middle so the book stays exactly where the
+            phone's own launch screen drew it. No jump when we take over. */}
+        <View style={s.words} pointerEvents="none">
+          <Animated.View
+            style={{
+              opacity: span(0.5, 0.75, 0, 1),
+              transform: [{ translateY: span(0.5, 0.75, 14, 0) }],
+            }}
+          >
+            <Text style={s.name}>Last App</Text>
+          </Animated.View>
+          <Animated.View style={{ opacity: span(0.68, 0.95, 0, 1) }}>
+            <Text style={s.line}>Ready when nothing else works</Text>
+          </Animated.View>
+        </View>
       </Pressable>
     </Animated.View>
   );
@@ -119,7 +121,8 @@ export function LaunchAnimation({ onDone }: { onDone: () => void }) {
 
 const s = StyleSheet.create({
   wrap: { backgroundColor: BG, zIndex: 100 },
-  fill: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingBottom: 40 },
+  fill: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  words: { position: 'absolute', left: 0, right: 0, top: '50%', marginTop: S / 2 - 14 },
   sky: { position: 'absolute', left: 0, top: 0, width: S, height: 560 * k, overflow: 'hidden' },
   halo: {
     position: 'absolute',
@@ -146,6 +149,6 @@ const s = StyleSheet.create({
     borderRadius: 13 * k,
     backgroundColor: RAY,
   },
-  name: { color: '#FFFFFF', fontSize: 34, fontWeight: '800', marginTop: 6, textAlign: 'center' },
+  name: { color: '#FFFFFF', fontSize: 34, fontWeight: '800', textAlign: 'center' },
   line: { color: '#E4F1EA', fontSize: 17, fontWeight: '600', marginTop: 4, textAlign: 'center' },
 });
