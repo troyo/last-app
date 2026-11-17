@@ -242,6 +242,9 @@ const BOOK_META =
   /(^|\/)(Authors?|Contributors|Templates?|Manual of Style|History|How To Read This Book|Introduction|Glossary|Sources|Index|Cover|Licen[cs]e|Print(able)? version|Behind the Scenes|Notes for .*Instructors|Legal Liability|First Aid Training|Consent|Appendix [A-DF]\b.*|Guide to the OCTEM|PIOPED References|Stencil Chapter)$/i;
 // A large skills handbook written for a youth outdoors programme. Each chapter answers
 // "how do you actually do this": fire building, camp cooking, canning, carpentry, first aid.
+// Handbook pages that are about one car model, one town, a club, a hobby or the book itself.
+const HANDBOOK_JUNK =
+  /Pinewood Derby|Basketball|Track & Field|Glass Painting|Drawing & Painting|Palm Trees|Volcanoes|Pigeon Raising|Radio Electronics|^Automobile Repair\/(.+\/|99 |Scope|Before you buy|Engine Additives|Optimizing|Jeep|Warning light)|Power Tools|Dunedin|Designer's checklist|References$|Editing|Clubs$|Frequently Asked|Phobias|Varieties of Honey|Why Keep Bees|Hobby Beekeeping|Foreword|^Brewing\/Appendix|Woodworkers Library|Embroidery|siamese|jewelry|Faux marbling|m16|Home staging|Polishing silver|Satellite dish|Shoe polish|Sword|Wooden reed|Finding a Hatchery|Other information/i;
 const AY_BOOK = /^Adventist Youth Honors Answer Book\//;
 const AY_SHELVES =
   /^(Recreation|Nature|Outdoor Industries|Household Arts|Vocational|Health and Science|Arts and Crafts)$/;
@@ -251,7 +254,7 @@ function usableOffGrid(wiki, title) {
   // Appropedia is mostly write-ups of school and aid projects, not instructions. None of it is taken in bulk.
   if (wiki === 'appropedia') return false;
   if (wiki === 'wikibooks') {
-    if (BOOK_META.test(title)) return false;
+    if (BOOK_META.test(title) || HANDBOOK_JUNK.test(title)) return false;
     if (AY_BOOK.test(title)) {
       const [, shelf, honor, ...deeper] = title.split('/');
       // One page per skill: no regional variants, no sub-pages.
