@@ -130,7 +130,8 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
         removeAll,
         version,
         checkForUpdates,
-      }}>
+      }}
+    >
       {children}
     </LibraryContext.Provider>
   );

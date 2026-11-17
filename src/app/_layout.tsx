@@ -12,6 +12,7 @@ import { StatusBar } from 'expo-status-bar';
 import { LaunchAnimation } from '../components/LaunchAnimation';
 import { LibraryProvider } from '../lib/LibraryContext';
 import { useTheme } from '../lib/theme';
+import { hasSeenWelcome } from '../lib/welcome';
 
 // Hold the splash screen until the typeface is ready, so text never flickers.
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -24,7 +25,8 @@ export default function RootLayout() {
     Nunito_700Bold,
     Nunito_800ExtraBold,
   });
-  const [opening, setOpening] = useState(true);
+  // On the very first launch the welcome film is the opening; two in a row is too much.
+  const [opening, setOpening] = useState(hasSeenWelcome);
   const ready = loaded || !!error; // if the font can't load, carry on with the system one
   useEffect(() => {
     if (ready) SplashScreen.hideAsync().catch(() => {});

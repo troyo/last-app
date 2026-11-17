@@ -11,7 +11,7 @@ const POINTS = [
   'This is general information, not medical or professional advice.',
   'It doesn’t replace doctors or emergency services. If you can reach them, do that first.',
   'Guides can be incomplete or wrong. You use them at your own risk.',
-  'This is an early preview version for testing and demonstration.',
+  'Things change. Check important facts with a second source when you can.',
 ];
 
 // Shown once after the welcome tour. Nobody gets into the app without ticking the box.

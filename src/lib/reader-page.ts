@@ -335,13 +335,21 @@ export function buildReaderPage(opts: {
   license: string;
   px: number;
   colors: ReaderColors;
+  /** Is this other guide on the phone? Links to guides that are not become plain text. */
+  isSaved?: (id: string) => boolean;
 }): string {
   // Only our own script may run: anything else in a guide is refused.
+  const body = opts.isSaved
+    ? opts.html.replace(
+        /<a\b[^>]*href="lastapp:\/\/item\/([^"]+)"[^>]*>([\s\S]*?)<\/a>/g,
+        (whole, id: string, text: string) => (opts.isSaved!(decodeURIComponent(id)) ? whole : text),
+      )
+    : opts.html;
   const nonce = Math.random().toString(36).slice(2) + Date.now().toString(36);
   return `<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:; script-src 'nonce-${nonce}'">
-<style>${READER_FONT_CSS}${css(opts.px, opts.colors)}</style></head><body><div id="doc"><h1>${escapeHtml(opts.title)}</h1>${opts.html}</div>
+<style>${READER_FONT_CSS}${css(opts.px, opts.colors)}</style></head><body><div id="doc"><h1>${escapeHtml(opts.title)}</h1>${body}</div>
 <p class="credit">Source: ${escapeHtml(opts.source)} · ${escapeHtml(opts.license)}.
 General information, not medical advice. If you can reach emergency services, please do that first.</p>
 <script nonce="${nonce}">${SCRIPT}</script></body></html>`;

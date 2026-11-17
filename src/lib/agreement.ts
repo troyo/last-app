@@ -45,8 +45,8 @@ export const TERMS: { title: string; body: string }[] = [
     body: 'The app and everything in it are provided “as is”, with no warranties of any kind. To the fullest extent the law allows, the makers of Last App and its content sources are not liable for any injury, death, loss or damage that comes from using, or being unable to use, the app or its content.',
   },
   {
-    title: 'Preview version',
-    body: 'This is an early preview release for testing and demonstration. Features and content may change, and it may contain errors.',
+    title: 'Guides change',
+    body: 'Guides are updated over time and may contain errors. When something matters, check it against a second source if you can.',
   },
   {
     title: 'Who can use it',

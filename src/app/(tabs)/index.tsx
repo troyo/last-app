@@ -1,12 +1,12 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Redirect, router, useFocusEffect } from 'expo-router';
+import { Redirect, router, useFocusEffect, useScrollToTop } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, FadeIn, IconName, IconTile, Text } from '../../components/ui';
 import { hasAgreed } from '../../lib/agreement';
-import { getCatalog, itemsForPack } from '../../lib/catalog';
+import { formatBytes, getCatalog, itemsForPack } from '../../lib/catalog';
 import { getChecklists, progressOf } from '../../lib/checklists';
 import { CLIMATE_TIPS, HAZARDS } from '../../lib/hazards';
 import { isDownloaded, remainingBytes } from '../../lib/library';
@@ -14,7 +14,7 @@ import { useLibrary } from '../../lib/LibraryContext';
 import { CLIMATES, getProfile, placeAsked } from '../../lib/place';
 import { packOffered } from '../../lib/first-pack';
 import { QUICK_HELP } from '../../lib/quick-help';
-import { HUES, TOPIC_LOOK, useTheme } from '../../lib/theme';
+import { HUES, useTheme } from '../../lib/theme';
 import { hasSeenWelcome } from '../../lib/welcome';
 
 // Short names so six cards fit in two tidy rows.
@@ -40,6 +40,9 @@ function greeting() {
 export default function Home() {
   const t = useTheme();
   const insets = useSafeAreaInsets();
+  // Tapping the Home tab again jumps back to the top.
+  const scroller = useRef<React.ComponentRef<typeof ScrollView>>(null);
+  useScrollToTop(scroller);
   const { state, downloading, progress, version } = useLibrary();
   const [, refresh] = useState(0);
   // Checklist progress may have changed while we were on another screen.
@@ -89,240 +92,252 @@ export default function Home() {
   );
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: t.bg }}
-      contentContainerStyle={{ paddingBottom: 40 }}
-    >
-      {/* White clock and battery icons while the green header is showing */}
-      {focused && <StatusBar style="light" />}
-      <View style={[s.header, { backgroundColor: t.header, paddingTop: insets.top + 22 }]}>
-        <Text style={s.hello}>{greeting()}</Text>
-        <Text style={s.sub}>Whatever comes up, you’ve got this.</Text>
-        {/* Looks like a search box; opens Ask. */}
-        <Pressable
-          onPress={() => router.push('/ask')}
-          accessibilityRole="search"
-          style={[s.search, { backgroundColor: t.card }]}
-        >
-          <Ionicons name="chatbubble-ellipses" size={22} color={t.accent} />
-          <Text style={{ color: t.text, fontSize: 17, fontWeight: '600', flex: 1 }}>
-            Ask anything
-          </Text>
-          <View style={[s.searchGo, { backgroundColor: t.accent }]}>
-            <Ionicons name="arrow-forward" size={18} color={t.accentText} />
-          </View>
-        </Pressable>
-      </View>
+    <View style={{ flex: 1, backgroundColor: t.bg }}>
+      <ScrollView
+        ref={scroller}
+        style={{ flex: 1, backgroundColor: t.bg }}
+        contentContainerStyle={{ paddingBottom: 40 }}
+      >
+        {/* White clock and battery icons while the green header is showing */}
+        {focused && <StatusBar style="light" />}
+        <View style={[s.header, { backgroundColor: t.header, paddingTop: insets.top + 22 }]}>
+          <Text style={s.hello}>{greeting()}</Text>
+          <Text style={s.sub}>Whatever comes up, you’ve got this.</Text>
+          {/* Looks like a search box; opens Ask. */}
+          <Pressable
+            onPress={() => router.push('/ask')}
+            accessibilityRole="search"
+            style={[s.search, { backgroundColor: t.card }]}
+          >
+            <Ionicons name="chatbubble-ellipses" size={22} color={t.accent} />
+            <Text style={{ color: t.text, fontSize: 17, fontWeight: '600', flex: 1 }}>
+              Ask anything
+            </Text>
+            <View style={[s.searchGo, { backgroundColor: t.accent }]}>
+              <Ionicons name="arrow-forward" size={18} color={t.accentText} />
+            </View>
+          </Pressable>
+        </View>
 
-      <View style={s.body}>
-        {!state.pack ? (
-          <FadeIn style={{ marginTop: 20 }}>
-            {/* Kept short so the emergency tiles below stay on the first screen. */}
-            <Card style={{ gap: 12 }}>
-              <View style={s.row}>
-                <Image
-                  source={require('../../../assets/illustrations/welcome.png')}
-                  style={{ width: 64, height: 64, borderRadius: 18 }}
-                  resizeMode="cover"
-                />
+        <View style={s.body}>
+          {!state.pack ? (
+            <FadeIn style={{ marginTop: 20 }}>
+              {/* Kept short so the emergency tiles below stay on the first screen. */}
+              <Card style={{ gap: 12 }}>
+                <View style={s.row}>
+                  <Image
+                    source={require('../../../assets/illustrations/welcome.png')}
+                    style={{ width: 64, height: 64, borderRadius: 18 }}
+                    resizeMode="cover"
+                  />
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ color: t.text, fontWeight: '800', fontSize: 19 }}>
+                      Save your first guides
+                    </Text>
+                    <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
+                      Free, and they work with no signal.
+                    </Text>
+                  </View>
+                </View>
+                <Button label="Get the free pack" onPress={() => router.push('/packs')} />
+              </Card>
+            </FadeIn>
+          ) : !ready || downloading ? (
+            <FadeIn style={{ marginTop: 20 }}>
+              <Card onPress={() => router.push('/packs')} style={s.row}>
+                <IconTile name={downloading ? 'cloud-download' : 'clock-outline'} {...HUES.sun} />
                 <View style={{ flex: 1 }}>
-                  <Text style={{ color: t.text, fontWeight: '800', fontSize: 19 }}>
-                    Save your first guides
+                  <Text style={{ color: t.text, fontWeight: '800', fontSize: 17 }}>
+                    {downloading
+                      ? 'Saving your guides…'
+                      : state.complete
+                        ? 'New guides are ready for you'
+                        : 'Almost there. Tap to finish'}
                   </Text>
-                  <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
-                    Free, and they work with no signal.
+                  <Text style={{ color: t.muted, marginTop: 2, fontSize: 15 }} numberOfLines={1}>
+                    {downloading && progress
+                      ? `${Math.round((Math.min(progress.doneBytes + progress.currentBytes, progress.totalBytes) / Math.max(progress.totalBytes, 1)) * 100)}% · ${formatBytes(progress.doneBytes + progress.currentBytes)} of ${formatBytes(progress.totalBytes)}`
+                      : `${packName} pack · ${onPhone.length.toLocaleString()} guides on this phone`}
                   </Text>
                 </View>
+                <Ionicons name="chevron-forward" size={20} color={t.text} />
+              </Card>
+            </FadeIn>
+          ) : null}
+
+          <Section title="Right now" action="See all" onAction={() => router.push('/emergency')} />
+          {/* Six most urgent cards in two short rows; the rest are one tap away. */}
+          <View style={s.grid}>
+            {QUICK_HELP.slice(0, 6).map((h) => (
+              <View key={h.id} style={s.third}>
+                <Pressable
+                  onPress={() => router.push(`/help/${h.id}`)}
+                  style={({ pressed }) => [
+                    s.helpChip,
+                    { backgroundColor: HUES[h.hue].tint },
+                    pressed && { opacity: 0.8 },
+                  ]}
+                >
+                  <MaterialCommunityIcons
+                    name={h.icon as IconName}
+                    size={24}
+                    color={HUES[h.hue].color}
+                  />
+                  <Text
+                    style={s.chipTitle}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.85}
+                  >
+                    {SHORT[h.id] ?? h.title}
+                  </Text>
+                </Pressable>
               </View>
-              <Button label="Get the free pack" onPress={() => router.push('/packs')} />
-            </Card>
-          </FadeIn>
-        ) : !ready || downloading ? (
-          <FadeIn style={{ marginTop: 20 }}>
-            <Card onPress={() => router.push('/packs')} style={s.row}>
-              <IconTile name={downloading ? 'cloud-download' : 'clock-outline'} {...HUES.sun} />
+            ))}
+          </View>
+
+          <Section
+            title={profile ? `For ${profile.place}` : 'For your area'}
+            action={profile ? 'Change' : undefined}
+            onAction={() => router.push('/place')}
+          />
+          {!profile ? (
+            <Card onPress={() => router.push('/place')} style={s.row}>
+              <IconTile name="map-marker-radius" {...HUES.green} size={48} />
               <View style={{ flex: 1 }}>
-                <Text style={{ color: t.text, fontWeight: '800', fontSize: 17 }}>
-                  {downloading
-                    ? 'Saving your guides…'
-                    : state.complete
-                      ? 'New guides are ready for you'
-                      : 'Almost there. Tap to finish'}
+                <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>
+                  Make this fit where you live
                 </Text>
-                <Text style={{ color: t.muted, marginTop: 2, fontSize: 15 }} numberOfLines={1}>
-                  {downloading && progress?.currentTitle
-                    ? progress.currentTitle
-                    : `${packName} pack · ${onPhone.length.toLocaleString()} guides on this phone`}
+                <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
+                  Takes a minute. No signal needed.
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={t.text} />
             </Card>
-          </FadeIn>
-        ) : null}
-
-        <Section title="Right now" action="See all" onAction={() => router.push('/emergency')} />
-        {/* Six most urgent cards in two short rows; the rest are one tap away. */}
-        <View style={s.grid}>
-          {QUICK_HELP.slice(0, 6).map((h) => (
-            <View key={h.id} style={s.third}>
-              <Pressable
-                onPress={() => router.push(`/help/${h.id}`)}
-                style={({ pressed }) => [
-                  s.helpChip,
-                  { backgroundColor: HUES[h.hue].tint },
-                  pressed && { opacity: 0.8 },
-                ]}
-              >
+          ) : (
+            <>
+              <View style={s.grid}>
+                {myHazards.map((h) => (
+                  <View key={h.id} style={s.halfGrow}>
+                    <Pressable
+                      onPress={() => router.push(`/hazard/${h.id}`)}
+                      style={({ pressed }) => [
+                        s.hazard,
+                        { backgroundColor: HUES[h.hue].tint },
+                        pressed && { opacity: 0.8 },
+                      ]}
+                    >
+                      <IconTile
+                        name={h.icon as IconName}
+                        color={HUES[h.hue].color}
+                        tint={t.card}
+                        size={42}
+                      />
+                      <Text style={s.hazardTitle} numberOfLines={2}>
+                        {h.title.replace(' and deep cold', '')}
+                      </Text>
+                    </Pressable>
+                  </View>
+                ))}
+              </View>
+              <View style={[s.tip, { backgroundColor: t.header }]}>
                 <MaterialCommunityIcons
-                  name={h.icon as IconName}
-                  size={24}
-                  color={HUES[h.hue].color}
+                  name={CLIMATES[profile.climate].icon as IconName}
+                  size={26}
+                  color="#F6B93B"
                 />
-                <Text
-                  style={s.chipTitle}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  minimumFontScale={0.85}
-                >
-                  {SHORT[h.id] ?? h.title}
-                </Text>
-              </Pressable>
-            </View>
-          ))}
-        </View>
+                <View style={{ flex: 1, gap: 2 }}>
+                  <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800' }}>
+                    {CLIMATES[profile.climate].title}
+                  </Text>
+                  <Text style={{ color: '#FFFFFF', fontSize: 15, lineHeight: 22 }}>
+                    {CLIMATE_TIPS[profile.climate][0]}
+                  </Text>
+                </View>
+              </View>
+            </>
+          )}
 
-        <Section
-          title={profile ? `For ${profile.place}` : 'For your area'}
-          action={profile ? 'Change' : undefined}
-          onAction={() => router.push('/place')}
-        />
-        {!profile ? (
-          <Card onPress={() => router.push('/place')} style={s.row}>
-            <IconTile name="map-marker-radius" {...HUES.green} size={48} />
+          <Section title="Get ready" action="See lists" onAction={() => router.push('/prep')} />
+          <Card style={s.prep}>
+            {getChecklists().map((list) => {
+              const p = progressOf(list);
+              const pct = p.total ? p.done / p.total : 0;
+              return (
+                <Pressable
+                  key={list.id}
+                  onPress={() => router.push(`/checklist/${list.id}`)}
+                  accessibilityLabel={`Ready for ${list.title}, ${Math.round(pct * 100)} percent done`}
+                  style={({ pressed }) => [s.prepCol, pressed && { opacity: 0.7 }]}
+                >
+                  {/* A little jar that fills up as you tick things off. */}
+                  <View
+                    style={[s.jar, { backgroundColor: t.soft, borderColor: HUES[list.hue].color }]}
+                  >
+                    <View
+                      style={[
+                        s.jarFill,
+                        { height: `${pct * 100}%`, backgroundColor: HUES[list.hue].tint },
+                      ]}
+                    />
+                    <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>
+                      {Math.round(pct * 100)}%
+                    </Text>
+                  </View>
+                  <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>
+                    {list.title}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </Card>
+          <Text style={[s.center, { color: t.muted, marginTop: 10 }]}>
+            {profile
+              ? `Lists written for ${profile.people === 1 ? 'you' : `your ${profile.people} people`} in ${profile.place}.`
+              : 'How long could your home last with no power or shops?'}
+          </Text>
+
+          <Section title="Learn" />
+          <Card onPress={() => router.push('/search')} style={s.row}>
+            <IconTile name="bookshelf" {...HUES.teal} />
             <View style={{ flex: 1 }}>
               <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>
-                Make this fit where you live
+                Browse all guides
               </Text>
-              <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
-                Takes a minute. No signal needed.
+              <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
+                {topics
+                  .map((x) => x.title.split(' ')[0])
+                  .slice(0, 4)
+                  .join(', ')}{' '}
+                and more
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={t.text} />
           </Card>
-        ) : (
-          <>
-            <View style={s.grid}>
-              {myHazards.map((h) => (
-                <View key={h.id} style={s.halfGrow}>
-                  <Pressable
-                    onPress={() => router.push(`/hazard/${h.id}`)}
-                    style={({ pressed }) => [
-                      s.hazard,
-                      { backgroundColor: HUES[h.hue].tint },
-                      pressed && { opacity: 0.8 },
-                    ]}
-                  >
-                    <IconTile
-                      name={h.icon as IconName}
-                      color={HUES[h.hue].color}
-                      tint={t.card}
-                      size={42}
-                    />
-                    <Text style={s.hazardTitle} numberOfLines={2}>
-                      {h.title.replace(' and deep cold', '')}
-                    </Text>
-                  </Pressable>
-                </View>
-              ))}
-            </View>
-            <View style={[s.tip, { backgroundColor: t.header }]}>
-              <MaterialCommunityIcons
-                name={CLIMATES[profile.climate].icon as IconName}
-                size={26}
-                color="#F6B93B"
-              />
-              <View style={{ flex: 1, gap: 2 }}>
-                <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800' }}>
-                  {CLIMATES[profile.climate].title}
-                </Text>
-                <Text style={{ color: '#FFFFFF', fontSize: 15, lineHeight: 22 }}>
-                  {CLIMATE_TIPS[profile.climate][0]}
-                </Text>
-              </View>
-            </View>
-          </>
-        )}
 
-        <Section title="Get ready" action="See lists" onAction={() => router.push('/prep')} />
-        <Card style={s.prep}>
-          {getChecklists().map((list) => {
-            const p = progressOf(list);
-            const pct = p.total ? p.done / p.total : 0;
-            return (
-              <Pressable
-                key={list.id}
-                onPress={() => router.push(`/checklist/${list.id}`)}
-                accessibilityLabel={`Ready for ${list.title}, ${Math.round(pct * 100)} percent done`}
-                style={({ pressed }) => [s.prepCol, pressed && { opacity: 0.7 }]}
-              >
-                {/* A little jar that fills up as you tick things off. */}
-                <View
-                  style={[s.jar, { backgroundColor: t.soft, borderColor: HUES[list.hue].color }]}
-                >
-                  <View
-                    style={[
-                      s.jarFill,
-                      { height: `${pct * 100}%`, backgroundColor: HUES[list.hue].tint },
-                    ]}
-                  />
-                  <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>
-                    {Math.round(pct * 100)}%
-                  </Text>
-                </View>
-                <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>{list.title}</Text>
-              </Pressable>
-            );
-          })}
-        </Card>
-        <Text style={[s.center, { color: t.muted, marginTop: 10 }]}>
-          {profile
-            ? `Lists written for ${profile.people === 1 ? 'you' : `your ${profile.people} people`} in ${profile.place}.`
-            : 'How long could your home last with no power or shops?'}
-        </Text>
-
-        <Section title="Learn" />
-        <View style={s.grid}>
-          {topics.map((topic, i) => {
-            const count = onPhone.filter((x) => x.topic === topic.id).length;
-            const look = TOPIC_LOOK[topic.id] ?? { icon: 'book-open-variant', hue: 'teal' };
-            return (
-              <FadeIn key={topic.id} delay={80 + i * 35} style={s.half}>
-                <Card onPress={() => router.push(`/topic/${topic.id}`)} style={s.topic}>
-                  <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={48} />
-                  <Text style={[s.topicTitle, { color: t.text }]} numberOfLines={2}>
-                    {topic.title}
-                  </Text>
-                  <Text style={{ color: t.muted, fontSize: 15 }} numberOfLines={1}>
-                    {count > 0
-                      ? `${count.toLocaleString()} ${count === 1 ? 'guide' : 'guides'}`
-                      : 'Not saved yet'}
-                  </Text>
-                </Card>
-              </FadeIn>
-            );
-          })}
+          {ready && !downloading && (
+            <View style={[s.row, { gap: 8, marginTop: 26, justifyContent: 'center' }]}>
+              <Ionicons name="checkmark-circle" size={20} color={t.good} />
+              <Text style={{ color: t.muted, fontSize: 15 }}>
+                {onPhone.length.toLocaleString()} guides saved. All of it works offline.
+              </Text>
+            </View>
+          )}
         </View>
-
-        {ready && !downloading && (
-          <View style={[s.row, { gap: 8, marginTop: 26, justifyContent: 'center' }]}>
-            <Ionicons name="checkmark-circle" size={20} color={t.good} />
-            <Text style={{ color: t.muted, fontSize: 15 }}>
-              {onPhone.length.toLocaleString()} guides saved. All of it works offline.
-            </Text>
-          </View>
-        )}
-      </View>
-    </ScrollView>
+      </ScrollView>
+      {/* Keeps the clock and battery readable once the green header has scrolled away. */}
+      <View
+        pointerEvents="none"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: insets.top,
+          backgroundColor: t.header,
+        }}
+      />
+    </View>
   );
 }
 

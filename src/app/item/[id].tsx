@@ -84,6 +84,10 @@ function Article({ item }: { item: Item }) {
             license: item.license,
             px: TEXT_SIZES[size],
             colors: t,
+            isSaved: (other) => {
+              const target = findItem(other);
+              return !!target && fileFor(target).exists;
+            },
           }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [html, size, dark, item],

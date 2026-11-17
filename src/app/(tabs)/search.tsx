@@ -24,6 +24,14 @@ const PACK_NAME = { small: 'Small', medium: 'Medium', large: 'Large' } as const;
 export default function Search() {
   const t = useTheme();
   const { version } = useLibrary();
+  // How many guides of each topic are on this phone, so no topic is a surprise dead end.
+  const savedCount = useMemo(() => {
+    const n: Record<string, number> = {};
+    for (const item of getCatalog().items)
+      if (isDownloaded(item)) n[item.topic] = (n[item.topic] ?? 0) + 1;
+    return n;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
   const [query, setQuery] = useState('');
   const [, bump] = useState(0);
   // Other screens can open Search with words already typed in.
@@ -135,12 +143,19 @@ export default function Search() {
                   ]}
                 >
                   <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={40} />
-                  <Text
-                    style={{ color: t.text, fontSize: 17, fontWeight: '800', flex: 1 }}
-                    numberOfLines={1}
-                  >
-                    {topic.title}
-                  </Text>
+                  <View style={{ flex: 1 }}>
+                    <Text
+                      style={{ color: t.text, fontSize: 17, fontWeight: '800' }}
+                      numberOfLines={1}
+                    >
+                      {topic.title}
+                    </Text>
+                    <Text style={{ color: t.text, fontSize: 15 }} numberOfLines={1}>
+                      {savedCount[topic.id]
+                        ? `${savedCount[topic.id].toLocaleString()} ${savedCount[topic.id] === 1 ? 'guide' : 'guides'} on this phone`
+                        : 'In the bigger packs'}
+                    </Text>
+                  </View>
                   <Ionicons name="chevron-forward" size={18} color={t.text} />
                 </Pressable>
               );

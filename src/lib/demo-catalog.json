@@ -1,850 +1,850 @@
 {
- "version": 2,
- "name": "Demo catalog",
- "note": "Demo content (Wikipedia, CC BY-SA 4.0). The full open library loads once it's published.",
- "packs": [
-  {
-   "id": "small",
-   "title": "Small",
-   "summary": "The essentials: first aid, water, fire, and a basic kit."
-  },
-  {
-   "id": "medium",
-   "title": "Medium",
-   "summary": "Small, plus injuries, food storage, power and disaster prep."
-  },
-  {
-   "id": "large",
-   "title": "Large",
-   "summary": "Everything: wilderness medicine, sanitation, growing food, radio and navigation."
-  }
- ],
- "topics": [
-  {
-   "id": "first-aid",
-   "title": "First aid & health",
-   "icon": "🩹"
-  },
-  {
-   "id": "water",
-   "title": "Safe water",
-   "icon": "💧"
-  },
-  {
-   "id": "food",
-   "title": "Food",
-   "icon": "🥫"
-  },
-  {
-   "id": "shelter",
-   "title": "Shelter & warmth",
-   "icon": "🔥"
-  },
-  {
-   "id": "power",
-   "title": "Power & repairs",
-   "icon": "🔋"
-  },
-  {
-   "id": "prep",
-   "title": "Preparedness & comms",
-   "icon": "📻"
-  }
- ],
- "downloads": [
-  {
-   "id": "wp-first-aid",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/First_aid",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-cardiopulmonary-resuscitation",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Cardiopulmonary_resuscitation",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-recovery-position",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Recovery_position",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-tourniquet",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Tourniquet",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-hypothermia",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Hypothermia",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-heat-stroke",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Heat_stroke",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-choking",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Choking",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-water-purification",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Water_purification",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-portable-water-purification",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Portable_water_purification",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-solar-water-disinfection",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Solar_water_disinfection",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-food-preservation",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Food_preservation",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-fire-making",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Fire_making",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-emergency-blanket",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Emergency_blanket",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-survival-kit",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Survival_kit",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-bug-out-bag",
-   "tier": "small",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Bug-out_bag",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-burn",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Burn",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-bone-fracture",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Bone_fracture",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-splint-medicine",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Splint_(medicine)",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-dehydration",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Dehydration",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-oral-rehydration-therapy",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Oral_rehydration_therapy",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-carbon-monoxide-poisoning",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Carbon_monoxide_poisoning",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-boiling",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Boiling",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-rainwater-harvesting",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Rainwater_harvesting",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-home-canning",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Home_canning",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-smoking-cooking",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Smoking_(cooking)",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-solar-cooker",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Solar_cooker",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-automotive-battery",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Automotive_battery",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-power-inverter",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Power_inverter",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-engine-generator",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Engine-generator",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-earthquake-preparedness",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Earthquake_preparedness",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-emergency-population-warning",
-   "tier": "medium",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Emergency_population_warning",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-snakebite",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Snakebite",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-anaphylaxis",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Anaphylaxis",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-drowning",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Drowning",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-wilderness-medical-emergency",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Wilderness_medical_emergency",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-sanitation",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Sanitation",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-composting-toilet",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Composting_toilet",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-seed-saving",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Seed_saving",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-gardening",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Gardening",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-knot",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Knot",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-solar-panel",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Solar_panel",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-amateur-radio-emergency-communications",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Amateur_radio_emergency_communications",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-navigation",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Navigation",
-   "bytes": 250000
-  },
-  {
-   "id": "wp-orienteering",
-   "tier": "large",
-   "kind": "html",
-   "url": "https://en.wikipedia.org/api/rest_v1/page/html/Orienteering",
-   "bytes": 250000
-  }
- ],
- "items": [
-  {
-   "id": "wp-first-aid",
-   "title": "First aid",
-   "topic": "first-aid",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/First_aid",
-   "download": "wp-first-aid"
-  },
-  {
-   "id": "wp-cardiopulmonary-resuscitation",
-   "title": "Cardiopulmonary resuscitation",
-   "topic": "first-aid",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Cardiopulmonary_resuscitation",
-   "download": "wp-cardiopulmonary-resuscitation"
-  },
-  {
-   "id": "wp-recovery-position",
-   "title": "Recovery position",
-   "topic": "first-aid",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Recovery_position",
-   "download": "wp-recovery-position"
-  },
-  {
-   "id": "wp-tourniquet",
-   "title": "Tourniquet",
-   "topic": "first-aid",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Tourniquet",
-   "download": "wp-tourniquet"
-  },
-  {
-   "id": "wp-hypothermia",
-   "title": "Hypothermia",
-   "topic": "first-aid",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Hypothermia",
-   "download": "wp-hypothermia"
-  },
-  {
-   "id": "wp-heat-stroke",
-   "title": "Heat stroke",
-   "topic": "first-aid",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Heat_stroke",
-   "download": "wp-heat-stroke"
-  },
-  {
-   "id": "wp-choking",
-   "title": "Choking",
-   "topic": "first-aid",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Choking",
-   "download": "wp-choking"
-  },
-  {
-   "id": "wp-water-purification",
-   "title": "Water purification",
-   "topic": "water",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Water_purification",
-   "download": "wp-water-purification"
-  },
-  {
-   "id": "wp-portable-water-purification",
-   "title": "Portable water purification",
-   "topic": "water",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Portable_water_purification",
-   "download": "wp-portable-water-purification"
-  },
-  {
-   "id": "wp-solar-water-disinfection",
-   "title": "Solar water disinfection",
-   "topic": "water",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Solar_water_disinfection",
-   "download": "wp-solar-water-disinfection"
-  },
-  {
-   "id": "wp-food-preservation",
-   "title": "Food preservation",
-   "topic": "food",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Food_preservation",
-   "download": "wp-food-preservation"
-  },
-  {
-   "id": "wp-fire-making",
-   "title": "Fire making",
-   "topic": "shelter",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Fire_making",
-   "download": "wp-fire-making"
-  },
-  {
-   "id": "wp-emergency-blanket",
-   "title": "Emergency blanket",
-   "topic": "shelter",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Emergency_blanket",
-   "download": "wp-emergency-blanket"
-  },
-  {
-   "id": "wp-survival-kit",
-   "title": "Survival kit",
-   "topic": "prep",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Survival_kit",
-   "download": "wp-survival-kit"
-  },
-  {
-   "id": "wp-bug-out-bag",
-   "title": "Bug-out bag",
-   "topic": "prep",
-   "tier": "small",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Bug-out_bag",
-   "download": "wp-bug-out-bag"
-  },
-  {
-   "id": "wp-burn",
-   "title": "Burn",
-   "topic": "first-aid",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Burn",
-   "download": "wp-burn"
-  },
-  {
-   "id": "wp-bone-fracture",
-   "title": "Bone fracture",
-   "topic": "first-aid",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Bone_fracture",
-   "download": "wp-bone-fracture"
-  },
-  {
-   "id": "wp-splint-medicine",
-   "title": "Splint (medicine)",
-   "topic": "first-aid",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Splint_(medicine)",
-   "download": "wp-splint-medicine"
-  },
-  {
-   "id": "wp-dehydration",
-   "title": "Dehydration",
-   "topic": "first-aid",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Dehydration",
-   "download": "wp-dehydration"
-  },
-  {
-   "id": "wp-oral-rehydration-therapy",
-   "title": "Oral rehydration therapy",
-   "topic": "first-aid",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Oral_rehydration_therapy",
-   "download": "wp-oral-rehydration-therapy"
-  },
-  {
-   "id": "wp-carbon-monoxide-poisoning",
-   "title": "Carbon monoxide poisoning",
-   "topic": "first-aid",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Carbon_monoxide_poisoning",
-   "download": "wp-carbon-monoxide-poisoning"
-  },
-  {
-   "id": "wp-boiling",
-   "title": "Boiling",
-   "topic": "water",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Boiling",
-   "download": "wp-boiling"
-  },
-  {
-   "id": "wp-rainwater-harvesting",
-   "title": "Rainwater harvesting",
-   "topic": "water",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Rainwater_harvesting",
-   "download": "wp-rainwater-harvesting"
-  },
-  {
-   "id": "wp-home-canning",
-   "title": "Home canning",
-   "topic": "food",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Home_canning",
-   "download": "wp-home-canning"
-  },
-  {
-   "id": "wp-smoking-cooking",
-   "title": "Smoking (cooking)",
-   "topic": "food",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Smoking_(cooking)",
-   "download": "wp-smoking-cooking"
-  },
-  {
-   "id": "wp-solar-cooker",
-   "title": "Solar cooker",
-   "topic": "food",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Solar_cooker",
-   "download": "wp-solar-cooker"
-  },
-  {
-   "id": "wp-automotive-battery",
-   "title": "Automotive battery",
-   "topic": "power",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Automotive_battery",
-   "download": "wp-automotive-battery"
-  },
-  {
-   "id": "wp-power-inverter",
-   "title": "Power inverter",
-   "topic": "power",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Power_inverter",
-   "download": "wp-power-inverter"
-  },
-  {
-   "id": "wp-engine-generator",
-   "title": "Engine-generator",
-   "topic": "power",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Engine-generator",
-   "download": "wp-engine-generator"
-  },
-  {
-   "id": "wp-earthquake-preparedness",
-   "title": "Earthquake preparedness",
-   "topic": "prep",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Earthquake_preparedness",
-   "download": "wp-earthquake-preparedness"
-  },
-  {
-   "id": "wp-emergency-population-warning",
-   "title": "Emergency population warning",
-   "topic": "prep",
-   "tier": "medium",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Emergency_population_warning",
-   "download": "wp-emergency-population-warning"
-  },
-  {
-   "id": "wp-snakebite",
-   "title": "Snakebite",
-   "topic": "first-aid",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Snakebite",
-   "download": "wp-snakebite"
-  },
-  {
-   "id": "wp-anaphylaxis",
-   "title": "Anaphylaxis",
-   "topic": "first-aid",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Anaphylaxis",
-   "download": "wp-anaphylaxis"
-  },
-  {
-   "id": "wp-drowning",
-   "title": "Drowning",
-   "topic": "first-aid",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Drowning",
-   "download": "wp-drowning"
-  },
-  {
-   "id": "wp-wilderness-medical-emergency",
-   "title": "Wilderness medical emergency",
-   "topic": "first-aid",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Wilderness_medical_emergency",
-   "download": "wp-wilderness-medical-emergency"
-  },
-  {
-   "id": "wp-sanitation",
-   "title": "Sanitation",
-   "topic": "water",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Sanitation",
-   "download": "wp-sanitation"
-  },
-  {
-   "id": "wp-composting-toilet",
-   "title": "Composting toilet",
-   "topic": "water",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Composting_toilet",
-   "download": "wp-composting-toilet"
-  },
-  {
-   "id": "wp-seed-saving",
-   "title": "Seed saving",
-   "topic": "food",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Seed_saving",
-   "download": "wp-seed-saving"
-  },
-  {
-   "id": "wp-gardening",
-   "title": "Gardening",
-   "topic": "food",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Gardening",
-   "download": "wp-gardening"
-  },
-  {
-   "id": "wp-knot",
-   "title": "Knot",
-   "topic": "shelter",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Knot",
-   "download": "wp-knot"
-  },
-  {
-   "id": "wp-solar-panel",
-   "title": "Solar panel",
-   "topic": "power",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Solar_panel",
-   "download": "wp-solar-panel"
-  },
-  {
-   "id": "wp-amateur-radio-emergency-communications",
-   "title": "Amateur radio emergency communications",
-   "topic": "prep",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Amateur_radio_emergency_communications",
-   "download": "wp-amateur-radio-emergency-communications"
-  },
-  {
-   "id": "wp-navigation",
-   "title": "Navigation",
-   "topic": "prep",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Navigation",
-   "download": "wp-navigation"
-  },
-  {
-   "id": "wp-orienteering",
-   "title": "Orienteering",
-   "topic": "prep",
-   "tier": "large",
-   "type": "article",
-   "source": "Wikipedia contributors",
-   "license": "CC BY-SA 4.0",
-   "sourceUrl": "https://en.wikipedia.org/wiki/Orienteering",
-   "download": "wp-orienteering"
-  }
- ]
+  "version": 2,
+  "name": "Demo catalog",
+  "note": "Demo content (Wikipedia, CC BY-SA 4.0). The full open library loads once it's published.",
+  "packs": [
+    {
+      "id": "small",
+      "title": "Small",
+      "summary": "The essentials: first aid, water, fire, and a basic kit."
+    },
+    {
+      "id": "medium",
+      "title": "Medium",
+      "summary": "Small, plus injuries, food storage, power and disaster prep."
+    },
+    {
+      "id": "large",
+      "title": "Large",
+      "summary": "Everything: wilderness medicine, sanitation, growing food, radio and navigation."
+    }
+  ],
+  "topics": [
+    {
+      "id": "first-aid",
+      "title": "First aid & health",
+      "icon": "🩹"
+    },
+    {
+      "id": "water",
+      "title": "Safe water",
+      "icon": "💧"
+    },
+    {
+      "id": "food",
+      "title": "Food",
+      "icon": "🥫"
+    },
+    {
+      "id": "shelter",
+      "title": "Shelter & warmth",
+      "icon": "🔥"
+    },
+    {
+      "id": "power",
+      "title": "Power & repairs",
+      "icon": "🔋"
+    },
+    {
+      "id": "prep",
+      "title": "Preparedness & comms",
+      "icon": "📻"
+    }
+  ],
+  "downloads": [
+    {
+      "id": "wp-first-aid",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/First_aid",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-cardiopulmonary-resuscitation",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Cardiopulmonary_resuscitation",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-recovery-position",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Recovery_position",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-tourniquet",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Tourniquet",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-hypothermia",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Hypothermia",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-heat-stroke",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Heat_stroke",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-choking",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Choking",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-water-purification",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Water_purification",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-portable-water-purification",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Portable_water_purification",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-solar-water-disinfection",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Solar_water_disinfection",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-food-preservation",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Food_preservation",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-fire-making",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Fire_making",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-emergency-blanket",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Emergency_blanket",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-survival-kit",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Survival_kit",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-bug-out-bag",
+      "tier": "small",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Bug-out_bag",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-burn",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Burn",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-bone-fracture",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Bone_fracture",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-splint-medicine",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Splint_(medicine)",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-dehydration",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Dehydration",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-oral-rehydration-therapy",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Oral_rehydration_therapy",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-carbon-monoxide-poisoning",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Carbon_monoxide_poisoning",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-boiling",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Boiling",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-rainwater-harvesting",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Rainwater_harvesting",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-home-canning",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Home_canning",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-smoking-cooking",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Smoking_(cooking)",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-solar-cooker",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Solar_cooker",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-automotive-battery",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Automotive_battery",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-power-inverter",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Power_inverter",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-engine-generator",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Engine-generator",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-earthquake-preparedness",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Earthquake_preparedness",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-emergency-population-warning",
+      "tier": "medium",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Emergency_population_warning",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-snakebite",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Snakebite",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-anaphylaxis",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Anaphylaxis",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-drowning",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Drowning",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-wilderness-medical-emergency",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Wilderness_medical_emergency",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-sanitation",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Sanitation",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-composting-toilet",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Composting_toilet",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-seed-saving",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Seed_saving",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-gardening",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Gardening",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-knot",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Knot",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-solar-panel",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Solar_panel",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-amateur-radio-emergency-communications",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Amateur_radio_emergency_communications",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-navigation",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Navigation",
+      "bytes": 250000
+    },
+    {
+      "id": "wp-orienteering",
+      "tier": "large",
+      "kind": "html",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/html/Orienteering",
+      "bytes": 250000
+    }
+  ],
+  "items": [
+    {
+      "id": "wp-first-aid",
+      "title": "First aid",
+      "topic": "first-aid",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/First_aid",
+      "download": "wp-first-aid"
+    },
+    {
+      "id": "wp-cardiopulmonary-resuscitation",
+      "title": "Cardiopulmonary resuscitation",
+      "topic": "first-aid",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Cardiopulmonary_resuscitation",
+      "download": "wp-cardiopulmonary-resuscitation"
+    },
+    {
+      "id": "wp-recovery-position",
+      "title": "Recovery position",
+      "topic": "first-aid",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Recovery_position",
+      "download": "wp-recovery-position"
+    },
+    {
+      "id": "wp-tourniquet",
+      "title": "Tourniquet",
+      "topic": "first-aid",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Tourniquet",
+      "download": "wp-tourniquet"
+    },
+    {
+      "id": "wp-hypothermia",
+      "title": "Hypothermia",
+      "topic": "first-aid",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Hypothermia",
+      "download": "wp-hypothermia"
+    },
+    {
+      "id": "wp-heat-stroke",
+      "title": "Heat stroke",
+      "topic": "first-aid",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Heat_stroke",
+      "download": "wp-heat-stroke"
+    },
+    {
+      "id": "wp-choking",
+      "title": "Choking",
+      "topic": "first-aid",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Choking",
+      "download": "wp-choking"
+    },
+    {
+      "id": "wp-water-purification",
+      "title": "Water purification",
+      "topic": "water",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Water_purification",
+      "download": "wp-water-purification"
+    },
+    {
+      "id": "wp-portable-water-purification",
+      "title": "Portable water purification",
+      "topic": "water",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Portable_water_purification",
+      "download": "wp-portable-water-purification"
+    },
+    {
+      "id": "wp-solar-water-disinfection",
+      "title": "Solar water disinfection",
+      "topic": "water",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Solar_water_disinfection",
+      "download": "wp-solar-water-disinfection"
+    },
+    {
+      "id": "wp-food-preservation",
+      "title": "Food preservation",
+      "topic": "food",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Food_preservation",
+      "download": "wp-food-preservation"
+    },
+    {
+      "id": "wp-fire-making",
+      "title": "Fire making",
+      "topic": "shelter",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Fire_making",
+      "download": "wp-fire-making"
+    },
+    {
+      "id": "wp-emergency-blanket",
+      "title": "Emergency blanket",
+      "topic": "shelter",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Emergency_blanket",
+      "download": "wp-emergency-blanket"
+    },
+    {
+      "id": "wp-survival-kit",
+      "title": "Survival kit",
+      "topic": "prep",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Survival_kit",
+      "download": "wp-survival-kit"
+    },
+    {
+      "id": "wp-bug-out-bag",
+      "title": "Bug-out bag",
+      "topic": "prep",
+      "tier": "small",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Bug-out_bag",
+      "download": "wp-bug-out-bag"
+    },
+    {
+      "id": "wp-burn",
+      "title": "Burn",
+      "topic": "first-aid",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Burn",
+      "download": "wp-burn"
+    },
+    {
+      "id": "wp-bone-fracture",
+      "title": "Bone fracture",
+      "topic": "first-aid",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Bone_fracture",
+      "download": "wp-bone-fracture"
+    },
+    {
+      "id": "wp-splint-medicine",
+      "title": "Splint (medicine)",
+      "topic": "first-aid",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Splint_(medicine)",
+      "download": "wp-splint-medicine"
+    },
+    {
+      "id": "wp-dehydration",
+      "title": "Dehydration",
+      "topic": "first-aid",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Dehydration",
+      "download": "wp-dehydration"
+    },
+    {
+      "id": "wp-oral-rehydration-therapy",
+      "title": "Oral rehydration therapy",
+      "topic": "first-aid",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Oral_rehydration_therapy",
+      "download": "wp-oral-rehydration-therapy"
+    },
+    {
+      "id": "wp-carbon-monoxide-poisoning",
+      "title": "Carbon monoxide poisoning",
+      "topic": "first-aid",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Carbon_monoxide_poisoning",
+      "download": "wp-carbon-monoxide-poisoning"
+    },
+    {
+      "id": "wp-boiling",
+      "title": "Boiling",
+      "topic": "water",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Boiling",
+      "download": "wp-boiling"
+    },
+    {
+      "id": "wp-rainwater-harvesting",
+      "title": "Rainwater harvesting",
+      "topic": "water",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rainwater_harvesting",
+      "download": "wp-rainwater-harvesting"
+    },
+    {
+      "id": "wp-home-canning",
+      "title": "Home canning",
+      "topic": "food",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Home_canning",
+      "download": "wp-home-canning"
+    },
+    {
+      "id": "wp-smoking-cooking",
+      "title": "Smoking (cooking)",
+      "topic": "food",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Smoking_(cooking)",
+      "download": "wp-smoking-cooking"
+    },
+    {
+      "id": "wp-solar-cooker",
+      "title": "Solar cooker",
+      "topic": "food",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Solar_cooker",
+      "download": "wp-solar-cooker"
+    },
+    {
+      "id": "wp-automotive-battery",
+      "title": "Automotive battery",
+      "topic": "power",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Automotive_battery",
+      "download": "wp-automotive-battery"
+    },
+    {
+      "id": "wp-power-inverter",
+      "title": "Power inverter",
+      "topic": "power",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Power_inverter",
+      "download": "wp-power-inverter"
+    },
+    {
+      "id": "wp-engine-generator",
+      "title": "Engine-generator",
+      "topic": "power",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Engine-generator",
+      "download": "wp-engine-generator"
+    },
+    {
+      "id": "wp-earthquake-preparedness",
+      "title": "Earthquake preparedness",
+      "topic": "prep",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Earthquake_preparedness",
+      "download": "wp-earthquake-preparedness"
+    },
+    {
+      "id": "wp-emergency-population-warning",
+      "title": "Emergency population warning",
+      "topic": "prep",
+      "tier": "medium",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Emergency_population_warning",
+      "download": "wp-emergency-population-warning"
+    },
+    {
+      "id": "wp-snakebite",
+      "title": "Snakebite",
+      "topic": "first-aid",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Snakebite",
+      "download": "wp-snakebite"
+    },
+    {
+      "id": "wp-anaphylaxis",
+      "title": "Anaphylaxis",
+      "topic": "first-aid",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Anaphylaxis",
+      "download": "wp-anaphylaxis"
+    },
+    {
+      "id": "wp-drowning",
+      "title": "Drowning",
+      "topic": "first-aid",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Drowning",
+      "download": "wp-drowning"
+    },
+    {
+      "id": "wp-wilderness-medical-emergency",
+      "title": "Wilderness medical emergency",
+      "topic": "first-aid",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Wilderness_medical_emergency",
+      "download": "wp-wilderness-medical-emergency"
+    },
+    {
+      "id": "wp-sanitation",
+      "title": "Sanitation",
+      "topic": "water",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Sanitation",
+      "download": "wp-sanitation"
+    },
+    {
+      "id": "wp-composting-toilet",
+      "title": "Composting toilet",
+      "topic": "water",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Composting_toilet",
+      "download": "wp-composting-toilet"
+    },
+    {
+      "id": "wp-seed-saving",
+      "title": "Seed saving",
+      "topic": "food",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Seed_saving",
+      "download": "wp-seed-saving"
+    },
+    {
+      "id": "wp-gardening",
+      "title": "Gardening",
+      "topic": "food",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Gardening",
+      "download": "wp-gardening"
+    },
+    {
+      "id": "wp-knot",
+      "title": "Knot",
+      "topic": "shelter",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Knot",
+      "download": "wp-knot"
+    },
+    {
+      "id": "wp-solar-panel",
+      "title": "Solar panel",
+      "topic": "power",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Solar_panel",
+      "download": "wp-solar-panel"
+    },
+    {
+      "id": "wp-amateur-radio-emergency-communications",
+      "title": "Amateur radio emergency communications",
+      "topic": "prep",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Amateur_radio_emergency_communications",
+      "download": "wp-amateur-radio-emergency-communications"
+    },
+    {
+      "id": "wp-navigation",
+      "title": "Navigation",
+      "topic": "prep",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Navigation",
+      "download": "wp-navigation"
+    },
+    {
+      "id": "wp-orienteering",
+      "title": "Orienteering",
+      "topic": "prep",
+      "tier": "large",
+      "type": "article",
+      "source": "Wikipedia contributors",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Orienteering",
+      "download": "wp-orienteering"
+    }
+  ]
 }
