@@ -1,22 +1,58 @@
-// Browser preview version: an iframe with scripts and network blocked.
+// Browser preview version: an iframe with the network blocked. Only the
+// reader's own script can run (the page's security policy refuses any other).
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+
 const LINK_PREFIX = 'lastapp://item/';
 
-export function HtmlView(props: {
-  html: string;
-  background: string;
-  dark: boolean;
-  onOpenItem: (id: string) => void;
-}) {
+export type ReaderCommand =
+  | { type: 'find'; query: string }
+  | { type: 'next' }
+  | { type: 'prev' }
+  | { type: 'clear' };
+export type ReaderMessage = { type: 'find'; count: number; at: number };
+export type HtmlViewHandle = { send: (cmd: ReaderCommand) => void };
+
+export const HtmlView = forwardRef<
+  HtmlViewHandle,
+  {
+    html: string;
+    background: string;
+    dark: boolean;
+    onOpenItem: (id: string) => void;
+    onMessage?: (msg: ReaderMessage) => void;
+  }
+>(function HtmlView(props, ref) {
+  const frame = useRef<HTMLIFrameElement>(null);
+  const onMessage = useRef(props.onMessage);
+  onMessage.current = props.onMessage;
+  useImperativeHandle(ref, () => ({
+    send: (cmd) =>
+      frame.current?.contentWindow?.postMessage(JSON.stringify({ ...cmd, reader: true }), '*'),
+  }));
+  useEffect(() => {
+    const listen = (e: MessageEvent) => {
+      if (e.source !== frame.current?.contentWindow) return;
+      try {
+        onMessage.current?.(JSON.parse(String(e.data)));
+      } catch {
+        // not one of ours
+      }
+    };
+    window.addEventListener('message', listen);
+    return () => window.removeEventListener('message', listen);
+  }, []);
   return (
     <iframe
+      ref={frame}
       title="article"
-      sandbox="allow-same-origin"
+      sandbox="allow-same-origin allow-scripts"
       srcDoc={props.html}
       onLoad={(e) => {
         const doc = (e.target as HTMLIFrameElement).contentDocument;
         doc?.addEventListener('click', (ev) => {
           const a = (ev.target as HTMLElement).closest('a');
-          const href = a?.getAttribute('href') ?? '';
+          if (!a) return;
+          const href = a.getAttribute('href') ?? '';
           ev.preventDefault();
           if (href.startsWith(LINK_PREFIX)) props.onOpenItem(href.slice(LINK_PREFIX.length));
         });
@@ -24,4 +60,4 @@ export function HtmlView(props: {
       style={{ flex: 1, border: 0, width: '100%', height: '100%', background: props.background }}
     />
   );
-}
+});

@@ -1,11 +1,22 @@
+import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
-import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, useColorScheme, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  useColorScheme,
+  View,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '../../components/ui';
-import { HtmlView } from '../../components/HtmlView';
+import { HtmlView, HtmlViewHandle } from '../../components/HtmlView';
 import { findItem, Item } from '../../lib/catalog';
 import { fileFor } from '../../lib/library';
+import { buildReaderPage } from '../../lib/reader-page';
 import { getTextSize, nextTextSize, TEXT_SIZES } from '../../lib/text-size';
 import { useTheme } from '../../lib/theme';
 
@@ -46,70 +57,152 @@ function Credit({ item }: { item: Item }) {
 function Article({ item }: { item: Item }) {
   const t = useTheme();
   const dark = useColorScheme() === 'dark';
+  const insets = useSafeAreaInsets();
   const [html, setHtml] = useState<string | null>(null);
   const [size, setSize] = useState(getTextSize);
+  const view = useRef<HtmlViewHandle>(null);
+  // "Find in this guide"
+  const [finding, setFinding] = useState(false);
+  const [query, setQuery] = useState('');
+  const [found, setFound] = useState<{ count: number; at: number } | null>(null);
 
   useEffect(() => {
     fileFor(item).text().then(setHtml);
   }, [item]);
 
-  if (html === null) return <View style={{ flex: 1, backgroundColor: t.bg }} />;
+  // Our own simple, readable page. Nothing is loaded from the internet.
+  const page = useMemo(
+    () =>
+      html === null
+        ? null
+        : buildReaderPage({
+            title: item.title,
+            html,
+            source: item.source,
+            license: item.license,
+            px: TEXT_SIZES[size],
+            colors: t,
+          }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [html, size, dark, item],
+  );
 
-  // Our own simple, readable styling. Nothing is loaded from the internet.
-  // Rounded system font, generous spacing, and encyclopedia clutter hidden.
-  const px = TEXT_SIZES[size];
-  const page = `<!doctype html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">
-<style>
-  body{font:${px}px/1.65 ui-rounded,-apple-system,Roboto,sans-serif;margin:0;padding:4px 22px 64px;
-       background:${t.bg};color:${t.text};-webkit-text-size-adjust:100%;word-wrap:break-word}
-  h1{font-size:1.6em;line-height:1.2;margin:.4em 0 .5em;font-weight:800}
-  h2{font-size:1.25em;line-height:1.25;margin:1.8em 0 .5em;padding-top:1em;border-top:1px solid ${t.border};font-weight:800}
-  h3,h4{font-size:1.08em;line-height:1.3;margin:1.4em 0 .4em;font-weight:700}
-  p{margin:0 0 1em} ul,ol{padding-left:1.3em;margin:0 0 1em} li{margin:.35em 0}
-  a{color:${t.accent};text-decoration:underline;text-underline-offset:3px}
-  img{max-width:100%;height:auto;border-radius:12px;display:block;margin:0 auto}
-  figure{margin:1.2em 0;padding:0} figcaption,.thumbcaption{font-size:.8em;line-height:1.4;color:${t.muted};margin-top:.5em;text-align:center}
-  table{border-collapse:collapse;font-size:.85em;display:block;overflow-x:auto;margin:1em 0;max-width:100%}
-  td,th{border:1px solid ${t.border};padding:6px 8px;text-align:left;vertical-align:top} th{background:${t.soft}}
-  blockquote{margin:1em 0;padding:.6em 1em;background:${t.soft};border-radius:12px}
-  dl{margin:0 0 1em} dd{margin-left:1em}
-  .mw-ref,.reference,.mw-editsection,.navbox,.hatnote,.ambox,.metadata,.reflist,.mw-references-wrap,
-  .infobox,.sidebar,.toc,.noprint,.shortdescription,.mw-empty-elt,.mw-jump-link,.portal,.portalbox,
-  .sistersitebox,.side-box,.stub,.catlinks,.authority-control,.navigation-not-searchable,.mbox-small,
-  .magnify,.mw-cite-backlink,.nomobile,.tmbox,.ombox,.cmbox,.fmbox{display:none !important}
-  .credit{color:${t.muted};font-size:.72em;line-height:1.5;border-top:1px solid ${t.border};margin-top:2.5em;padding-top:1em}
-</style></head><body><h1>${escapeHtml(item.title)}</h1>${html}
-<p class="credit">Source: ${escapeHtml(item.source)} · ${escapeHtml(item.license)}.
-General information, not medical advice. If you can reach emergency services, please do that first.</p></body></html>`;
+  // Search as you type, after a short pause so long guides stay smooth.
+  useEffect(() => {
+    if (!finding) return;
+    const id = setTimeout(() => view.current?.send({ type: 'find', query }), 250);
+    return () => clearTimeout(id);
+  }, [query, finding]);
+
+  const stopFinding = () => {
+    setFinding(false);
+    setQuery('');
+    setFound(null);
+    view.current?.send({ type: 'clear' });
+  };
+
+  if (page === null) return <View style={{ flex: 1, backgroundColor: t.bg }} />;
+  const typed = query.trim().length > 1;
 
   return (
-    <>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: t.bg }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={insets.top + 44}
+    >
       <Stack.Screen
         options={{
-          // Tap "Aa" to make the words bigger. The choice is remembered.
           headerRight: () => (
-            <Pressable
-              onPress={() => setSize(nextTextSize())}
-              hitSlop={12}
-              accessibilityLabel="Change text size"
-            >
-              <Text style={{ color: t.accent, fontSize: 20, fontWeight: '800' }}>Aa</Text>
-            </Pressable>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18, paddingRight: 4 }}>
+              <Pressable
+                onPress={() => (finding ? stopFinding() : setFinding(true))}
+                hitSlop={12}
+                accessibilityLabel="Find in this guide"
+              >
+                <Ionicons name="search" size={24} color={t.accent} />
+              </Pressable>
+              {/* Tap "Aa" to make the words bigger. The choice is remembered. */}
+              <Pressable
+                onPress={() => {
+                  stopFinding();
+                  setSize(nextTextSize());
+                }}
+                hitSlop={12}
+                accessibilityLabel="Change text size"
+              >
+                <Text style={{ color: t.accent, fontSize: 20, fontWeight: '800' }}>Aa</Text>
+              </Pressable>
+            </View>
           ),
         }}
       />
       <HtmlView
+        ref={view}
         html={page}
         background={t.bg}
         dark={dark}
+        onMessage={(m) => m.type === 'find' && setFound({ count: m.count, at: m.at })}
         onOpenItem={(id) => {
           const target = findItem(id);
           if (target && fileFor(target).exists) router.push(`/item/${id}`);
         }}
       />
-    </>
+      {finding && (
+        <View
+          style={[
+            s.findBar,
+            {
+              backgroundColor: t.card,
+              borderTopColor: t.border,
+              paddingBottom: Math.max(insets.bottom, 10),
+            },
+          ]}
+        >
+          <View style={[s.findBox, { backgroundColor: t.bg }]}>
+            <Ionicons name="search" size={18} color={t.text} />
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder="Find in this guide"
+              placeholderTextColor={t.muted}
+              autoFocus
+              autoCorrect={false}
+              autoCapitalize="none"
+              returnKeyType="search"
+              onSubmitEditing={() => view.current?.send({ type: 'next' })}
+              blurOnSubmit={false}
+              style={[s.findInput, { color: t.text }]}
+            />
+          </View>
+          {typed && found && (
+            <Text numberOfLines={1} style={{ color: t.text, fontSize: 15, fontWeight: '800' }}>
+              {found.count === 0 ? 'None' : `${found.at} of ${found.count}`}
+            </Text>
+          )}
+          <Pressable
+            onPress={() => view.current?.send({ type: 'prev' })}
+            disabled={!found?.count}
+            hitSlop={6}
+            accessibilityLabel="Previous match"
+            style={[s.findBtn, { backgroundColor: t.soft, opacity: found?.count ? 1 : 0.4 }]}
+          >
+            <Ionicons name="chevron-up" size={22} color={t.accent} />
+          </Pressable>
+          <Pressable
+            onPress={() => view.current?.send({ type: 'next' })}
+            disabled={!found?.count}
+            hitSlop={6}
+            accessibilityLabel="Next match"
+            style={[s.findBtn, { backgroundColor: t.soft, opacity: found?.count ? 1 : 0.4 }]}
+          >
+            <Ionicons name="chevron-down" size={22} color={t.accent} />
+          </Pressable>
+          <Pressable onPress={stopFinding} hitSlop={8} accessibilityRole="button">
+            <Text style={{ color: t.accent, fontSize: 16, fontWeight: '800' }}>Done</Text>
+          </Pressable>
+        </View>
+      )}
+    </KeyboardAvoidingView>
   );
 }
 
@@ -146,15 +239,39 @@ function Pdf({ item }: { item: Item }) {
   );
 }
 
-function escapeHtml(s: string) {
-  return s.replace(
-    /[&<>"]/g,
-    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!,
-  );
-}
-
 const s = StyleSheet.create({
   pad: { padding: 16 },
   credit: { fontSize: 15, padding: 16 },
   btn: { padding: 15, borderRadius: 16, alignItems: 'center' },
+  findBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingTop: 10,
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
+  findBox: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    height: 46,
+    borderRadius: 23,
+    paddingHorizontal: 14,
+  },
+  findInput: {
+    flex: 1,
+    minWidth: 0,
+    fontSize: 17,
+    paddingVertical: 0,
+    fontFamily: 'Nunito_400Regular',
+  },
+  findBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
