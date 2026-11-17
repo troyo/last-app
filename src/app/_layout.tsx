@@ -41,7 +41,8 @@ export default function RootLayout() {
           // Just a clean back arrow, no "Back"/screen-name label next to it.
           headerBackButtonDisplayMode: 'minimal',
           contentStyle: { backgroundColor: t.bg },
-        }}>
+        }}
+      >
         <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Home' }} />
         <Stack.Screen name="welcome" options={{ headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="agree" options={{ headerShown: false, gestureEnabled: false }} />
@@ -57,6 +58,7 @@ export default function RootLayout() {
         <Stack.Screen name="item/[id]" options={{ title: '' }} />
         <Stack.Screen name="checklist/[id]" options={{ title: '' }} />
         <Stack.Screen name="help/[id]" options={{ title: '' }} />
+        <Stack.Screen name="show/[id]" options={{ headerShown: false }} />
       </Stack>
     </LibraryProvider>
   );

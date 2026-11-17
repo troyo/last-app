@@ -1,9 +1,11 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { minutesIn, StepTimer } from '../../components/StepTimer';
 import { Card, IconName, IconTile, Text } from '../../components/ui';
 import { DiagramId, DIAGRAMS } from '../../lib/diagrams';
 import { findQuickHelp } from '../../lib/quick-help';
+import { hasShowMe } from '../../lib/show-me';
 import { HUES, useTheme } from '../../lib/theme';
 
 function Diagram({ id }: { id: DiagramId }) {
@@ -35,6 +37,27 @@ export default function QuickHelpScreen() {
           <Text style={[s.title, { color: t.text }]}>{h.title}</Text>
         </View>
         <Text style={[s.when, { color: t.muted }]}>{h.when}</Text>
+
+        {hasShowMe(h.id) && (
+          <Pressable
+            onPress={() => router.push(`/show/${h.id}`)}
+            accessibilityRole="button"
+            style={({ pressed }) => [
+              s.show,
+              { backgroundColor: t.accent },
+              pressed && { opacity: 0.85 },
+            ]}
+          >
+            <Ionicons name="play-circle" size={34} color={t.accentText} />
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: t.accentText, fontSize: 20, fontWeight: '800' }}>Show me</Text>
+              <Text style={{ color: t.accentText, fontSize: 15 }}>
+                Moving pictures, one step at a time, read out loud
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={22} color={t.accentText} />
+          </Pressable>
+        )}
 
         <Text style={[s.label, { color: t.accent, marginTop: 4 }]}>Do this now</Text>
         {h.steps.map((step, i) => (
@@ -130,6 +153,13 @@ const s = StyleSheet.create({
     lineHeight: 25,
   },
   diagram: { width: '100%', aspectRatio: 720 / 420, borderRadius: 16, overflow: 'hidden' },
+  show: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 14,
+    borderRadius: 22,
+  },
   step: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
   num: {
     width: 36,
