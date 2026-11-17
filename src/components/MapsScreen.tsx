@@ -23,7 +23,7 @@ import {
   outlineOf,
   planDownload,
 } from '../lib/map-areas';
-import { locate } from '../lib/locate';
+import { canLocateQuietly, locate } from '../lib/locate';
 import {
   DEFAULT_PLACES,
   formatMiles,
@@ -147,7 +147,9 @@ export function MapsScreen() {
     camera.current?.flyTo({ center: here, zoom: 11, duration: 1200 });
   }, []);
   useEffect(() => {
-    goToMe(true);
+    // Only find you on opening if you've already allowed it; otherwise wait
+    // for a tap on the locate button, so the prompt never appears unasked.
+    if (canLocateQuietly()) goToMe(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

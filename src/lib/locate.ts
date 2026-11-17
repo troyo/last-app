@@ -1,6 +1,28 @@
 // Asks the phone where it is. GPS works with no cell signal or Wi-Fi, it just
 // needs a view of the sky and can take a minute.
 import { LocationManager } from '@maplibre/maplibre-react-native';
+import { File, Paths } from './fs';
+
+// Set once the person has let us find them, so screens can locate them
+// quietly later without springing the permission prompt on them unasked.
+const GRANTED = new File(Paths.document, 'location-ok.json');
+
+/** True if location has worked before, so asking again won't pop a prompt. */
+export function canLocateQuietly(): boolean {
+  try {
+    return GRANTED.exists;
+  } catch {
+    return false;
+  }
+}
+
+function rememberGranted() {
+  try {
+    if (!GRANTED.exists) GRANTED.writeSync('{"ok":true}');
+  } catch {
+    // only a convenience
+  }
+}
 
 export type Fix = { lat: number; lon: number };
 
@@ -29,6 +51,7 @@ export function locate(timeoutMs = 20000): Promise<Fix | null> {
     const finish = (fix: Fix | null) => {
       if (finished) return;
       finished = true;
+      if (fix) rememberGranted();
       clearTimeout(timer);
       try {
         LocationManager.removeListener(onUpdate as never);
