@@ -179,6 +179,27 @@ const TOPIC_WORDS = [
 ];
 // Wikibooks pages are named "Book/Chapter" or "Book:Page", so the book tells us the shelf.
 const BOOK_TOPICS = [
+  ['first-aid', /^Adventist Youth Honors Answer Book\/Health and Science\//i],
+  ['grow', /^Adventist Youth Honors Answer Book\/Outdoor Industries\//i],
+  [
+    'food',
+    /^Adventist Youth Honors Answer Book\/(Household Arts\/.*(bak|cook|cann|dry|preserv|nutrition|food)|Nature\/.*(edible|fung))/i,
+  ],
+  ['prep', /^Adventist Youth Honors Answer Book\/(Recreation|Nature)\//i],
+  ['diy', /^Adventist Youth Honors Answer Book\//i],
+  [
+    'diy',
+    /^(Do-It-Yourself|Woodworking|Carpentry|Sewing|Knitting|Blacksmithing|Automobile Repair|Candle Making|Soapmaking|Basketry|Leatherworking|Metalworking|Masonry)\b/i,
+  ],
+  [
+    'grow',
+    /^(Gardening|Beekeeping|Raising Chickens|Permaculture Design|A Guide to Vegetable Gardening)\b/i,
+  ],
+  ['food', /^(Fermentation|Brewing|Winemaking|Cheesemaking|Outdoor Cooking|Foraging)\b/i],
+  [
+    'prep',
+    /^(Camping|Backpack Camping and Woodland Survival|Wilderness Survival|Hiking|Orienteering|Ropework|Emergency Preparedness)\b/i,
+  ],
   ['food', /^Cookbook\b/i],
   ['first-aid', /^(First Aid|Emergency Medicine)\b/i],
   ['grow', /^Horticulture\b/i],
@@ -219,11 +240,24 @@ const GROW_OK =
 // Pages that are about the book itself, not something you can do.
 const BOOK_META =
   /(^|\/)(Authors?|Contributors|Templates?|Manual of Style|History|How To Read This Book|Introduction|Glossary|Sources|Index|Cover|Licen[cs]e|Print(able)? version|Behind the Scenes|Notes for .*Instructors|Legal Liability|First Aid Training|Consent|Appendix [A-DF]\b.*|Guide to the OCTEM|PIOPED References|Stencil Chapter)$/i;
+// A large skills handbook written for a youth outdoors programme. Each chapter answers
+// "how do you actually do this": fire building, camp cooking, canning, carpentry, first aid.
+const AY_BOOK = /^Adventist Youth Honors Answer Book\//;
+const AY_SHELVES =
+  /^(Recreation|Nature|Outdoor Industries|Household Arts|Vocational|Health and Science|Arts and Crafts)$/;
+const AY_OK =
+  /camp|fire|cook|dutch oven|backpack|hik|orienteer|navigation|map|compass|knot|pioneer|lashing|wilderness|winter|outdoor|canoe|kayak|row|sail|swim|lifesav|rescue|climb|rappel|track|weather|star|edible|fung|mushroom|tree|shrub|herb|seed|snake|reptile|spider|poison|agricultur|farm|garden|fruit|bee|cattle|dair|goat|horse|poultry|chicken|sheep|rabbit|pig|livestock|bak|bread|canning|drying|preserv|nutrition|sew|dressmak|tailor|launder|quilt|housekeep|knit|crochet|weav|spinning|basket|soap|candle|pottery|leather|wood|carv|carpent|mason|brick|plumb|small engine|auto|bicycle|shoe|paint|blacksmith|metal|radio|electric|first aid|nursing|cpr|health|healing|red alert|disaster|hygiene|physical fitness|water safety|sanitation/i;
 function usableOffGrid(wiki, title) {
   // Appropedia is mostly write-ups of school and aid projects, not instructions. None of it is taken in bulk.
   if (wiki === 'appropedia') return false;
   if (wiki === 'wikibooks') {
     if (BOOK_META.test(title)) return false;
+    if (AY_BOOK.test(title)) {
+      const [, shelf, honor, ...deeper] = title.split('/');
+      // One page per skill: no regional variants, no sub-pages.
+      if (!honor || deeper.length || /\(/.test(honor) || !AY_SHELVES.test(shelf)) return false;
+      return AY_OK.test(honor) && !NEEDS_GEAR.test(honor);
+    }
     if (/^Cookbook:/.test(title))
       return COOK_OK.test(title) && !NEEDS_GEAR.test(title) && !COOK_TREAT.test(title);
     if (/^Electronics/.test(title)) return false;
@@ -422,8 +456,10 @@ const fetched = await pool(articleList, 4, async (a) => {
     return null;
   }
   const title =
-    decodeEntities(data.parse.displaytitle?.replace(/<[^>]+>/g, '') || a.title) +
-    (wiki.titleSuffix || '');
+    decodeEntities(data.parse.displaytitle?.replace(/<[^>]+>/g, '') || a.title)
+      // Show the skill, not the shelf mark of the book it came from.
+      .replace(/^Adventist Youth Honors Answer Book\/[^/]+\//, '')
+      .replace(/^Cookbook:/, '') + (wiki.titleSuffix || '');
   if (!isEnglish(title, html)) {
     report.skipped.push(`Article "${a.title}" (${a.wiki}): not in English`);
     return null;
@@ -440,7 +476,9 @@ const fetched = await pool(articleList, 4, async (a) => {
   seenTitles.add(seenKey);
   return {
     ...a,
-    topic: a.bulk ? topicFor(title, a.topic, a.wiki) : a.topic,
+    topic: a.bulk
+      ? topicFor(a.wiki === 'wikibooks' ? a.title.replace(/_/g, ' ') : title, a.topic, a.wiki)
+      : a.topic,
     title,
     html,
     sourceUrl: wiki.pageBase + encodeURIComponent(a.title.replace(/ /g, '_')),
