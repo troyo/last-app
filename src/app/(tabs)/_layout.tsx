@@ -12,7 +12,7 @@ export default function TabsLayout() {
         tabBarActiveTintColor: t.accent,
         tabBarInactiveTintColor: t.muted,
         tabBarStyle: { backgroundColor: t.card, borderTopColor: t.border },
-        tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
+        tabBarLabelStyle: { fontSize: 12, fontFamily: 'Nunito_700Bold' },
         sceneStyle: { backgroundColor: t.bg },
       }}>
       <Tabs.Screen

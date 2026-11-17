@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Text } from '../components/ui';
 import { getCatalog } from '../lib/catalog';
 import { useLibrary } from '../lib/LibraryContext';
 import { useTheme } from '../lib/theme';

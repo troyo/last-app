@@ -1,9 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Redirect, router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Card, FadeIn } from '../../components/ui';
+import { Button, Card, FadeIn, Text } from '../../components/ui';
 import { getCatalog, itemsForPack } from '../../lib/catalog';
 import { isDownloaded, remainingBytes } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
@@ -103,7 +103,13 @@ export default function Home() {
             onChangeText={setQuery}
             placeholder="What do you need help with?"
             placeholderTextColor={t.muted}
-            style={{ flex: 1, color: t.text, fontSize: 17, paddingVertical: 14 }}
+            style={{
+              flex: 1,
+              color: t.text,
+              fontSize: 17,
+              paddingVertical: 14,
+              fontFamily: 'Nunito_400Regular',
+            }}
             clearButtonMode="while-editing"
             returnKeyType="search"
           />

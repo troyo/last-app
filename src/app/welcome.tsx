@@ -1,17 +1,8 @@
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
-import {
-  Image,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  ScrollView,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import { Image, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, FadeIn, Float } from '../components/ui';
+import { Button, FadeIn, Float, Text } from '../components/ui';
 import { useTheme } from '../lib/theme';
 import { markWelcomeSeen } from '../lib/welcome';
 

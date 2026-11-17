@@ -6,11 +6,37 @@ import {
   Pressable,
   StyleProp,
   StyleSheet,
-  Text,
+  Text as RNText,
+  TextProps,
   View,
   ViewStyle,
 } from 'react-native';
 import { useTheme } from '../lib/theme';
+
+// One friendly, rounded typeface everywhere. Each weight is its own font file,
+// so we turn "fontWeight" into the matching file.
+const FACE: Record<string, string> = {
+  '400': 'Nunito_400Regular',
+  '500': 'Nunito_600SemiBold',
+  '600': 'Nunito_600SemiBold',
+  '700': 'Nunito_700Bold',
+  '800': 'Nunito_800ExtraBold',
+  '900': 'Nunito_800ExtraBold',
+  normal: 'Nunito_400Regular',
+  bold: 'Nunito_700Bold',
+};
+export const fontFor = (weight?: string | number) => FACE[String(weight ?? '400')] ?? FACE['400'];
+
+/** Drop-in replacement for React Native's Text that uses the app's typeface. */
+export function Text({ style, ...rest }: TextProps) {
+  const flat = StyleSheet.flatten(style) ?? {};
+  return (
+    <RNText
+      {...rest}
+      style={[flat, { fontFamily: fontFor(flat.fontWeight), fontWeight: undefined }]}
+    />
+  );
+}
 
 export function Button(props: {
   label: string;

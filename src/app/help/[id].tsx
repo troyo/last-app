@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Card } from '../../components/ui';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Card, Text } from '../../components/ui';
 import { findQuickHelp } from '../../lib/quick-help';
 import { useTheme } from '../../lib/theme';
 
