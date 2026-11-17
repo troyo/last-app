@@ -21,13 +21,13 @@ Words already in the name and subtitle (survival, guide, prepper, offline, how-t
 
 ## Promotional text (170 max)
 
-No power. No signal. No problem. Step-by-step survival help, first aid you can follow out loud, and thousands of how-to guides, all saved on your phone.
+No power. No signal. No problem. Step-by-step survival help, first aid you can follow out loud, and a full library of how-to guides, all saved on your phone.
 
 ## Description
 
 When the power is out and the phone lines are down, Last App still works.
 
-Last App is a complete offline survival guide. Download it once and everything is saved on your phone: emergency first aid, disaster plans, prepper checklists and thousands of how-to guides. No internet, no signal and no account needed.
+Last App is a complete offline survival guide. Download it once and everything is saved on your phone: emergency first aid, disaster plans, prepper checklists and a full library of how-to guides. No internet, no signal and no account needed.
 
 KNOW WHAT TO DO IN SECONDS
 - 10 emergency cards with big, plain steps: bleeding, CPR, choking, burns, broken bones, overheating, hypothermia, safe water, lost outdoors and power outages
@@ -45,8 +45,9 @@ PREP LIKE A PRO
 - Water, food and supplies sized for your household
 - A plain reason next to every item, so you know why it matters
 
-THOUSANDS OF HOW-TO GUIDES
-- First aid and health, safe water, food and gardening, shelter and warmth, power and repairs, radios, off-grid living and DIY
+HOW-TO GUIDES THAT NEED NO POWER
+- First aid and health, safe water, food and gardening, shelter and warmth, power and repairs, radios, off-grid living and hand-tool DIY
+- Every guide is picked to work with no electricity, no internet and no special equipment
 - Army and FEMA field manuals
 - Search everything, or just ask a question and get an answer from your guides
 - Find words inside any guide, jump between sections, and make the text bigger

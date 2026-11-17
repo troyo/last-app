@@ -14,7 +14,7 @@ const S = [
   ['hazard', 'sun', 'Ready for <b>your</b><br>disasters', 'Hurricanes, tornadoes, quakes, floods, wildfire', 'light'],
   ['checklist', 'cream', 'Prep for 3 days,<br><b>2 weeks or 1 year</b>', 'Prepper checklists sized for your household', 'light'],
   ['ask', 'dark', 'Ask anything.<br><b>Works offline.</b>', 'Instant answers from your saved guides', 'light'],
-  ['search', 'coral', '<b>9,000+</b> how-to<br>survival guides', 'Water, food, shelter, power, medical, off-grid', 'light'],
+  ['search', 'coral', 'How-to guides that<br><b>need no power</b>', 'Water, food, shelter, medical and hand-tool skills', 'light'],
 ];
 const page = ([shot, th, h, sub, bar], W, H) => { const [bg, hc, ac, sc] = TH[th]; const k = W / 1320; const top = bar === 'dark' ? GREEN : '#F8F5EE', fg = bar === 'dark' ? '#fff' : INK;
   const pw = Math.round(W * 0.8), bez = Math.round(22 * k), sw = pw - bez * 2, sk = sw / 1320, sbH = Math.round(150 * sk);

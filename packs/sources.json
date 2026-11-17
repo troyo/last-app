@@ -15,7 +15,7 @@
     {
       "id": "large",
       "title": "Large",
-      "summary": "Everything we have: thousands of DIY and off-grid guides, cookbooks, gardening, electronics, more field manuals and deep dives on every topic."
+      "summary": "Everything we have: more no-power, no-gadget guides for growing and keeping food, water, shelter, hand tools and repairs, plus extra field manuals."
     }
   ],
   "topics": [
@@ -739,7 +739,7 @@
       "wiki": "wikibooks",
       "tier": "large",
       "topic": "books",
-      "limit": 3000,
+      "limit": 6000,
       "namespace": 102
     },
     {
@@ -748,13 +748,6 @@
       "topic": "books",
       "prefix": "Horticulture",
       "limit": 1500
-    },
-    {
-      "wiki": "wikibooks",
-      "tier": "large",
-      "topic": "books",
-      "prefix": "Emergency Medicine",
-      "limit": 500
     },
     {
       "wiki": "wikibooks",
@@ -771,17 +764,10 @@
       "limit": 300
     },
     {
-      "wiki": "wikibooks",
-      "tier": "large",
-      "topic": "books",
-      "prefix": "Electronics",
-      "limit": 800
-    },
-    {
       "wiki": "appropedia",
       "tier": "large",
       "topic": "diy",
-      "limit": 6000
+      "limit": 20000
     }
   ],
   "pdfs": [

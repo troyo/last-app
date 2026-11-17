@@ -196,6 +196,37 @@ function topicFor(title, fallback, wiki) {
 // Pages that are about a university class, a conference or the wiki itself.
 const NOT_A_GUIDE =
   /^(\d{4}\b|\d{3} |[A-Z]{2,5}\d{2,4}\b)|^(Fab Labs?|Community action|Commons news|Global Ecovillage Network|CrashSavers|ALL-SAFE|ETALO|External Links|Appropedia|User|Help)\b|\b(conference|symposium|semester|syllabus|course|class project|science project|team|meeting|minutes|literature review|protocol:|category|template|portal|news|newsletter|self-assessment|simulator|association|foundation|organi[sz]ation|network|institute|university|centre|center|collaborations?|killer apps|3d print(ed|ing)?|fused filament|drop box|press release|grant|proposal|survey results|bibliography)\b/i;
+// The whole point of the app: every guide must be something a person can do with
+// no power, no internet and no special equipment. Bulk sources are full of pages
+// that fail that test (3D printing, electronics, lab kit, studies, school projects),
+// so bulk pages are only let in when they pass the checks below.
+const NEEDS_GEAR =
+  /3-?d[- ]?print|printable|printer|reprap|recyclebot|filament|open[- ]source|opensource|arduino|raspberry|microcontroller|firmware|software|\bapps?\b|\bapplication\b|computer|comput|digital|internet|online|website|\bweb\b|wiki|database|\bdata\b|laser|\bcnc\b|\bpcb\b|circuit|sensor|\bleds?\b|photovoltaic|\bpv\b|semiconductor|transistor|amplifier|oscillator|inverter|grid[- ]tie|smart grid|microgrid|electric (car|vehicle|tractor)|\bev\b|nanotech|spectro|chromatograph|microscop|centrifuge|ultrasound|oximet|x-ray|\bmri\b|laboratory|\blab\b|simulation|model(l)?ing|\bmodel\b|analysis|assessment|feasibility|case stud|\bstudy\b|studies|research|review|thesis|report|survey|framework|policy|policies|economic|financ|market|business|industr|commercial|manufactur|factory|enterprise|funding|development|sustainab|climate|carbon|emission|footprint|compendium|portfolio|curriculum|lesson|education|workshop|project|program(me)?|initiative|campaign|movement|community|communities|cooperative|ecovillage|\bngo\b|country|countries|\bin (india|africa|kenya|nigeria|malawi|haiti|nepal|ghana|uganda|tanzania|mexico|peru|china|brazil)\b|\bCCAT\b|\bHSU\b|\bMOST\b|\bGSTC\b|\bWSSD\b|vehicle|\bcars?\b|taxes|tourism|aerosol pandemic|refrigerat|air condition|washing machine|dishwasher|microwave|blender|food processor|bread machine|slow cooker|air fryer|ice cream|freezer|reactor|fukushima|partnership|gallery|statistics|atlas|hydrogen|dialysis|\bdemo\b|scents|hydroponic|ethanol|superheated|energy control|cheesecake|brownie|cookies?\b|cake\b|milkshake|candy|fudge/i;
+// Appropedia: short, plain titles about a core survival skill.
+const CORE_SKILL =
+  /\b(water|rainwater|well|spring|cistern|filter|filters|purification|chlorination|boiling|distillation|latrine|toilet|toilets|compost|composting|soap|hygiene|handwashing|garden|gardening|seed|seeds|soil|mulch|mulching|crop|vegetable|vegetables|fruit|orchard|beekeeping|chickens?|poultry|goats?|rabbits?|fishing|trapping|foraging|hunting|shelter|earthbag|adobe|cob|thatch|thatching|insulation|rope|knots?|candles?|lantern|basket|pottery|bricks?|tanning|sewing|weaving|first aid|wounds?|oral rehydration|medicinal|root cellar|solar (cooker|cookers|oven|still|dryer|water disinfection)|zeer|haybox|biochar|charcoal|firewood|fire|stoves?|rocket stove|cooking|drying|smoking|salting|pickling|fermentation|canning|food (storage|preservation)|hand ?pump|hand tools?|navigation|bicycle)s?\b/i;
+const PLACE_OR_PROJECT =
+  /\b(school|elementary|college|park|farm|hotel|street|house|centre|center|village|city|county|[A-Z]{3,})\b|\d{4}/;
+const APPROPEDIA_BOOKS = /^(Are You Ready\?|Household Cyclopedia|Keeping Chickens)\//;
+// Cookbook: staples and ways of keeping food, not dinner-party recipes.
+const COOK_OK =
+  /\b(bread|flatbread|hardtack|bannock|tortilla|sourdough|yeast|beans?|lentil|porridge|oat|grits|cornmeal|polenta|jerky|pemmican|pickl|sauerkraut|kimchi|ferment|canning|preserv|dried|drying|smok|salt (pork|fish|cod)|cur(ed|ing)|stock|broth|yogurt|butter|vinegar|sprout|foraging|acorn|dandelion|nettle|campfire|dutch oven|substitut|cooking techniques|food safety|nutrition)\w*\b/i;
+const GROW_OK =
+  /\b(vegetable|potato|tomato|bean|pea|corn|maize|squash|pumpkin|carrot|onion|garlic|cabbage|kale|lettuce|spinach|beet|turnip|radish|pepper|herb|fruit|apple|berry|seed|sow|soil|compost|mulch|manure|fertil|water|irrigat|prun|propagat|graft|cutting|transplant|harvest|storage|pest|weed|tool|raised bed|container|season|frost|greenhouse|cold frame|garden)\w*\b/i;
+function usableOffGrid(wiki, title) {
+  if (wiki === 'appropedia') {
+    if (APPROPEDIA_BOOKS.test(title)) return true;
+    if (/[/:]/.test(title) || title.split(/\s+/).length > 5) return false;
+    return CORE_SKILL.test(title) && !NEEDS_GEAR.test(title) && !PLACE_OR_PROJECT.test(title);
+  }
+  if (wiki === 'wikibooks') {
+    if (/^Cookbook:/.test(title)) return COOK_OK.test(title) && !NEEDS_GEAR.test(title);
+    if (/^(Electronics|Emergency Medicine)/.test(title)) return false;
+    if (/^Horticulture\//.test(title)) return GROW_OK.test(title.replace(/^Horticulture\//, ''));
+    return !NEEDS_GEAR.test(title);
+  }
+  return true;
+}
 for (const group of sources.articles) {
   const titles = QUICK ? group.titles.slice(0, 2) : group.titles;
   for (const t of titles) want(group.wiki, t, group.tier, group.topic);
@@ -237,6 +268,7 @@ if (!QUICK) {
         if ((p.title.match(NON_LATIN) || []).length > 1) continue;
         if (/\/[a-z]{2,3}(-[a-z]+)?$/.test(p.title)) continue;
         if (bulk.wiki === 'appropedia' && NOT_A_GUIDE.test(p.title)) continue;
+        if (!usableOffGrid(bulk.wiki, p.title)) continue;
         count++;
         want(bulk.wiki, p.title, bulk.tier, bulk.topic, true);
       }
