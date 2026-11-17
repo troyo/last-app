@@ -121,7 +121,8 @@ const OTHER_WORDS = new Set(
     ' ',
   ),
 );
-const NON_LATIN = /[\u0370-\u03FF\u0400-\u052F\u0590-\u08FF\u0900-\u0DFF\u0E00-\u0FFF\u1100-\u11FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]/g;
+const NON_LATIN =
+  /[\u0370-\u03FF\u0400-\u052F\u0590-\u08FF\u0900-\u0DFF\u0E00-\u0FFF\u1100-\u11FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]/g;
 const plainText = (html) =>
   html
     .replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, ' ')
@@ -148,27 +149,53 @@ function isEnglish(title, html) {
   const foreign = ((title + text).match(NON_LATIN) || []).length;
   if (foreign / letters > 0.05 || (title.match(NON_LATIN) || []).length > 1) return false;
   const { share, other } = englishShare(text);
-  return share >= 0.1 && other < share;
+  // Only turn a page away on real evidence of another language. Lists, recipes and
+  // contents pages have few "the/of/and" words in any language, and they are still English.
+  return !(other >= 0.03 && other > share);
 }
 
 // Bulk pages arrive unsorted. Put each under the topic it is about, so
 // "DIY" isn't one pile of thousands. First match wins; the rest stay put.
 const TOPIC_WORDS = [
   ['water', /\b(water|rainwater|well|pump|filter|filtration|chlorin|desalinat|irrigation)\b/i],
-  ['sanitation', /\b(toilet|latrine|sanitation|compost(ing)? toilet|sewage|greywater|soap|hygiene|waste)\b/i],
-  ['grow', /\b(garden|gardening|crop|seed|soil|compost|farming|agricultur|permaculture|greenhouse|aquaponic|livestock|poultry|beekeeping)\b/i],
+  [
+    'sanitation',
+    /\b(toilet|latrine|sanitation|compost(ing)? toilet|sewage|greywater|soap|hygiene|waste)\b/i,
+  ],
+  [
+    'grow',
+    /\b(garden|gardening|crop|seed|soil|compost|farming|agricultur|permaculture|greenhouse|aquaponic|livestock|poultry|beekeeping)\b/i,
+  ],
   ['food', /\b(food|cook|cooking|stove|oven|recipe|preserv|canning|drying|ferment|nutrition)\b/i],
-  ['power', /\b(solar|photovoltaic|wind turbine|battery|batteries|generator|electric|biogas|hydro|energy|lighting|lamp)\b/i],
-  ['shelter', /\b(shelter|house|housing|building|construction|insulation|roof|earthbag|adobe|cob|heating|rocket mass)\b/i],
+  [
+    'power',
+    /\b(solar|photovoltaic|wind turbine|battery|batteries|generator|electric|biogas|hydro|energy|lighting|lamp)\b/i,
+  ],
+  [
+    'shelter',
+    /\b(shelter|house|housing|building|construction|insulation|roof|earthbag|adobe|cob|heating|rocket mass)\b/i,
+  ],
   ['first-aid', /\b(health|medical|medicine|first aid|disease|malaria|wound|hospital|clinic)\b/i],
 ];
-function topicFor(title, fallback) {
+// Wikibooks pages are named "Book/Chapter" or "Book:Page", so the book tells us the shelf.
+const BOOK_TOPICS = [
+  ['food', /^Cookbook\b/i],
+  ['first-aid', /^(First Aid|Emergency Medicine)\b/i],
+  ['grow', /^Horticulture\b/i],
+  ['power', /^(Electronics|Bicycles)\b/i],
+  ['prep', /^(Scouting|Knots|Outdoor Survival|Amateur Radio)\b/i],
+];
+function topicFor(title, fallback, wiki) {
+  if (wiki === 'wikibooks') {
+    for (const [topic, re] of BOOK_TOPICS) if (re.test(title)) return topic;
+    return fallback;
+  }
   for (const [topic, re] of TOPIC_WORDS) if (re.test(title)) return topic;
   return fallback;
 }
 // Pages that are about a university class, a conference or the wiki itself.
 const NOT_A_GUIDE =
-  /^(\d{4}\b|[A-Z]{2,5}\d{2,4}\b)|\b(conference|symposium|semester|syllabus|course|class project|team|meeting|minutes|literature review|protocol:|category|template|portal)\b/i;
+  /^(\d{4}\b|\d{3} |[A-Z]{2,5}\d{2,4}\b)|^(Fab Labs?|Community action|Commons news|Global Ecovillage Network|CrashSavers|ALL-SAFE|ETALO|External Links|Appropedia|User|Help)\b|\b(conference|symposium|semester|syllabus|course|class project|science project|team|meeting|minutes|literature review|protocol:|category|template|portal|news|newsletter|self-assessment|simulator|association|foundation|organi[sz]ation|network|institute|university|centre|center|collaborations?|killer apps|3d print(ed|ing)?|fused filament|drop box|press release|grant|proposal|survey results|bibliography)\b/i;
 for (const group of sources.articles) {
   const titles = QUICK ? group.titles.slice(0, 2) : group.titles;
   for (const t of titles) want(group.wiki, t, group.tier, group.topic);
@@ -286,8 +313,7 @@ async function embedImages(html, maxImages) {
     else if (!COMMONS.test(src)) {
       imgNote('not from Wikimedia Commons');
       if (dropSamples.length < 8) dropSamples.push(tag.slice(0, 300));
-    }
-    else if (width < 120) imgNote('too small (icon)');
+    } else if (width < 120) imgNote('too small (icon)');
     if (kept < maxImages && COMMONS.test(src) && width >= 120) {
       const r = await fetchWithRetry(src.startsWith('//') ? `https:${src}` : src, {
         binary: true,
@@ -369,7 +395,7 @@ const fetched = await pool(articleList, 4, async (a) => {
   seenTitles.add(seenKey);
   return {
     ...a,
-    topic: a.bulk && a.wiki === 'appropedia' ? topicFor(title, a.topic) : a.topic,
+    topic: a.bulk ? topicFor(title, a.topic, a.wiki) : a.topic,
     title,
     html,
     sourceUrl: wiki.pageBase + encodeURIComponent(a.title.replace(/ /g, '_')),
@@ -403,7 +429,8 @@ function summaryOf(html) {
       .trim();
     // Skip menus and link lists: real sentences have plenty of small common words.
     if (text.length >= 60 && englishShare(text).share < 0.12) continue;
-    if (text.length >= 60) return text.length > 170 ? text.slice(0, 167).replace(/\s\S*$/, '') + '…' : text;
+    if (text.length >= 60)
+      return text.length > 170 ? text.slice(0, 167).replace(/\s\S*$/, '') + '…' : text;
   }
   return undefined;
 }
