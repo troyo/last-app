@@ -182,6 +182,7 @@ const IMG_MAX_BYTES = 250 * 1024;
 let imageCount = 0;
 let imageBytes = 0;
 const imageDrops = {};
+const dropSamples = [];
 const imgNote = (why) => (imageDrops[why] = (imageDrops[why] || 0) + 1);
 
 async function embedImages(html, maxImages) {
@@ -193,7 +194,10 @@ async function embedImages(html, maxImages) {
     const src = tag.match(/\bsrc="([^"]+)"/)?.[1]?.replace(/&amp;/g, '&') ?? '';
     const width = Number(tag.match(/\bwidth="(\d+)"/)?.[1] ?? 0);
     if (kept >= maxImages) imgNote('over the per-article limit');
-    else if (!COMMONS.test(src)) imgNote('not from Wikimedia Commons');
+    else if (!COMMONS.test(src)) {
+      imgNote('not from Wikimedia Commons');
+      if (dropSamples.length < 8) dropSamples.push(tag.slice(0, 300));
+    }
     else if (width < 120) imgNote('too small (icon)');
     if (kept < maxImages && COMMONS.test(src) && width >= 120) {
       const r = await fetchWithRetry(src.startsWith('//') ? `https:${src}` : src, {
@@ -402,6 +406,7 @@ const md = [
   ``,
   `Pictures kept: ${imageCount} (${mb(imageBytes)})`,
   ...Object.entries(imageDrops).map(([why, n]) => `- Pictures dropped, ${why}: ${n}`),
+  ...dropSamples.map((x) => '  - sample: `' + x.replace(/`/g, "'") + '`'),
   ``,
   `## Failed (${report.failed.length})`,
   ...report.failed.map((x) => `- ${x}`),
