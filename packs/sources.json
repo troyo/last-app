@@ -10,12 +10,12 @@
     {
       "id": "medium",
       "title": "Medium",
-      "summary": "Small, plus Army and Marine survival manuals, FEMA CERT training, USDA canning, first aid and survival handbooks, and 100+ more guides."
+      "summary": "Small, plus living off-grid for the long haul: growing and preserving food, renewable water, sanitation, power, radios, and Army and FEMA manuals."
     },
     {
       "id": "large",
       "title": "Large",
-      "summary": "Everything: Appropedia for DIY and off-grid living, cookbooks, gardening, more field manuals, radio and navigation."
+      "summary": "Everything we have: thousands of DIY and off-grid guides, cookbooks, gardening, electronics, more field manuals and deep dives on every topic."
     }
   ],
   "topics": [
@@ -30,9 +30,19 @@
       "icon": "💧"
     },
     {
+      "id": "sanitation",
+      "title": "Hygiene & sanitation",
+      "icon": "🧼"
+    },
+    {
       "id": "food",
       "title": "Food",
       "icon": "🥫"
+    },
+    {
+      "id": "grow",
+      "title": "Grow & keep food",
+      "icon": "🌱"
     },
     {
       "id": "shelter",
@@ -50,14 +60,14 @@
       "icon": "📻"
     },
     {
+      "id": "security",
+      "title": "Safety & community",
+      "icon": "🤝"
+    },
+    {
       "id": "manuals",
       "title": "Field manuals",
       "icon": "📘"
-    },
-    {
-      "id": "medical",
-      "title": "Medical encyclopedia",
-      "icon": "🩺"
     },
     {
       "id": "diy",
@@ -429,6 +439,270 @@
         "Tracking_(hunting)",
         "Barter",
         "Community_emergency_response_team"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "grow",
+      "titles": [
+        "Kitchen_garden",
+        "Vegetable_farming",
+        "Seed_saving",
+        "Compost",
+        "Crop_rotation",
+        "Companion_planting",
+        "Raised-bed_gardening",
+        "Three_Sisters_(agriculture)",
+        "Food_preservation",
+        "Canning",
+        "Home_canning",
+        "Food_drying",
+        "Pickling",
+        "Curing_(food_preservation)",
+        "Smoking_(cooking)",
+        "Root_cellar",
+        "Food_storage",
+        "Foraging",
+        "Poultry_farming",
+        "Chicken_coop"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "grow",
+      "titles": [
+        "Fermentation_in_food_processing",
+        "Sourdough",
+        "Sprouting",
+        "Hardtack",
+        "Pemmican",
+        "Jerky",
+        "Potato",
+        "Bean",
+        "Maize",
+        "Winter_squash",
+        "Cabbage",
+        "Sweet_potato",
+        "Beekeeping",
+        "Cuniculture",
+        "Goat_farming",
+        "Aquaponics",
+        "Greenhouse",
+        "Cold_frame",
+        "Mulch",
+        "Irrigation",
+        "Permaculture",
+        "Subsistence_agriculture",
+        "Grain",
+        "Flour",
+        "Bread",
+        "Lard",
+        "Salt",
+        "Honey",
+        "Mushroom_hunting",
+        "Edible_seaweed"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "food",
+      "titles": [
+        "Fishing",
+        "Trapping",
+        "Hunting",
+        "Field_dressing_(hunting)",
+        "Solar_cooker",
+        "Rocket_stove",
+        "Dutch_oven",
+        "Thermal_cooking"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "water",
+      "titles": [
+        "Rainwater_harvesting",
+        "Water_well",
+        "Hand_pump",
+        "Slow_sand_filter",
+        "Solar_water_disinfection",
+        "Solar_still",
+        "Cistern",
+        "Water_tank"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "water",
+      "titles": [
+        "Ceramic_water_filter",
+        "Biosand_filter",
+        "Spring_(hydrology)",
+        "Rain_barrel",
+        "Water_supply",
+        "Groundwater",
+        "Dew_pond"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "sanitation",
+      "titles": [
+        "Sanitation",
+        "Hand_washing",
+        "Soap",
+        "Composting_toilet",
+        "Pit_latrine",
+        "Bucket_toilet",
+        "Oral_rehydration_therapy",
+        "Diarrhea",
+        "Cholera",
+        "Waterborne_disease",
+        "Menstrual_hygiene_management",
+        "Hygiene"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "sanitation",
+      "titles": [
+        "Dysentery",
+        "Typhoid_fever",
+        "Head_louse",
+        "Scabies",
+        "Bed_bug",
+        "Rodent_control",
+        "Waste_management",
+        "Greywater",
+        "Laundry",
+        "Bleach",
+        "Lye",
+        "Vinegar"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "power",
+      "titles": [
+        "Off-the-grid",
+        "Photovoltaic_system",
+        "Solar_panel",
+        "Stand-alone_power_system",
+        "Deep-cycle_battery",
+        "Engine-generator",
+        "Wood-burning_stove",
+        "Firewood",
+        "Kerosene_lamp",
+        "Candle",
+        "Charcoal"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "power",
+      "titles": [
+        "Small_wind_turbine",
+        "Micro_hydro",
+        "Biogas",
+        "Wood_gas",
+        "Lead–acid_battery",
+        "Rechargeable_battery",
+        "Inverter_(electrical)",
+        "Hand_tool",
+        "Sharpening",
+        "Sewing",
+        "Carpentry",
+        "Blacksmith",
+        "Rope",
+        "Tanning_(leather)",
+        "Bicycle",
+        "Wheelbarrow"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "security",
+      "titles": [
+        "Survivalism",
+        "Self-sufficiency",
+        "Homesteading",
+        "Emergency_evacuation",
+        "Barter",
+        "Neighborhood_watch",
+        "Amateur_radio",
+        "Citizens_band_radio",
+        "Family_Radio_Service",
+        "General_Mobile_Radio_Service",
+        "Shortwave_radio",
+        "Morse_code",
+        "Civil_defense",
+        "Fallout_shelter",
+        "Potassium_iodide",
+        "Nuclear_fallout",
+        "Quarantine",
+        "Pandemic"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "security",
+      "titles": [
+        "Retreat_(survivalism)",
+        "Nuclear_electromagnetic_pulse",
+        "Mutual_aid_(organization_theory)",
+        "Community_emergency_response_team",
+        "Disaster_response",
+        "Emergency_management",
+        "Weather_radio",
+        "Signal_lamp",
+        "Distress_signal",
+        "Home_safety",
+        "Fire_safety",
+        "Carbon_monoxide_detector"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "first-aid",
+      "titles": [
+        "Wilderness_medicine",
+        "Infection",
+        "Antiseptic",
+        "Wound_healing",
+        "Toothache",
+        "Dental_emergency",
+        "Fever",
+        "Childbirth",
+        "Scurvy",
+        "Malnutrition",
+        "Vitamin_deficiency",
+        "Medicinal_plants"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "shelter",
+      "titles": [
+        "Earth_shelter",
+        "Log_cabin",
+        "Quinzhee",
+        "Thermal_insulation",
+        "Passive_solar_building_design",
+        "Wool",
+        "Layered_clothing"
       ]
     }
   ],
