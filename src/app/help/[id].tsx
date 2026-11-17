@@ -5,8 +5,8 @@ import { minutesIn, StepTimer } from '../../components/StepTimer';
 import { Bullets, Card, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
 import { DiagramId, DIAGRAMS } from '../../lib/diagrams';
 import { findQuickHelp } from '../../lib/quick-help';
-import { hasShowMe } from '../../lib/show-me';
-import { HUES, useDark, useTheme } from '../../lib/theme';
+import { hasShowMe, SHOW_ME } from '../../lib/show-me';
+import { HUES, useDark, useHues, useTheme } from '../../lib/theme';
 
 function Diagram({ id }: { id: DiagramId }) {
   // The drawings are on a light panel. In dark mode they are dimmed a little so they don't glare.
@@ -28,7 +28,11 @@ export default function QuickHelpScreen() {
   const t = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const h = findQuickHelp(id);
+  const hues = useHues();
+  const dark = useDark();
   if (!h) return null;
+  const hue = hues[h.hue];
+  const show = hasShowMe(h.id) ? SHOW_ME[h.id] : null;
 
   return (
     <>
@@ -43,27 +47,41 @@ export default function QuickHelpScreen() {
         }}
       />
       <ScrollView style={{ backgroundColor: t.bg }} contentContainerStyle={s.wrap}>
-        <Text style={[s.when, { color: t.muted }]}>{h.when}</Text>
-
-        {hasShowMe(h.id) && (
+        {/* The top of the card: how to know it's the right one, and the picture walk-through. */}
+        {show ? (
           <Pressable
             onPress={() => router.push(`/show/${h.id}`)}
             accessibilityRole="button"
+            accessibilityLabel={`Show me how, in ${show.length} pictures, read aloud`}
             style={({ pressed }) => [
-              s.show,
-              { backgroundColor: t.accent },
-              pressed && { opacity: 0.85 },
+              s.hero,
+              { backgroundColor: hue.tint },
+              pressed && { opacity: 0.88 },
             ]}
           >
-            <Ionicons name="play-circle" size={34} color={t.accentText} />
-            <View style={{ flex: 1 }}>
-              <Text style={{ color: t.accentText, fontSize: 20, fontWeight: '800' }}>Show me</Text>
-              <Text style={{ color: t.accentText, fontSize: 15 }}>
-                Pictures, step by step, read aloud
-              </Text>
+            <Text style={[s.when, { color: t.text }]}>{h.when}</Text>
+            <View style={[s.heroRow, { backgroundColor: t.card }]}>
+              <View style={s.thumb}>
+                <Image source={show[0].pics[0]} style={s.thumbPic} resizeMode="cover" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: t.text, fontSize: 18, fontWeight: '700' }}>Show me how</Text>
+                <Text style={{ color: t.text, fontSize: 15, lineHeight: 20 }}>
+                  {show.length} pictures, read aloud
+                </Text>
+              </View>
+              <View style={[s.play, { backgroundColor: hue.color }]}>
+                <Ionicons
+                  name="play"
+                  size={20}
+                  color={dark ? '#0B1210' : '#FFFFFF'}
+                  style={{ marginLeft: 2 }}
+                />
+              </View>
             </View>
-            <Ionicons name="chevron-forward" size={22} color={t.accentText} />
           </Pressable>
+        ) : (
+          <Text style={[s.when, { color: t.text }]}>{h.when}</Text>
         )}
 
         <Text style={[s.label, { color: t.accent, marginTop: 4 }]}>Do this now</Text>
@@ -134,7 +152,7 @@ const s = StyleSheet.create({
   wrap: { paddingHorizontal: 18, paddingTop: 4, gap: 10, paddingBottom: 40 },
   head: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   title: { fontSize: 26, fontWeight: '800', lineHeight: 31, flex: 1 },
-  when: { fontSize: 16, lineHeight: 23, marginBottom: 2 },
+  when: { fontSize: 17, lineHeight: 24 },
   call: { borderRadius: 20, padding: 18 },
   callText: {
     color: '#FFFFFF',
@@ -149,13 +167,24 @@ const s = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
   },
-  show: {
+  hero: { borderRadius: 24, padding: 14, gap: 12 },
+  heroRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    padding: 14,
-    borderRadius: 22,
+    padding: 8,
+    paddingRight: 12,
+    borderRadius: 18,
   },
+  thumb: {
+    width: 84,
+    height: 60,
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#E9EFEC',
+  },
+  thumbPic: { width: '100%', height: '100%' },
+  play: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   step: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
   num: {
     width: 36,

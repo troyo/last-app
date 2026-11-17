@@ -43,80 +43,102 @@ export function StepTimer({ minutes }: { minutes: number }) {
     setEndsAt(Date.now() + minutes * 60000);
   };
 
-  if (running) {
-    const total = minutes * 60;
-    return (
-      <View style={[s.panel, { backgroundColor: t.soft, borderColor: t.accent }]}>
-        <View style={s.top}>
-          <View style={{ flex: 1 }}>
-            <Text style={[s.clock, { color: t.text }]} accessibilityLiveRegion="none">
-              {clock(left)}
-            </Text>
-            <Text style={{ color: t.text, fontSize: 16 }}>left. Your phone will buzz.</Text>
-          </View>
-          <Pressable
-            onPress={() => setEndsAt(null)}
-            accessibilityRole="button"
-            accessibilityLabel="Stop timer"
-            hitSlop={8}
-            style={({ pressed }) => [
-              s.stop,
-              { borderColor: t.accent },
-              pressed && { opacity: 0.7 },
-            ]}
-          >
-            <Ionicons name="stop" size={18} color={t.accent} />
-            <Text style={{ color: t.accent, fontSize: 16, fontWeight: '700' }}>Stop</Text>
-          </Pressable>
-        </View>
-        <View style={[s.track, { backgroundColor: t.border }]}>
-          <View
-            style={[s.fill, { backgroundColor: t.accent, width: `${100 - (left / total) * 100}%` }]}
-          />
-        </View>
-      </View>
-    );
-  }
+  const total = minutes * 60;
+  const gone = running ? 1 - left / total : 0;
 
+  // Part of the step it belongs to: a small clock face, what it will do, and one round button.
   return (
     <Pressable
-      onPress={start}
+      onPress={running ? () => setEndsAt(null) : start}
       accessibilityRole="button"
-      style={({ pressed }) => [s.btn, { backgroundColor: t.accent }, pressed && { opacity: 0.85 }]}
+      accessibilityLabel={
+        running ? `${clock(left)} left. Stop timer` : `Start ${minutes}-minute timer`
+      }
+      style={({ pressed }) => [
+        s.row,
+        { backgroundColor: t.soft, borderColor: running ? t.accent : 'transparent' },
+        pressed && { opacity: 0.85 },
+      ]}
     >
-      <Ionicons name={done ? 'refresh' : 'play'} size={22} color={t.accentText} />
+      <View style={[s.dial, { borderColor: t.accent, backgroundColor: t.card }]}>
+        {done ? (
+          <Ionicons name="checkmark" size={26} color={t.accent} />
+        ) : (
+          <>
+            <Text style={[s.dialNum, { color: t.text }]}>
+              {running ? Math.ceil(left / 60) : minutes}
+            </Text>
+            <Text style={[s.dialUnit, { color: t.text }]}>min</Text>
+          </>
+        )}
+      </View>
       <View style={{ flex: 1 }}>
-        <Text style={{ color: t.accentText, fontSize: 17, fontWeight: '700' }}>
-          {done ? 'Time’s up. Start again' : `Start ${minutes}-minute timer`}
-        </Text>
-        {!done && <Text style={{ color: t.accentText, fontSize: 15 }}>Buzzes when time is up</Text>}
+        {running ? (
+          <>
+            <Text style={[s.clock, { color: t.text }]}>{clock(left)}</Text>
+            <Text style={{ color: t.text, fontSize: 15 }}>Buzzes at zero</Text>
+            <View style={[s.track, { backgroundColor: t.border }]}>
+              <View style={[s.fill, { backgroundColor: t.accent, width: `${gone * 100}%` }]} />
+            </View>
+          </>
+        ) : (
+          <>
+            <Text style={{ color: t.text, fontSize: 17, fontWeight: '700' }}>
+              {done ? 'Time’s up' : `${minutes}-minute timer`}
+            </Text>
+            <Text style={{ color: t.text, fontSize: 15 }}>
+              {done ? 'Tap to time it again' : 'Tap to start'}
+            </Text>
+          </>
+        )}
+      </View>
+      <View
+        style={[
+          s.go,
+          { backgroundColor: running ? 'transparent' : t.accent, borderColor: t.accent },
+        ]}
+      >
+        <Ionicons
+          name={running ? 'stop' : done ? 'refresh' : 'play'}
+          size={20}
+          color={running ? t.accent : t.accentText}
+          style={!running && !done ? { marginLeft: 2 } : undefined}
+        />
       </View>
     </Pressable>
   );
 }
 
 const s = StyleSheet.create({
-  btn: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    paddingHorizontal: 16,
-    minHeight: 60,
+    padding: 10,
+    paddingRight: 12,
     borderRadius: 18,
+    borderWidth: 2,
     marginTop: 10,
   },
-  panel: { borderRadius: 18, borderWidth: 2, padding: 14, gap: 12, marginTop: 10 },
-  top: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  clock: { fontSize: 40, fontWeight: '800', lineHeight: 44, fontVariant: ['tabular-nums'] },
-  stop: {
-    flexDirection: 'row',
+  dial: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    borderWidth: 3,
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 16,
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 2,
+    justifyContent: 'center',
   },
-  track: { height: 8, borderRadius: 4, overflow: 'hidden' },
-  fill: { height: 8, borderRadius: 4 },
+  track: { height: 6, borderRadius: 3, overflow: 'hidden', marginTop: 6 },
+  fill: { height: 6, borderRadius: 3 },
+  dialNum: { fontSize: 18, fontWeight: '800', lineHeight: 20, fontVariant: ['tabular-nums'] },
+  dialUnit: { fontSize: 11, lineHeight: 12, fontWeight: '600' },
+  clock: { fontSize: 28, fontWeight: '800', lineHeight: 32, fontVariant: ['tabular-nums'] },
+  go: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

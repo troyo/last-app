@@ -32,6 +32,8 @@ export type QuickHelp = {
   danger?: string[];
   /** One extra thing worth knowing. */
   know?: string;
+  /** 'outage' = do-it-yourself fixes for life with no power. Shown as their own group. */
+  group?: 'outage';
 };
 
 export const QUICK_HELP: QuickHelp[] = [
@@ -247,6 +249,7 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'power',
+    group: 'outage',
     icon: 'flashlight',
     hue: 'violet',
     title: 'Power is out',
@@ -377,6 +380,7 @@ export const QUICK_HELP: QuickHelp[] = [
   },
   {
     id: 'warm',
+    group: 'outage',
     icon: 'radiator-off',
     hue: 'coral',
     title: 'Stay warm with no heat',
@@ -440,6 +444,196 @@ export const QUICK_HELP: QuickHelp[] = [
       'Drooping eyelids, blurred vision or weakness',
       'Bleeding from the gums or nose, or dark urine',
       'Fainting, vomiting or strong belly pain',
+    ],
+  },
+  {
+    id: 'light',
+    group: 'outage',
+    icon: 'lightbulb-on',
+    hue: 'sun',
+    title: 'Make light',
+    when: 'It’s dark, the power is out and you need to see.',
+    steps: [
+      'Use a flashlight or headlamp first. It is the safest light you have.',
+      'Light a whole room: stand a flashlight on its end pointing at a white ceiling, or strap a headlamp to a full, clear water jug with the light facing in.',
+      'Garden solar lights work indoors. Charge them in the sun by day and bring them in at night.',
+      'No batteries? Make an oil lamp. Half fill a glass jar with cooking oil. Poke a strip of cotton cloth or string through a small piece of foil so half an inch sticks up, and float or rest the foil on the oil.',
+      'Let the wick soak for 5 minutes, then light it. Stand the jar on a plate, away from curtains and paper.',
+    ],
+    next: [
+      'Save batteries: one light for the room, not one each.',
+      'Do chores by daylight. Go to bed earlier and get up with the sun.',
+      'Keep one flashlight in the same spot every night so anyone can find it in the dark.',
+    ],
+    dont: [
+      'Never leave a candle or oil lamp burning when you sleep or leave the room.',
+      'Don’t use gasoline, lighter fluid or alcohol in a homemade lamp. Cooking oil only.',
+      'Don’t use a flame if you smell gas.',
+    ],
+    know: 'Olive oil and other cooking oils burn slowly and do not flare up if the jar tips. A jar this size can burn for many hours.',
+  },
+  {
+    id: 'cook',
+    group: 'outage',
+    icon: 'pot-steam',
+    hue: 'coral',
+    title: 'Cook with no power',
+    when: 'The stove and microwave don’t work and you need hot food or boiled water.',
+    steps: [
+      'Take it outside. A grill, camp stove or fire must be used outdoors, well away from doors and windows.',
+      'A gas stovetop may still work. Turn the knob and light the burner with a match. The oven usually will not.',
+      'No stove? Build a small fire between two rows of bricks or stones and rest a pot or oven rack across the top.',
+      'Use a lid on every pot. Food cooks faster and you burn far less fuel.',
+      'Cut food small and soak rice, beans and pasta in water first. They cook in about half the time.',
+      'Boil water for 1 minute to make it safe to drink.',
+    ],
+    next: [
+      'Cook once a day and eat the rest cold. It saves fuel.',
+      'Keep food hot longer: wrap the covered pot in towels or blankets inside a box. It keeps cooking for an hour or more.',
+      'Eat fridge food first, then freezer food, then cans. Canned food is already cooked and safe to eat cold.',
+    ],
+    dont: [
+      'Never use a grill, camp stove or charcoal indoors, in a garage or in a tent. The fumes kill with no smell.',
+      'Don’t leave a fire or stove alone, and keep water or sand next to it.',
+      'Don’t heat a sealed can. Open it first.',
+    ],
+  },
+  {
+    id: 'toilet',
+    group: 'outage',
+    icon: 'toilet',
+    hue: 'teal',
+    title: 'Toilet with no water',
+    when: 'The toilet won’t flush or the taps are dry.',
+    steps: [
+      'If you have spare water that is not for drinking, pour a bucket of it straight into the bowl. That flushes it.',
+      'No spare water? Lift the seat, line the dry bowl or a sturdy bucket with two trash bags, and put the seat back down.',
+      'After every use, cover it with a cup of sawdust, dry dirt, ash, shredded paper or cat litter. This stops the smell and the flies.',
+      'When the bag is half full, tie it shut and put it in a bin with a tight lid, outside and away from water.',
+      'Wash your hands every time, with soap and water or hand sanitizer.',
+    ],
+    next: [
+      'If you can, use one bucket for pee and one for poo. Pee can be poured on the ground away from wells and streams. It keeps the other bucket lighter and less smelly.',
+      'For a long outage, dig a hole 2 feet deep, at least 200 feet from any well, stream or lake, and bury the bags’ contents.',
+      'Keep a hand washing spot next to the toilet: a jug of water, soap and a bowl.',
+    ],
+    dont: [
+      'Don’t flush if sewage is backing up or you were told the sewer is broken.',
+      'Don’t leave waste uncovered. Flies carry it to your food.',
+      'Don’t dump waste near water you might drink.',
+    ],
+    know: 'Most sickness after a disaster comes from dirty hands and dirty water, not from the disaster itself. This card matters more than it looks.',
+  },
+  {
+    id: 'food-cold',
+    group: 'outage',
+    icon: 'fridge',
+    hue: 'blue',
+    title: 'Keep food from spoiling',
+    when: 'The fridge and freezer have no power.',
+    steps: [
+      'Keep both doors shut. Every time you open them, cold escapes.',
+      'Know your clock: a closed fridge keeps food safe for about 4 hours. A full freezer lasts about 2 days, a half-full one about 1 day.',
+      'Push freezer food close together so it stays frozen longer.',
+      'Before 4 hours are up, move milk, meat, fish, eggs and leftovers into a cooler with ice or frozen food packed around them.',
+      'Cook meat that is thawing but still cold, and eat it today.',
+    ],
+    next: [
+      'In freezing weather, put food outside in a closed box in the shade, safe from animals.',
+      'These are fine without a fridge: hard cheese, butter, whole fruit and vegetables, bread, peanut butter, jam, ketchup and mustard.',
+      'Still has ice crystals or feels fridge-cold? Frozen food can be cooked or frozen again.',
+      'Meat can be kept by drying or salting it. Search the guides for “drying food”.',
+    ],
+    dont: [
+      'Don’t taste food to check it. Food can make you sick and still smell and taste fine.',
+      'Don’t eat meat, fish, milk, soft cheese, eggs or leftovers that were warm for more than 2 hours.',
+      'Don’t open the freezer to check on it.',
+    ],
+    know: 'When in doubt, throw it out. Food poisoning with no clean water and no doctor is far worse than a lost meal.',
+  },
+  {
+    id: 'cool',
+    group: 'outage',
+    icon: 'fan-off',
+    hue: 'sun',
+    title: 'Stay cool with no AC',
+    when: 'It’s hot, the power is out and the house is heating up.',
+    steps: [
+      'Drink water often, before you feel thirsty. Sip all day.',
+      'Get wet. Put a wet cloth on your neck, wrists and head, and wet your shirt. Wet it again when it dries.',
+      'Close curtains and blinds on sunny windows during the day. Hang a sheet outside the window if you can.',
+      'Go low. The lowest floor and the shady side of the house are coolest. A basement is best.',
+      'At night, open windows on both sides of the house so air moves through. Close them again in the morning.',
+      'Rest in the hottest hours. Do hard work at dawn or after dark.',
+    ],
+    next: [
+      'Hang a wet sheet in an open window or doorway. Air blowing through it cools the room.',
+      'Sleep downstairs or outside in the shade, on a thin sheet, not a thick mattress.',
+      'Eat small, cold meals. Cooking heats the house.',
+      'Check on babies, older people and pets often. They overheat fastest.',
+    ],
+    dont: [
+      'Never leave a child or a pet in a parked car.',
+      'Don’t drink alcohol. It dries you out.',
+      'Don’t wait for thirst. Dark yellow pee means you need more water.',
+    ],
+    danger: [
+      'Hot, dry skin with no sweat',
+      'Confusion, fainting or a pounding headache',
+      'Throwing up or muscle cramps that won’t stop',
+    ],
+    know: 'Someone hot and confused needs cooling right now. Open the “Overheating” card.',
+  },
+  {
+    id: 'phone',
+    group: 'outage',
+    icon: 'battery-charging',
+    hue: 'green',
+    title: 'Make your phone last',
+    when: 'You can’t charge and this phone is your light, map and guide.',
+    steps: [
+      'Turn on Low Power Mode and turn the screen brightness all the way down.',
+      'Turn on Airplane Mode. With no signal, your phone burns battery searching for one. Check for signal for a few minutes at set times instead.',
+      'Close this app when you have read what you need. Write key steps on paper.',
+      'Keep the phone warm in cold weather and shaded in hot weather. Batteries drain fast when cold and are damaged by heat.',
+      'Charge from a car. Run the engine outside, never in a garage, and plug into the car’s USB or lighter socket.',
+    ],
+    next: [
+      'Charge power banks and every spare device whenever power is on, even for a few minutes.',
+      'A laptop can charge a phone from its USB port, even when the laptop is asleep.',
+      'Share one phone between a group and keep the others switched off as spares.',
+      'A small solar panel in direct sun charges a phone in a few hours. Face it at the sun and move it as the sun moves.',
+    ],
+    dont: [
+      'Don’t use the phone as a flashlight if you have any other light.',
+      'Don’t run a car in a closed garage to charge.',
+      'Don’t let it drop to zero in freezing weather. It may not turn back on until it is warm.',
+    ],
+  },
+  {
+    id: 'store-water',
+    group: 'outage',
+    icon: 'cup-water',
+    hue: 'blue',
+    title: 'Save water before taps stop',
+    when: 'The power is out or a storm is coming, and the taps still run.',
+    steps: [
+      'Fill every clean pot, bottle, jug and bowl with tap water right now. Put lids or plates on them.',
+      'Fill the bathtub and sinks. Use this water for washing and flushing, not drinking, unless you treat it.',
+      'Plan on 1 gallon for each person each day, for drinking and cooking. Add more for pets, heat and washing.',
+      'Your water heater holds 30 to 80 gallons of clean water. Turn off its power or gas, shut the cold water valve on top, then open the tap at the bottom into a bucket.',
+      'Put out buckets, bins and tarps to catch rain.',
+    ],
+    next: [
+      'Rain, tub and found water must be made safe to drink. Open the “Make water safe to drink” card.',
+      'Wash dishes and hands with as little as you can: one bowl to wash, one bowl to rinse.',
+      'Use washing water a second time to flush the toilet.',
+      'Melted ice from the freezer and the liquid in canned fruit and vegetables are safe to drink.',
+    ],
+    dont: [
+      'Don’t drink water from a waterbed, a radiator, a pool or a toilet bowl.',
+      'Don’t ration water to nothing. Drink what you need today and look for more.',
+      'Don’t store water in containers that held chemicals, fuel or bleach.',
     ],
   },
 ];

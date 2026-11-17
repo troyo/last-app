@@ -20,7 +20,10 @@ export default function Emergency() {
 
   const want = filter.trim().toLowerCase();
   const fits = (...texts: string[]) => !want || texts.join(' ').toLowerCase().includes(want);
-  const cards = QUICK_HELP.filter((h) => fits(h.title, h.when));
+  const all = QUICK_HELP.filter((h) => fits(h.title, h.when));
+  const cards = all.filter((h) => !h.group);
+  // Do-it-yourself fixes for life with no power: light, cooking, toilet, food, phone.
+  const outage = all.filter((h) => h.group === 'outage');
   // Disasters likely where you live come first; the rest are still one tap away.
   const mine = getProfile()?.hazards ?? [];
   const hazards = HAZARDS.filter((h) => fits(h.title, h.blurb, h.search)).sort(
@@ -74,6 +77,35 @@ export default function Emergency() {
           </View>
         )}
 
+        {outage.length > 0 && (
+          <>
+            <Text style={[s.h2, { color: t.text }]}>When the power is out</Text>
+            <Text style={{ color: t.text, fontSize: 16, lineHeight: 22 }}>
+              Do-it-yourself fixes with what’s in the house.
+            </Text>
+            <View style={s.grid}>
+              {outage.map((h) => (
+                <Pressable
+                  key={h.id}
+                  onPress={() => router.push(`/help/${h.id}`)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${h.title}. ${h.when}`}
+                  style={({ pressed }) => [
+                    s.tile,
+                    { backgroundColor: t.card },
+                    pressed && { opacity: 0.75, transform: [{ scale: 0.98 }] },
+                  ]}
+                >
+                  <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={48} />
+                  <Text style={[s.tileText, { color: t.text }]} numberOfLines={2}>
+                    {h.title}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </>
+        )}
+
         {hazards.length > 0 && (
           <>
             <Text style={[s.h2, { color: t.text }]}>Disasters</Text>
@@ -107,7 +139,7 @@ export default function Emergency() {
           </>
         )}
 
-        {cards.length + hazards.length === 0 && (
+        {all.length + hazards.length === 0 && (
           <View style={{ gap: 12, paddingTop: 6 }}>
             <Text style={{ color: t.text, fontSize: 17, lineHeight: 24 }}>
               No emergency card matches “{filter.trim()}”. The guides may still cover it.

@@ -198,6 +198,37 @@ export default function Home() {
           </View>
 
           <Section
+            title="When the power is out"
+            action="See all"
+            onAction={() => router.push('/emergency')}
+          />
+          {/* Do-it-yourself fixes people reach for most in an outage. Swipe sideways for more. */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ marginHorizontal: -18 }}
+            contentContainerStyle={{ paddingHorizontal: 18, gap: 10 }}
+          >
+            {QUICK_HELP.filter((h) => h.group === 'outage').map((h) => (
+              <Pressable
+                key={h.id}
+                onPress={() => router.push(`/help/${h.id}`)}
+                accessibilityRole="button"
+                style={({ pressed }) => [
+                  s.diy,
+                  { backgroundColor: t.card, borderColor: t.border },
+                  pressed && { opacity: 0.8 },
+                ]}
+              >
+                <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={40} />
+                <Text style={{ color: t.text, fontSize: 16, fontWeight: '700', lineHeight: 20 }}>
+                  {h.title}
+                </Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+
+          <Section
             title={profile ? `For ${profile.place}` : 'For your area'}
             action={profile ? 'Change' : undefined}
             onAction={() => router.push('/place')}
@@ -380,6 +411,14 @@ const s = StyleSheet.create({
   section: { fontSize: 24, fontWeight: '800', lineHeight: 30, flex: 1 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', margin: -5 },
   third: { width: '33.333%', padding: 5 },
+  diy: {
+    width: 132,
+    minHeight: 112,
+    borderRadius: 20,
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: 12,
+    gap: 10,
+  },
   half: { width: '50%', padding: 5 },
   halfGrow: { flexBasis: '50%', flexGrow: 1, padding: 5 },
   helpChip: {
