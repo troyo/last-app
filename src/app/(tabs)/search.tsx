@@ -105,20 +105,20 @@ export default function Search() {
             accessibilityRole="button"
             style={({ pressed }) => [
               s.topic,
-              { backgroundColor: t.accent, marginBottom: 8 },
+              { backgroundColor: t.soft, marginBottom: 8 },
               pressed && { opacity: 0.8 },
             ]}
           >
-            <Ionicons name="chatbubble-ellipses" size={24} color={t.accentText} />
+            <Ionicons name="chatbubble-ellipses" size={24} color={t.accent} />
             <View style={{ flex: 1 }}>
-              <Text style={{ color: t.accentText, fontSize: 17, fontWeight: '800' }}>
+              <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>
                 Ask a question instead
               </Text>
-              <Text style={{ color: t.accentText, fontSize: 15 }}>
-                In your own words. Works with no signal.
+              <Text style={{ color: t.text, fontSize: 15 }} numberOfLines={1}>
+                In your own words, offline
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={18} color={t.accentText} />
+            <Ionicons name="chevron-forward" size={18} color={t.accent} />
           </Pressable>
           {recent.length > 0 && (
             <>

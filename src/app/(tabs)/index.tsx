@@ -210,7 +210,7 @@ export default function Home() {
                   Make this fit where you live
                 </Text>
                 <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
-                  Takes a minute. No signal needed.
+                  Takes about a minute.
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={t.text} />
@@ -385,12 +385,12 @@ const s = StyleSheet.create({
   helpChip: {
     height: 78,
     borderRadius: 20,
-    paddingHorizontal: 6,
+    paddingHorizontal: 8,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
   },
-  chipTitle: { fontSize: 15, fontWeight: '800', textAlign: 'center' },
+  chipTitle: { fontSize: 14, fontWeight: '800', textAlign: 'center' },
   hazard: {
     height: 70,
     borderRadius: 20,

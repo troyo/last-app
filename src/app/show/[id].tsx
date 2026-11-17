@@ -10,7 +10,7 @@ import { StepTimer } from '../../components/StepTimer';
 import { Text } from '../../components/ui';
 import { findQuickHelp } from '../../lib/quick-help';
 import { SHOW_ME } from '../../lib/show-me';
-import { useTheme } from '../../lib/theme';
+import { useDark, useTheme } from '../../lib/theme';
 
 const tap = () => {
   if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => {});
@@ -19,6 +19,7 @@ const tap = () => {
 // One step per screen: a big moving picture, a few words, and a voice.
 export default function ShowMe() {
   const t = useTheme();
+  const dark = useDark();
   useKeepAwake(); // the screen must not go dark in the middle of CPR
   const { id } = useLocalSearchParams<{ id: string }>();
   const help = findQuickHelp(id);
@@ -108,7 +109,11 @@ export default function ShowMe() {
 
       <View style={s.body}>
         <View style={s.picture}>
-          <Image source={pic} style={{ width: '100%', height: '100%' }} resizeMode="contain" />
+          <Image
+            source={pic}
+            style={{ width: '100%', height: '100%', opacity: dark ? 0.86 : 1 }}
+            resizeMode="contain"
+          />
           {counted > 0 && (
             <View style={[s.count, { backgroundColor: t.accent }]}>
               <Text style={{ color: t.accentText, fontSize: 34, fontWeight: '800' }}>

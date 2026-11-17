@@ -6,15 +6,17 @@ import { Card, IconName, IconTile, Text } from '../../components/ui';
 import { DiagramId, DIAGRAMS } from '../../lib/diagrams';
 import { findQuickHelp } from '../../lib/quick-help';
 import { hasShowMe } from '../../lib/show-me';
-import { HUES, useTheme } from '../../lib/theme';
+import { HUES, useDark, useTheme } from '../../lib/theme';
 
 function Diagram({ id }: { id: DiagramId }) {
+  // The drawings are on a light panel. In dark mode they are dimmed a little so they don't glare.
+  const dim = useDark() ? 0.86 : 1;
   return (
     <View style={s.diagram}>
       <Image
         source={DIAGRAMS[id].image}
         accessibilityLabel={DIAGRAMS[id].alt}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', opacity: dim }}
         resizeMode="contain"
       />
     </View>
@@ -52,7 +54,7 @@ export default function QuickHelpScreen() {
             <View style={{ flex: 1 }}>
               <Text style={{ color: t.accentText, fontSize: 20, fontWeight: '800' }}>Show me</Text>
               <Text style={{ color: t.accentText, fontSize: 15 }}>
-                Moving pictures, one step at a time, read out loud
+                Pictures, step by step, read aloud
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={22} color={t.accentText} />
