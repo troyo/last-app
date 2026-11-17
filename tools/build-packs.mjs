@@ -177,7 +177,7 @@ function cleanHtml(html, wiki) {
 // Pictures: only from Wikimedia Commons (freely licensed; "fair use" images
 // live elsewhere and are dropped). Each kept picture is stored inside the
 // article itself, so it shows with no internet.
-const COMMONS = /^(?:https?:)?\/\/upload\.wikimedia\.org\/wikipedia\/commons\//;
+const COMMONS = /^(?:https?:)?\/\/(?:upload|thumb)\.wikimedia\.org\/wikipedia\/commons\//;
 const IMG_MAX_BYTES = 250 * 1024;
 let imageCount = 0;
 let imageBytes = 0;
