@@ -11,9 +11,10 @@ const S = [
   ['emergency', 'coral', 'Know what to do<br><b>in seconds</b>', 'Step-by-step help for 10 real emergencies', 'light'],
   ['show', 'cream', 'It shows you how,<br><b>out loud</b>', 'Moving pictures anyone can follow', 'light'],
   ['help', 'dark', 'First aid when<br><b>help can’t come</b>', 'CPR, bleeding, burns, broken bones and more', 'light'],
+  ['maps', 'cream', 'Find help<br><b>near you</b>', 'Hospitals, shelters, police and water on offline maps', 'light'],
   ['hazard', 'sun', 'Ready for <b>your</b><br>disasters', 'Hurricanes, tornadoes, quakes, floods, wildfire', 'light'],
-  ['checklist', 'cream', 'Prep for 3 days,<br><b>2 weeks or 1 year</b>', 'Prepper checklists sized for your household', 'light'],
-  ['ask', 'dark', 'Ask anything.<br><b>Works offline.</b>', 'Instant answers from your saved guides', 'light'],
+  ['checklist', 'dark', 'Prep for 3 days,<br><b>2 weeks or 1 year</b>', 'Prepper checklists sized for your household', 'light'],
+  ['ask', 'cream', 'Ask anything.<br><b>Works offline.</b>', 'Instant answers from your saved guides', 'light'],
   ['search', 'coral', 'How-to guides that<br><b>need no power</b>', 'Water, food, shelter, medical and hand-tool skills', 'light'],
 ];
 const page = ([shot, th, h, sub, bar], W, H) => { const [bg, hc, ac, sc] = TH[th]; const k = W / 1320; const top = bar === 'dark' ? GREEN : '#F8F5EE', fg = bar === 'dark' ? '#fff' : INK;
