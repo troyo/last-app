@@ -23,6 +23,12 @@ on:
 permissions:
   contents: write
 
+# One build at a time. A newer push cancels the older build, so an old build can
+# never finish last and become the "latest" library by accident.
+concurrency:
+  group: build-packs
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
