@@ -10,7 +10,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.troyo.lastapp",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Last App uses your location to show where you are on the map and to fit its guides to your area. It stays on your phone."
+        "NSLocationWhenInUseUsageDescription": "Last App uses your location to show where you are on the map and to fit its guides to your area. It stays on your phone.",
+        "UIViewControllerBasedStatusBarAppearance": false
       }
     },
     "android": {
