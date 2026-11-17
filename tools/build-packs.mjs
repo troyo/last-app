@@ -211,20 +211,31 @@ const APPROPEDIA_BOOKS = /^(Are You Ready\?|Household Cyclopedia|Keeping Chicken
 // Cookbook: staples and ways of keeping food, not dinner-party recipes.
 const COOK_OK =
   /\b(bread|flatbread|hardtack|bannock|tortilla|sourdough|yeast|beans?|lentil|porridge|oat|grits|cornmeal|polenta|jerky|pemmican|pickl|sauerkraut|kimchi|ferment|canning|preserv|dried|drying|smok|salt (pork|fish|cod)|cur(ed|ing)|stock|broth|yogurt|butter|vinegar|sprout|foraging|acorn|dandelion|nettle|campfire|dutch oven|substitut|cooking techniques|food safety|nutrition)\w*\b/i;
+// Party food and desserts are not survival cooking.
+const COOK_TREAT =
+  /\b(tart|pudding|buttercream|frosting|muffins?|cake|cookies?|chocolate|chips|burgers?|wings|mayonnaise|casserole|donuts?|doughnuts?|cheesecake|brownies?|pie|cocktail|martini|dip|candy|fudge|ice cream|sandwich|pizza|pasta salad)\b/i;
 const GROW_OK =
-  /\b(vegetable|potato|tomato|bean|pea|corn|maize|squash|pumpkin|carrot|onion|garlic|cabbage|kale|lettuce|spinach|beet|turnip|radish|pepper|herb|fruit|apple|berry|seed|sow|soil|compost|mulch|manure|fertil|water|irrigat|prun|propagat|graft|cutting|transplant|harvest|storage|pest|weed|tool|raised bed|container|season|frost|greenhouse|cold frame|garden)\w*\b/i;
+  /\b(vegetables?|potato|tomato|beans?|peas?|corn|maize|squash|pumpkin|carrot|onion|garlic|cabbage|kale|lettuce|spinach|beet|turnip|radish|fruit trees?|berr(y|ies)|seeds?|sowing|soil|compost\w*|mulch\w*|manure|fertili[sz]\w*|irrigat\w*|watering|pruning|propagat\w*|graft\w*|cuttings?|transplant\w*|harvest\w*|storage|weed control|weed management|crop rotation|raised beds?|cold frames?|greenhouses?|no till|frost)\b/i;
+// Pages that are about the book itself, not something you can do.
+const BOOK_META =
+  /(^|\/)(Authors?|Contributors|Templates?|Manual of Style|History|How To Read This Book|Introduction|Glossary|Sources|Index|Cover|Licen[cs]e|Print(able)? version|Behind the Scenes|Notes for .*Instructors|Legal Liability|First Aid Training|Consent|Appendix [A-DF]\b.*|Guide to the OCTEM|PIOPED References|Stencil Chapter)$/i;
 function usableOffGrid(wiki, title) {
-  if (wiki === 'appropedia') {
-    if (APPROPEDIA_BOOKS.test(title)) return true;
-    if (/[/:]/.test(title) || title.split(/\s+/).length > 5) return false;
-    return CORE_SKILL.test(title) && !NEEDS_GEAR.test(title) && !PLACE_OR_PROJECT.test(title);
-  }
+  // Appropedia is mostly write-ups of school and aid projects, not instructions. None of it is taken in bulk.
+  if (wiki === 'appropedia') return false;
   if (wiki === 'wikibooks') {
-    if (/^Cookbook:/.test(title)) return COOK_OK.test(title) && !NEEDS_GEAR.test(title);
+    if (BOOK_META.test(title)) return false;
+    if (/^Cookbook:/.test(title))
+      return COOK_OK.test(title) && !NEEDS_GEAR.test(title) && !COOK_TREAT.test(title);
     if (/^Electronics/.test(title)) return false;
     // Hospital-level medicine stays: you may end up near a hospital or a nurse.
     if (/^Emergency Medicine/.test(title)) return true;
     if (/^Horticulture\//.test(title)) return GROW_OK.test(title.replace(/^Horticulture\//, ''));
+    if (/^Knots\//.test(title)) return !/Decorati|Trick|Sinnet/i.test(title);
+    if (/^Bicycles\//.test(title))
+      return (
+        /Maintenance and Repair\/.+\/|Fixing|Safety/.test(title) &&
+        !/Moulton|SRAM|Rapidfire|Tubeless|Tools and Supplies\//.test(title)
+      );
     return !NEEDS_GEAR.test(title);
   }
   return true;
@@ -417,7 +428,7 @@ const fetched = await pool(articleList, 4, async (a) => {
     report.skipped.push(`Article "${a.title}" (${a.wiki}): not in English`);
     return null;
   }
-  if (a.bulk && plainText(html).length < 600) {
+  if (a.bulk && plainText(html).length < 1500) {
     report.skipped.push(`Article "${a.title}" (${a.wiki}): too short to be useful`);
     return null;
   }

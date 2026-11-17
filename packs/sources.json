@@ -188,7 +188,6 @@
       "titles": [
         "Survival_kit",
         "Bug-out_bag",
-        "Emergency_population_warning",
         "NOAA_Weather_Radio",
         "Rule_of_threes_(survival)"
       ]
@@ -293,7 +292,6 @@
         "Engine-generator",
         "Solar_panel",
         "Solar_charger",
-        "Off-the-grid",
         "Jump_start_(vehicle)",
         "Portable_stove",
         "Kerosene_lamp"
@@ -305,14 +303,12 @@
       "topic": "prep",
       "titles": [
         "Earthquake_preparedness",
-        "Emergency_management",
         "Evacuation",
         "Shelter_in_place",
         "Hurricane_preparedness",
         "Tornado_preparedness",
         "Flood",
         "Wildfire",
-        "Pandemic",
         "Fallout_shelter",
         "Nuclear_fallout",
         "Potassium_iodide",
@@ -331,8 +327,6 @@
       "titles": [
         "Wilderness_medical_emergency",
         "Wilderness_first_aid",
-        "Combat_medic",
-        "Field_hospital",
         "Disinfectant",
         "Antibiotic",
         "Dental_emergency",
@@ -375,7 +369,6 @@
         "Composting",
         "Square_foot_gardening",
         "Raised-bed_gardening",
-        "Permaculture",
         "Chicken",
         "Beekeeping",
         "Butchering",
@@ -414,8 +407,6 @@
         "Bicycle_dynamo",
         "Biogas",
         "Wood_gas_generator",
-        "Welding",
-        "Soldering",
         "Small_engine",
         "Bicycle_maintenance"
       ]
@@ -428,7 +419,6 @@
         "Navigation",
         "Orienteering",
         "Compass",
-        "Map",
         "Topographic_map",
         "Celestial_navigation",
         "Dead_reckoning",
@@ -437,8 +427,7 @@
         "Shortwave_radio",
         "Crystal_radio",
         "Tracking_(hunting)",
-        "Barter",
-        "Community_emergency_response_team"
+        "Barter"
       ]
     },
     {
@@ -488,14 +477,10 @@
         "Beekeeping",
         "Cuniculture",
         "Goat_farming",
-        "Aquaponics",
         "Greenhouse",
         "Cold_frame",
         "Mulch",
         "Irrigation",
-        "Permaculture",
-        "Subsistence_agriculture",
-        "Grain",
         "Flour",
         "Bread",
         "Lard",
@@ -544,8 +529,6 @@
         "Biosand_filter",
         "Spring_(hydrology)",
         "Rain_barrel",
-        "Water_supply",
-        "Groundwater",
         "Dew_pond"
       ]
     },
@@ -579,7 +562,6 @@
         "Scabies",
         "Bed_bug",
         "Rodent_control",
-        "Waste_management",
         "Greywater",
         "Laundry",
         "Bleach",
@@ -592,7 +574,6 @@
       "tier": "medium",
       "topic": "power",
       "titles": [
-        "Off-the-grid",
         "Photovoltaic_system",
         "Solar_panel",
         "Stand-alone_power_system",
@@ -633,24 +614,18 @@
       "tier": "medium",
       "topic": "security",
       "titles": [
-        "Survivalism",
-        "Self-sufficiency",
-        "Homesteading",
         "Emergency_evacuation",
         "Barter",
-        "Neighborhood_watch",
         "Amateur_radio",
         "Citizens_band_radio",
         "Family_Radio_Service",
         "General_Mobile_Radio_Service",
         "Shortwave_radio",
         "Morse_code",
-        "Civil_defense",
         "Fallout_shelter",
         "Potassium_iodide",
         "Nuclear_fallout",
-        "Quarantine",
-        "Pandemic"
+        "Quarantine"
       ]
     },
     {
@@ -658,16 +633,9 @@
       "tier": "large",
       "topic": "security",
       "titles": [
-        "Retreat_(survivalism)",
-        "Nuclear_electromagnetic_pulse",
-        "Mutual_aid_(organization_theory)",
-        "Community_emergency_response_team",
-        "Disaster_response",
-        "Emergency_management",
         "Weather_radio",
         "Signal_lamp",
         "Distress_signal",
-        "Home_safety",
         "Fire_safety",
         "Carbon_monoxide_detector"
       ]
@@ -700,7 +668,6 @@
         "Log_cabin",
         "Quinzhee",
         "Thermal_insulation",
-        "Passive_solar_building_design",
         "Wool",
         "Layered_clothing"
       ]
@@ -730,13 +697,6 @@
     },
     {
       "wiki": "wikibooks",
-      "tier": "medium",
-      "topic": "books",
-      "prefix": "Scouting",
-      "limit": 300
-    },
-    {
-      "wiki": "wikibooks",
       "tier": "large",
       "topic": "books",
       "limit": 6000,
@@ -753,21 +713,8 @@
       "wiki": "wikibooks",
       "tier": "large",
       "topic": "books",
-      "prefix": "Amateur Radio Manual",
-      "limit": 300
-    },
-    {
-      "wiki": "wikibooks",
-      "tier": "large",
-      "topic": "books",
       "prefix": "Bicycles",
       "limit": 300
-    },
-    {
-      "wiki": "appropedia",
-      "tier": "large",
-      "topic": "diy",
-      "limit": 20000
     },
     {
       "wiki": "wikibooks",
