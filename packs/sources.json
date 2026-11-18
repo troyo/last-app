@@ -3743,6 +3743,116 @@
         "https://www.epa.gov/sites/default/files/2017-09/documents/emergency_disinfection_of_drinking_water_sept2017.pdf",
         "https://archive.org/download/MManuals/Epa_emergency-disinfection-drinkingWater-2006.pdf"
       ]
+    },
+    {
+      "id": "usda-fb-1939-home-storage-vegetables-fruits",
+      "title": "Home Storage of Vegetables and Fruits: root cellars and pits (USDA Farmers Bulletin 1939)",
+      "topic": "food",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA",
+      "urls": [
+        "https://archive.org/download/CAT87205380/farmbul1939rev1960.pdf"
+      ]
+    },
+    {
+      "id": "usda-fb-984-drying-fruits-vegetables",
+      "title": "Drying Fruits and Vegetables at Home (USDA Farmers Bulletin 984)",
+      "topic": "food",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA",
+      "urls": [
+        "https://archive.org/download/CAT85821386/farmbul0984rev1933.pdf"
+      ]
+    },
+    {
+      "id": "usda-fb-1448-farmstead-water-supply",
+      "title": "Farmstead Water Supply: wells, springs and cisterns (USDA Farmers Bulletin 1448)",
+      "topic": "water",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA",
+      "urls": [
+        "https://archive.org/download/CAT87204740/farmbul1448rev1933.pdf"
+      ]
+    },
+    {
+      "id": "usda-fb-2237-water-supply-sources-farmstead",
+      "title": "Water Supply Sources for the Farmstead and Rural Home (USDA Farmers Bulletin 2237)",
+      "topic": "water",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA",
+      "urls": [
+        "https://archive.org/download/CAT87207409/farmbul2237rev1978.pdf"
+      ]
+    },
+    {
+      "id": "usda-ace-36-soap-making",
+      "title": "Soap Making at Home from Fat and Lye (USDA, 1940)",
+      "topic": "diy",
+      "tier": "medium",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA",
+      "urls": [
+        "https://archive.org/download/soapmaking36unit/soapmaking36unit.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-5-125-rigging",
+      "title": "Rigging: Rope, Knots, Hoists and Moving Heavy Loads, FM 5-125 (US Army)",
+      "topic": "diy",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/fm-5-125-rigging-techniques-procedures-and-applications-1995/FM%205-125%20Rigging%20Techniques%2C%20Procedures%2C%20And%20Applications%20%201995.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-5-426-carpentry",
+      "title": "Carpentry, FM 5-426 (US Army)",
+      "topic": "diy",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/fm-5-426-carpentry-1995/FM%205-426%20Carpentry%201995.pdf"
+      ]
+    },
+    {
+      "id": "army-fm-5-428-concrete-masonry",
+      "title": "Concrete and Masonry, FM 5-428 (US Army)",
+      "topic": "diy",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "US Army",
+      "urls": [
+        "https://archive.org/download/fm-5-428-concrete-and-masonry-1998/FM%205-428%20Concrete%20and%20Masonry%201998.pdf"
+      ]
+    },
+    {
+      "id": "usda-fb-183-meat-on-the-farm",
+      "title": "Meat on the Farm: Butchering, Curing and Keeping (USDA Farmers Bulletin 183)",
+      "topic": "food",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA",
+      "urls": [
+        "https://archive.org/download/CAT10416773/farmbul0183rev1906.pdf"
+      ]
+    },
+    {
+      "id": "usda-fb-2262-small-poultry-flocks",
+      "title": "Small Poultry Flocks: backyard chickens (USDA Farmers Bulletin 2262)",
+      "topic": "grow",
+      "tier": "large",
+      "license": "Public domain (US federal government work)",
+      "source": "USDA",
+      "urls": [
+        "https://archive.org/download/CAT77689538/CAT77689538.pdf"
+      ]
     }
   ],
   "simpleVersionsOf": {
