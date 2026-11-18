@@ -122,7 +122,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'ration',
         text: 'Count the days of food you have. Divide it up and plan each meal. Feed children, the sick and hard workers first.',
-        open: { label: 'Guides on rationing', search: 'rationing' },
+        open: { label: 'Ration your food', href: '/help/ration' },
       },
       {
         id: 'cook',
@@ -166,7 +166,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'latrine',
         text: 'Dig a real latrine. Put it downhill and at least 200 feet from any water.',
-        open: { label: 'Guides on latrines', search: 'pit latrine' },
+        open: { label: 'Dig a latrine', href: '/help/latrine' },
       },
       {
         id: 'rain',
@@ -181,7 +181,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'plant',
         text: 'Plant fast crops if the season allows. Radishes, lettuce, beans and potatoes come quickly.',
-        open: { label: 'Guides on growing food', search: 'kitchen garden' },
+        open: { label: 'Start a food garden', href: '/help/garden' },
       },
       {
         id: 'wood',
@@ -216,7 +216,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'staples',
         text: 'Plant filling crops first. Potatoes, beans, corn and squash give the most food for the work.',
-        open: { label: 'Guides on potatoes', search: 'potato' },
+        open: { label: 'Start a food garden', href: '/help/garden' },
       },
       {
         id: 'soil',

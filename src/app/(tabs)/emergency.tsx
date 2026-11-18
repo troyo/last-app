@@ -27,6 +27,8 @@ export default function Emergency() {
   const cards = all.filter((h) => !h.group);
   // Do-it-yourself fixes for life with no power: light, cooking, toilet, food, phone.
   const outage = all.filter((h) => h.group === 'outage');
+  // Skills for the weeks and months after: toilets, food, sickness, growing.
+  const long = all.filter((h) => h.group === 'long');
   // Disasters likely where you live come first; the rest are still one tap away.
   const mine = getProfile()?.hazards ?? [];
   const hazards = HAZARDS.filter((h) => fits(h.title, h.blurb, h.search)).sort(
@@ -89,6 +91,35 @@ export default function Emergency() {
             </Text>
             <View style={s.grid}>
               {outage.map((h) => (
+                <Pressable
+                  key={h.id}
+                  onPress={() => router.push(`/help/${h.id}`)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${h.title}. ${h.when}`}
+                  style={({ pressed }) => [
+                    s.tile,
+                    { backgroundColor: t.card },
+                    pressed && { opacity: 0.75, transform: [{ scale: 0.98 }] },
+                  ]}
+                >
+                  <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={48} />
+                  <Text style={[s.tileText, { color: t.text }]} numberOfLines={2}>
+                    {h.title}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </>
+        )}
+
+        {long.length > 0 && (
+          <>
+            <Text style={[s.h2, { color: t.text }]}>For the long haul</Text>
+            <Text style={{ color: t.text, fontSize: 16, lineHeight: 22 }}>
+              Skills for the weeks and months with no help.
+            </Text>
+            <View style={s.grid}>
+              {long.map((h) => (
                 <Pressable
                   key={h.id}
                   onPress={() => router.push(`/help/${h.id}`)}

@@ -32,8 +32,8 @@ export type QuickHelp = {
   danger?: string[];
   /** One extra thing worth knowing. */
   know?: string;
-  /** 'outage' = do-it-yourself fixes for life with no power. Shown as their own group. */
-  group?: 'outage';
+  /** 'outage' = do-it-yourself fixes for life with no power. 'long' = skills for the weeks and months after. Each is shown as its own group. */
+  group?: 'outage' | 'long';
 };
 
 export const QUICK_HELP: QuickHelp[] = [
@@ -795,6 +795,147 @@ export const QUICK_HELP: QuickHelp[] = [
       'Don’t turn the water heater’s power or gas back on until the tank is full again. An empty heater can burn out or start a fire.',
     ],
   },
+  {
+    id: 'latrine',
+    group: 'long',
+    icon: 'shovel',
+    hue: 'brown',
+    title: 'Dig a latrine',
+    when: 'The toilets are gone for good, and bags and buckets are running out.',
+    steps: [
+      'Pick the spot. At least 200 feet (about 70 big steps) from any well, stream or lake, and downhill from where you get water.',
+      'Keep it well away from where you cook and sleep, but close enough to reach at night.',
+      'Dig a hole about 3 feet wide and at least 5 feet deep. If you hit water, stop and dig somewhere else.',
+      'Lay strong boards or logs across the top. Leave a gap about 1 foot wide to squat over. Make sure they can’t slip.',
+      'Put up a screen with a tarp, sheets or branches. People who feel watched will go somewhere else.',
+      'Keep a bucket of ash, dry dirt or sawdust next to it. Throw in a scoop after every use. It stops flies and smell.',
+      'Cover the gap with a board when nobody is using it.',
+      'Set up hand washing right beside it, with a jug of water and soap or ash. Make it the rule.',
+    ],
+    next: [
+      'When the pit is full to 2 feet from the top, fill it in with dirt, pile more on top, and dig a new one.',
+      'Short on time? Dig a trench 1 foot wide and 1 foot deep. Squat across it and cover each use with dirt. It is good for a few days.',
+      'Small children can use a potty. Tip it into the pit.',
+      'Dig a small ditch on the uphill side so rain runs around the pit, not into it.',
+      'Mark old pits so nobody digs or plants food there for a year.',
+    ],
+    dont: [
+      'Don’t dig uphill from your water, or close to it.',
+      'Don’t put a latrine where the ground floods.',
+      'Don’t pour bleach or chemicals in. They are not needed.',
+      'Don’t let anyone skip hand washing. That is how one sick person becomes ten.',
+    ],
+    know: 'After a disaster, more people die from diarrhea than from the disaster itself. A good latrine and clean hands stop most of it.',
+  },
+  {
+    id: 'ration',
+    group: 'long',
+    icon: 'scale-balance',
+    hue: 'sun',
+    title: 'Ration your food',
+    when: 'No more food is coming, and what you have must last.',
+    steps: [
+      'Bring all the food to one place and count it. Write down every can, bag and jar.',
+      'Work out how many days it is. An adult needs about 2,000 calories a day, and labels show the calories. No labels? One pound of dry rice, beans, flour or pasta feeds one adult for about a day.',
+      'Divide the food by the number of people and the number of days it must last. That is each person’s share for a day.',
+      'Eat what spoils first. Fresh food, then frozen, then cans and dry goods.',
+      'Give fuller shares to children, pregnant and nursing women, the sick, and whoever does the heaviest work.',
+      'Put one trusted person in charge of the store. Serve meals together at set times, where everyone can see the shares are fair.',
+      'Count again every week. Change the shares early, not when the shelf is nearly empty.',
+    ],
+    next: [
+      'Stretch meals with soup and porridge. Water, heat and a little fat make small amounts filling.',
+      'Eat a little less on rest days and more on hard-work days.',
+      'Start adding food now: a garden, fishing, traps, and wild plants you are sure of. Rations buy time. They don’t replace food.',
+      'Save salt, fat and anything with vitamin C, like canned fruit and tomatoes, for the long run. They are hard to replace.',
+      'Keep the store dry, cool, off the floor and safe from mice.',
+    ],
+    dont: [
+      'Don’t cut water to save it. People last weeks on little food but only days without water.',
+      'Don’t let anyone eat from the store in secret. Hidden eating breaks trust faster than hunger does.',
+      'Don’t stay below half shares for long if you can help it. People get too weak to work.',
+      'Don’t give a huge meal to someone who has been starving. Start small, or it can kill them.',
+    ],
+    danger: [
+      'A child with swollen feet or belly, or with hair and skin changing.',
+      'Someone too weak to stand or work.',
+      'Bleeding gums, or old wounds opening again. That is scurvy. Find fresh greens or sprouted seeds.',
+    ],
+    know: 'Fair shares that everyone can see matter as much as the amount. Groups fall apart over food that looks unfair.',
+  },
+  {
+    id: 'sick',
+    group: 'long',
+    icon: 'bed',
+    hue: 'violet',
+    title: 'Care for someone sick',
+    when: 'Someone has a fever, a bad cough or diarrhea, and there is no doctor.',
+    steps: [
+      'Give them their own space, away from the others. A separate room, or a corner with a sheet hung up.',
+      'Pick one person to care for them. Fewer people going in means fewer people catching it.',
+      'Wash your hands with soap every time you leave them. If they cough, cover your nose and mouth with a cloth when you are close.',
+      'Get them to drink. A cup every hour while they are awake. With diarrhea or vomiting, use the rehydration drink.',
+      'For a fever, take off extra blankets and wipe the skin with a cool wet cloth. Give fever medicine (acetaminophen or ibuprofen) at the dose on the box if you have it.',
+      'Let them rest. Offer small, plain meals when they want to eat.',
+      'Give them their own cup, bowl and bucket. Wash these apart from everyone else’s, in hot soapy water.',
+      'Check on them every morning and night. Write down fever, drinking, peeing and breathing, so you can see if they are getting better or worse.',
+    ],
+    next: [
+      'Wash their bedding and clothes apart from the rest, in the hottest water you have. Dry them in the sun.',
+      'Empty their waste into the latrine, never near water. Wash your hands after.',
+      'Keep them apart until 1 full day after the fever, vomiting or diarrhea has stopped.',
+      'Several people sick at once? Suspect the water or the food. Boil all water and check the toilet and hand washing.',
+      'Turn someone who can’t move every 2 hours so they don’t get sores.',
+    ],
+    dont: [
+      'Don’t give aspirin to children.',
+      'Don’t share their cup, spoon or towel.',
+      'Don’t hand out antibiotics for a cold or flu. They do nothing for those, and you will need them for a bad wound or a chest infection.',
+      'Don’t pile blankets on someone with a fever to “sweat it out”.',
+    ],
+    danger: [
+      'Struggling to breathe, or breathing very fast.',
+      'Confused, hard to wake, or a stiff neck with a fever.',
+      'No pee for 8 hours, or can’t keep any drink down.',
+      'Blood in the stool, vomit or spit.',
+      'A fever that lasts more than 3 days, or goes away and comes back worse.',
+      'A rash of dark spots that don’t fade when you press on them.',
+    ],
+    know: 'Most fevers and stomach bugs pass in a few days with rest, drinks and clean hands. Your two jobs are to keep them drinking and to stop it spreading.',
+  },
+  {
+    id: 'garden',
+    group: 'long',
+    icon: 'sprout',
+    hue: 'green',
+    title: 'Start a food garden',
+    when: 'You need food that keeps coming after the cupboard is empty.',
+    steps: [
+      'Pick the sunniest spot you have, close to water and close to home. Vegetables need at least 6 hours of sun a day.',
+      'Start small. A bed 4 feet wide and 10 feet long is enough to learn on, and you can reach the middle without stepping on it.',
+      'Clear the grass and weeds. Dig and loosen the soil as deep as a shovel blade. Break up clumps and pull out roots and stones.',
+      'Mix in rotted leaves, old manure or compost. Never use fresh manure on a bed you are about to plant.',
+      'Plant filling crops first: potatoes, beans, corn and squash. Add fast ones for food within weeks: radishes, lettuce and peas.',
+      'Follow the seed packet for depth and spacing. No packet? Plant a seed about twice as deep as it is wide.',
+      'Water gently right after planting. After that, water in the early morning whenever the soil is dry a finger deep.',
+      'Cover bare soil with dry grass, leaves or straw. It holds water in and keeps weeds down.',
+    ],
+    next: [
+      'Pull weeds while they are small, every few days.',
+      'No seeds? Plant sprouting potatoes cut into chunks with one “eye” each. Dry beans from the cupboard often grow. So do seeds from squash and tomatoes you eat.',
+      'Plant a little every 2 weeks so the food doesn’t all come at once.',
+      'Let your best plants go to seed. Dry that seed and keep it for next year.',
+      'Start a compost pile now with peelings, leaves and grass. It is next year’s plant food.',
+      'Fence it. Rabbits, deer and chickens will eat everything.',
+    ],
+    dont: [
+      'Don’t plant in the shade of trees or buildings.',
+      'Don’t plant before the last frost, unless the crop is hardy like peas and cabbage.',
+      'Don’t use human waste on food plants.',
+      'Don’t count on the garden too soon. Most crops take 2 to 4 months.',
+    ],
+    know: 'Potatoes give more food from a small space than almost anything else. Beans add protein and feed the soil. Grow both.',
+  },
 ];
 
 // Everyday words people type when something is going wrong, so "blood" finds Bad bleeding
@@ -825,6 +966,12 @@ const WORDS: Record<string, string> = {
     'cut scrape graze gash wound infection infected pus stitches bandage dressing clean a wound puncture nail tetanus',
   allergy:
     'allergic allergy anaphylaxis epipen bee sting wasp hives swelling swollen throat peanut nuts rash wheezing',
+  latrine: 'toilet outhouse pit privy poop sewage sanitation dig hole long term bathroom',
+  ration:
+    'rationing food running out hungry hunger starving calories share shares stockpile how long will food last',
+  sick: 'fever flu cold cough ill illness infection quarantine isolate nursing contagious cholera virus temperature',
+  garden:
+    'grow food plant seeds vegetables potatoes beans farm farming crops soil compost planting',
   light: 'dark candle candles lamp lantern flashlight torch batteries see at night',
   cook: 'cooking stove hot food grill camp stove boil meal no gas microwave oven',
   toilet: 'bathroom poop pee sewage flush sanitation bucket latrine no water toilet',
