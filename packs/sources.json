@@ -2203,6 +2203,140 @@
         "Calendar",
         "Timekeeping"
       ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "first-aid",
+      "titles": [
+        "Buddy_wrapping",
+        "Pressure_ulcer",
+        "Otitis_media",
+        "Tick-borne_disease",
+        "Foreign_body",
+        "Chemical_eye_injury",
+        "Tooth_extraction",
+        "Dakin's_solution",
+        "Acute_stress_reaction",
+        "Sleep_hygiene",
+        "Human_nutrition",
+        "Kangaroo_mother_care",
+        "Perineal_tear",
+        "Infant_feeding",
+        "Weaning",
+        "Birth_control",
+        "Condom",
+        "Calendar-based_contraceptive_methods",
+        "Pandemic"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "first-aid",
+      "titles": [
+        "Seasonal_affective_disorder",
+        "Disposal_of_human_corpses",
+        "Old_age",
+        "Colic",
+        "Lathyrism"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "food",
+      "titles": [
+        "Pressure_cooking",
+        "Famine_food",
+        "Protein_combining",
+        "Bird_trapping",
+        "Trotline",
+        "Fishing_weir",
+        "Gruel",
+        "Pottage",
+        "Ash_cake",
+        "Haybox",
+        "Stone_boiling",
+        "Gristmill",
+        "Typha",
+        "Taraxacum",
+        "Urtica_dioica",
+        "Portulaca_oleracea",
+        "Storage_clamp",
+        "Ice_house_(building)"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "large",
+      "topic": "food",
+      "titles": [
+        "Pinole",
+        "Beehive_oven",
+        "Bowyer",
+        "Spear-thrower"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "grow",
+      "titles": [
+        "Overwintering",
+        "Winter_sowing",
+        "Hotbed",
+        "Seed_potato"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "shelter",
+      "titles": [
+        "Winter_storm",
+        "Raincoat",
+        "Dry_dung_fuel"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "security",
+      "titles": [
+        "Firefighting",
+        "Bucket_brigade",
+        "Mutual_aid_(organization_theory)",
+        "Division_of_labour",
+        "Group_cohesiveness"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "sanitation",
+      "titles": [
+        "Diaper",
+        "Dead_body_management"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "diy",
+      "titles": [
+        "Cement",
+        "Mangle_(machine)",
+        "Flat_tire"
+      ]
+    },
+    {
+      "wiki": "wikipedia",
+      "tier": "medium",
+      "topic": "water",
+      "titles": [
+        "Ice_cutting"
+      ]
     }
   ],
   "allPagesOf": [
