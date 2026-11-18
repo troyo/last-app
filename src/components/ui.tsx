@@ -58,7 +58,7 @@ export function Text({ style, ...rest }: TextProps) {
 export function Button(props: {
   label: string;
   onPress: () => void;
-  kind?: 'primary' | 'secondary' | 'quiet';
+  kind?: 'primary' | 'secondary' | 'quiet' | 'danger';
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
 }) {
@@ -81,9 +81,16 @@ export function Button(props: {
         style={[
           s.btnText,
           {
-            color: kind === 'primary' ? t.accentText : kind === 'secondary' ? t.text : t.muted,
+            color:
+              kind === 'primary'
+                ? t.accentText
+                : kind === 'secondary'
+                  ? t.text
+                  : kind === 'danger'
+                    ? t.bad
+                    : t.muted,
           },
-          kind === 'quiet' && { fontWeight: '700', fontSize: 16 },
+          (kind === 'quiet' || kind === 'danger') && { fontWeight: '700', fontSize: 16 },
         ]}
       >
         {props.label}
