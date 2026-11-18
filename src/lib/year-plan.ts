@@ -186,12 +186,12 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'wood',
         text: 'Cut and stack firewood now. It needs months to dry, and you need far more than you think.',
-        open: { label: 'Guides on firewood', search: 'firewood' },
+        open: { label: 'Firewood for winter', href: '/help/firewood' },
       },
       {
         id: 'soap',
         text: 'Make soap and keep washing. Clean bodies, clothes and dishes keep sickness away.',
-        open: { label: 'Guides on making soap', search: 'soap making' },
+        open: { label: 'Make soap', href: '/help/soap' },
       },
       {
         id: 'small',
@@ -250,7 +250,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'preserve',
         text: 'Save all extra food. Dry it, salt it, smoke it or ferment it. Nothing fresh will last on its own.',
-        open: { label: 'Guides on keeping food', search: 'food preservation' },
+        open: { label: 'Keep food without a fridge', href: '/help/keep-food' },
       },
       {
         id: 'waterplan',
@@ -295,7 +295,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'woodpile',
         text: 'Finish the woodpile. Keep it dry and off the ground, near the door.',
-        open: { label: 'Guides on firewood', search: 'firewood' },
+        open: { label: 'Firewood for winter', href: '/help/firewood' },
       },
       {
         id: 'seal',
