@@ -24,7 +24,7 @@ export default function ChecklistScreen() {
       <Stack.Screen options={{ title: `Ready for ${list.title}` }} />
       <ScrollView style={{ backgroundColor: t.bg }} contentContainerStyle={s.wrap}>
         <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>{list.blurb}</Text>
-        <View style={[s.barBg, { backgroundColor: t.soft }]}>
+        <View style={[s.barBg, { backgroundColor: t.border }]}>
           <View
             style={[s.bar, { width: `${(p.done / p.total) * 100}%`, backgroundColor: t.accent }]}
           />

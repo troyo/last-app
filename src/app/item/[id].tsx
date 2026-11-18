@@ -64,6 +64,9 @@ function Article({ item }: { item: Item }) {
   const view = useRef<HtmlViewHandle>(null);
   // "Find in this guide"
   const [finding, setFinding] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [sizeNote, setSizeNote] = useState<string | null>(null);
+  const noteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [query, setQuery] = useState('');
   const [found, setFound] = useState<{ count: number; at: number } | null>(null);
   const [ready, setReady] = useState(false);
@@ -114,7 +117,8 @@ function Article({ item }: { item: Item }) {
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: t.bg }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={insets.top + 56}
+      // The header is part of this screen, so the keyboard needs no extra offset.
+      keyboardVerticalOffset={0}
     >
       <Stack.Screen
         options={{
@@ -131,7 +135,15 @@ function Article({ item }: { item: Item }) {
               <Pressable
                 onPress={() => {
                   stopFinding();
-                  setSize(nextTextSize());
+                  const next = nextTextSize();
+                  setSize(next);
+                  // Say which size this is, since the button just cycles round.
+                  setSizeNote(
+                    ['Text: regular', 'Text: large', 'Text: extra large'][next] ??
+                      'Text size changed',
+                  );
+                  if (noteTimer.current) clearTimeout(noteTimer.current);
+                  noteTimer.current = setTimeout(() => setSizeNote(null), 1600);
                 }}
                 hitSlop={12}
                 accessibilityLabel="Change text size"
@@ -159,6 +171,13 @@ function Article({ item }: { item: Item }) {
           <Opening />
         </View>
       )}
+      {sizeNote && (
+        <View style={s.noteWrap} pointerEvents="none">
+          <View style={[s.note, { backgroundColor: t.text }]}>
+            <Text style={{ color: t.bg, fontSize: 16, fontWeight: '700' }}>{sizeNote}</Text>
+          </View>
+        </View>
+      )}
       {finding && (
         <View
           style={[
@@ -166,7 +185,8 @@ function Article({ item }: { item: Item }) {
             {
               backgroundColor: t.card,
               borderTopColor: t.border,
-              paddingBottom: Math.max(insets.bottom, 10),
+              // With the keyboard up there is no home bar to clear.
+              paddingBottom: typing ? 10 : Math.max(insets.bottom, 10),
             },
           ]}
         >
@@ -178,6 +198,8 @@ function Article({ item }: { item: Item }) {
               placeholder="Find in this guide"
               placeholderTextColor={t.muted}
               autoFocus
+              onFocus={() => setTyping(true)}
+              onBlur={() => setTyping(false)}
               autoCorrect={false}
               autoCapitalize="none"
               returnKeyType="search"
@@ -267,6 +289,8 @@ const s = StyleSheet.create({
   credit: { fontSize: 15, padding: 16 },
   opening: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14 },
   btn: { padding: 15, borderRadius: 16, alignItems: 'center' },
+  noteWrap: { position: 'absolute', left: 0, right: 0, top: 16, alignItems: 'center' },
+  note: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 999 },
   findBar: {
     flexDirection: 'row',
     alignItems: 'center',

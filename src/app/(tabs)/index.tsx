@@ -334,11 +334,13 @@ export default function Home() {
                 ))}
               </View>
               <View style={[s.tip, { backgroundColor: t.header }]}>
-                <MaterialCommunityIcons
-                  name={CLIMATES[profile.climate].icon as IconName}
-                  size={26}
-                  color="#F6B93B"
-                />
+                <View style={s.tipIcon}>
+                  <MaterialCommunityIcons
+                    name={CLIMATES[profile.climate].icon as IconName}
+                    size={24}
+                    color="#F6B93B"
+                  />
+                </View>
                 <View style={{ flex: 1, gap: 2 }}>
                   <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800' }}>
                     {CLIMATES[profile.climate].title}
@@ -385,7 +387,7 @@ export default function Home() {
                     <Text style={{ color: t.text, fontSize: 17, fontWeight: '700' }}>
                       Ready for {list.title}
                     </Text>
-                    <View style={[s.listTrack, { backgroundColor: t.soft }]}>
+                    <View style={[s.listTrack, { backgroundColor: t.border }]}>
                       <View
                         style={[
                           s.listFill,
@@ -506,6 +508,14 @@ const s = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tipIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255,255,255,0.14)',
     alignItems: 'center',
     justifyContent: 'center',
   },

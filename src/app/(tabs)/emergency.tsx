@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { router, useFocusEffect, useScrollToTop } from 'expo-router';
+import { useCallback, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconName, IconTile, Text } from '../../components/ui';
@@ -13,6 +13,9 @@ import { HUES, useTheme } from '../../lib/theme';
 // thumb. Built into the app, so it works with no download, power or signal.
 export default function Emergency() {
   const t = useTheme();
+  // Tapping the Emergency tab again jumps back to the top.
+  const scroller = useRef<React.ComponentRef<typeof ScrollView>>(null);
+  useScrollToTop(scroller);
   const [filter, setFilter] = useState('');
   // Your place may have changed while this tab was out of view.
   const [, refresh] = useState(0);
@@ -33,6 +36,7 @@ export default function Emergency() {
   return (
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: t.bg }}>
       <ScrollView
+        ref={scroller}
         contentContainerStyle={s.wrap}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
