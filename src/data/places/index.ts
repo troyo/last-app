@@ -2,53 +2,65 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 
 export const PLACE_STATES: { code: string; bbox: number[]; count: number }[] = [
+  { code: 'AK', bbox: [-176.64, 51.87, 174.1, 71.3], count: 528 },
   { code: 'AL', bbox: [-88.42, 30.23, -85.01, 34.99], count: 1512 },
   { code: 'AR', bbox: [-94.6, 33.04, -89.74, 36.5], count: 2382 },
   { code: 'AZ', bbox: [-114.79, 31.33, -109.05, 37.0], count: 3709 },
   { code: 'CA', bbox: [-124.29, 32.53, -114.2, 41.96], count: 13571 },
   { code: 'CO', bbox: [-108.91, 37.0, -102.11, 40.99], count: 2650 },
+  { code: 'CT', bbox: [-73.67, 41.0, -71.81, 42.04], count: 1349 },
   { code: 'DC', bbox: [-77.11, 38.82, -76.91, 38.98], count: 385 },
-  { code: 'DE', bbox: [-75.77, 38.46, -75.05, 39.84], count: 283 },
+  { code: 'DE', bbox: [-75.77, 38.46, -75.05, 39.84], count: 304 },
   { code: 'FL', bbox: [-87.48, 24.55, -80.03, 30.98], count: 6059 },
-  { code: 'GA', bbox: [-85.51, 30.68, -80.85, 34.99], count: 2467 },
+  { code: 'GA', bbox: [-85.51, 30.68, -80.85, 34.99], count: 2790 },
   { code: 'HI', bbox: [-159.68, 19.04, -154.95, 22.23], count: 428 },
-  { code: 'IA', bbox: [-96.47, 40.67, -90.17, 43.42], count: 344 },
-  { code: 'ID', bbox: [-117.03, 42.08, -111.11, 48.7], count: 605 },
+  { code: 'IA', bbox: [-96.49, 40.4, -90.17, 43.5], count: 2037 },
+  { code: 'ID', bbox: [-117.06, 42.03, -111.11, 48.71], count: 795 },
   { code: 'IL', bbox: [-91.4, 37.0, -87.53, 42.5], count: 4483 },
   { code: 'IN', bbox: [-87.94, 37.88, -84.82, 41.75], count: 2061 },
-  { code: 'KY', bbox: [-89.19, 36.5, -82.12, 39.11], count: 1149 },
+  { code: 'KS', bbox: [-102.01, 37.0, -94.61, 40.0], count: 2194 },
+  { code: 'KY', bbox: [-89.19, 36.5, -82.12, 39.12], count: 1302 },
+  { code: 'LA', bbox: [-93.99, 29.23, -89.36, 33.01], count: 1694 },
   { code: 'MA', bbox: [-73.45, 41.26, -69.95, 42.86], count: 2671 },
-  { code: 'ME', bbox: [-71.03, 43.08, -66.98, 47.36], count: 972 },
-  { code: 'MI', bbox: [-90.17, 41.72, -82.43, 47.45], count: 3115 },
-  { code: 'MO', bbox: [-94.88, 36.58, -89.54, 40.5], count: 483 },
-  { code: 'MS', bbox: [-90.86, 30.28, -88.94, 34.39], count: 10 },
+  { code: 'MD', bbox: [-79.41, 37.97, -75.05, 39.72], count: 1978 },
+  { code: 'ME', bbox: [-71.03, 43.08, -66.98, 47.36], count: 1055 },
+  { code: 'MI', bbox: [-90.17, 41.72, -82.43, 47.92], count: 3773 },
+  { code: 'MN', bbox: [-97.13, 43.5, -90.33, 48.91], count: 2918 },
+  { code: 'MO', bbox: [-95.52, 36.04, -89.35, 40.51], count: 2258 },
+  { code: 'MS', bbox: [-91.39, 30.25, -88.15, 34.99], count: 918 },
   { code: 'MT', bbox: [-115.96, 44.6, -104.05, 48.88], count: 836 },
-  { code: 'NC', bbox: [-84.3, 33.86, -75.47, 36.55], count: 3126 },
-  { code: 'ND', bbox: [-104.01, 46.0, -96.77, 48.91], count: 220 },
-  { code: 'NE', bbox: [-103.73, 40.02, -95.73, 42.84], count: 162 },
-  { code: 'NH', bbox: [-72.52, 42.7, -70.72, 45.05], count: 606 },
+  { code: 'NC', bbox: [-84.3, 33.85, -75.47, 36.55], count: 3575 },
+  { code: 'ND', bbox: [-104.01, 46.0, -96.77, 48.91], count: 232 },
+  { code: 'NE', bbox: [-104.04, 40.01, -95.6, 42.96], count: 1168 },
+  { code: 'NH', bbox: [-72.52, 42.7, -70.72, 45.05], count: 688 },
   { code: 'NJ', bbox: [-75.52, 38.93, -73.91, 41.32], count: 2608 },
-  { code: 'NM', bbox: [-109.05, 31.82, -103.05, 36.97], count: 1191 },
+  { code: 'NM', bbox: [-109.05, 31.82, -103.05, 36.97], count: 1370 },
   { code: 'NV', bbox: [-119.99, 35.02, -114.06, 41.99], count: 819 },
-  { code: 'NY', bbox: [-79.73, 40.5, -71.94, 45.0], count: 7856 },
+  { code: 'NY', bbox: [-79.73, 40.5, -71.94, 44.98], count: 7447 },
   { code: 'OH', bbox: [-84.82, 38.41, -80.53, 41.94], count: 4162 },
   { code: 'OK', bbox: [-102.9, 33.75, -94.44, 36.99], count: 1246 },
-  { code: 'PA', bbox: [-80.51, 39.72, -74.7, 42.22], count: 4568 },
-  { code: 'PR', bbox: [-66.97, 18.29, -65.78, 18.44], count: 16 },
-  { code: 'SC', bbox: [-83.22, 32.11, -78.61, 35.18], count: 2014 },
+  { code: 'OR', bbox: [-124.49, 41.99, -116.94, 46.19], count: 1635 },
+  { code: 'PA', bbox: [-80.51, 39.72, -74.7, 42.25], count: 5076 },
+  { code: 'PR', bbox: [-67.25, 17.96, -65.3, 18.51], count: 959 },
+  { code: 'RI', bbox: [-71.85, 41.16, -71.17, 42.01], count: 347 },
+  { code: 'SC', bbox: [-83.22, 32.11, -78.61, 35.18], count: 2203 },
   { code: 'SD', bbox: [-104.01, 42.51, -96.45, 45.94], count: 425 },
-  { code: 'TN', bbox: [-90.07, 34.99, -81.8, 36.64], count: 1483 },
+  { code: 'TN', bbox: [-90.07, 34.99, -81.8, 36.64], count: 1600 },
   { code: 'TX', bbox: [-106.59, 25.9, -93.73, 36.4], count: 8999 },
-  { code: 'UT', bbox: [-114.03, 37.0, -109.3, 41.98], count: 972 },
+  { code: 'UT', bbox: [-114.03, 37.0, -109.08, 41.98], count: 1578 },
   { code: 'VA', bbox: [-83.58, 36.54, -75.36, 39.39], count: 3692 },
-  { code: 'VT', bbox: [-73.35, 42.76, -71.5, 45.01], count: 468 },
-  { code: 'WA', bbox: [-124.63, 45.58, -117.04, 49.0], count: 3037 },
+  { code: 'VT', bbox: [-73.42, 42.76, -71.5, 45.01], count: 523 },
+  { code: 'WA', bbox: [-124.63, 45.58, -117.04, 49.0], count: 4472 },
+  { code: 'WI', bbox: [-92.78, 42.5, -86.83, 46.95], count: 2803 },
   { code: 'WV', bbox: [-82.58, 37.24, -77.75, 40.61], count: 804 },
+  { code: 'WY', bbox: [-111.05, 41.01, -104.07, 44.98], count: 377 },
 ];
 
 /** One state's places as a compact string, loaded only when needed. */
 export function loadPlaceData(code: string): string | null {
   switch (code) {
+    case 'AK':
+      return require('./AK').default;
     case 'AL':
       return require('./AL').default;
     case 'AR':
@@ -59,6 +71,8 @@ export function loadPlaceData(code: string): string | null {
       return require('./CA').default;
     case 'CO':
       return require('./CO').default;
+    case 'CT':
+      return require('./CT').default;
     case 'DC':
       return require('./DC').default;
     case 'DE':
@@ -77,14 +91,22 @@ export function loadPlaceData(code: string): string | null {
       return require('./IL').default;
     case 'IN':
       return require('./IN').default;
+    case 'KS':
+      return require('./KS').default;
     case 'KY':
       return require('./KY').default;
+    case 'LA':
+      return require('./LA').default;
     case 'MA':
       return require('./MA').default;
+    case 'MD':
+      return require('./MD').default;
     case 'ME':
       return require('./ME').default;
     case 'MI':
       return require('./MI').default;
+    case 'MN':
+      return require('./MN').default;
     case 'MO':
       return require('./MO').default;
     case 'MS':
@@ -111,10 +133,14 @@ export function loadPlaceData(code: string): string | null {
       return require('./OH').default;
     case 'OK':
       return require('./OK').default;
+    case 'OR':
+      return require('./OR').default;
     case 'PA':
       return require('./PA').default;
     case 'PR':
       return require('./PR').default;
+    case 'RI':
+      return require('./RI').default;
     case 'SC':
       return require('./SC').default;
     case 'SD':
@@ -131,8 +157,12 @@ export function loadPlaceData(code: string): string | null {
       return require('./VT').default;
     case 'WA':
       return require('./WA').default;
+    case 'WI':
+      return require('./WI').default;
     case 'WV':
       return require('./WV').default;
+    case 'WY':
+      return require('./WY').default;
     default:
       return null;
   }
