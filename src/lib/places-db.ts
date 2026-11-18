@@ -5,7 +5,14 @@
 // signal and no saved area at all. Built by tools/build-places.py.
 import { loadPlaceData, PLACE_STATES } from '../data/places';
 
-export type PlaceKind = 'hospital' | 'clinic' | 'police' | 'fire' | 'shelter' | 'pharmacy' | 'water';
+export type PlaceKind =
+  | 'hospital'
+  | 'clinic'
+  | 'police'
+  | 'fire'
+  | 'shelter'
+  | 'pharmacy'
+  | 'water';
 
 export type Kind = {
   id: PlaceKind;
@@ -20,13 +27,76 @@ export type Kind = {
 
 // Order is the order of the chips and of the "nearest" row.
 export const KINDS: Kind[] = [
-  { id: 'hospital', code: 'H', label: 'Hospitals', short: 'Hospital', one: 'Hospital', letter: 'H', color: '#D32F2F', on: true },
-  { id: 'clinic', code: 'U', label: 'Clinics', short: 'Clinic', one: 'Clinic or urgent care', letter: '+', color: '#C2185B', on: true },
-  { id: 'shelter', code: 'S', label: 'Shelters', short: 'Shelter', one: 'Shelter', letter: 'S', color: '#6A3FB5', on: true },
-  { id: 'water', code: 'W', label: 'Water', short: 'Water', one: 'Drinking water', letter: 'W', color: '#0277BD', on: false },
-  { id: 'fire', code: 'F', label: 'Fire', short: 'Fire', one: 'Fire station', letter: 'F', color: '#E65100', on: true },
-  { id: 'police', code: 'P', label: 'Police', short: 'Police', one: 'Police', letter: 'P', color: '#1E4FB8', on: true },
-  { id: 'pharmacy', code: 'R', label: 'Pharmacy', short: 'Pharmacy', one: 'Pharmacy', letter: 'Rx', color: '#00796B', on: false },
+  {
+    id: 'hospital',
+    code: 'H',
+    label: 'Hospitals',
+    short: 'Hospital',
+    one: 'Hospital',
+    letter: 'H',
+    color: '#D32F2F',
+    on: true,
+  },
+  {
+    id: 'clinic',
+    code: 'U',
+    label: 'Clinics',
+    short: 'Clinic',
+    one: 'Clinic or urgent care',
+    letter: '+',
+    color: '#C2185B',
+    on: true,
+  },
+  {
+    id: 'shelter',
+    code: 'S',
+    label: 'Shelters',
+    short: 'Shelter',
+    one: 'Shelter',
+    letter: 'S',
+    color: '#6A3FB5',
+    on: true,
+  },
+  {
+    id: 'water',
+    code: 'W',
+    label: 'Water',
+    short: 'Water',
+    one: 'Drinking water',
+    letter: 'W',
+    color: '#0277BD',
+    on: false,
+  },
+  {
+    id: 'fire',
+    code: 'F',
+    label: 'Fire',
+    short: 'Fire',
+    one: 'Fire station',
+    letter: 'F',
+    color: '#E65100',
+    on: true,
+  },
+  {
+    id: 'police',
+    code: 'P',
+    label: 'Police',
+    short: 'Police',
+    one: 'Police',
+    letter: 'P',
+    color: '#1E4FB8',
+    on: true,
+  },
+  {
+    id: 'pharmacy',
+    code: 'R',
+    label: 'Pharmacy',
+    short: 'Pharmacy',
+    one: 'Pharmacy',
+    letter: 'Rx',
+    color: '#00796B',
+    on: false,
+  },
 ];
 
 export const kindOf = (id: string) => KINDS.find((k) => k.id === id);
@@ -58,14 +128,21 @@ export function placesIn(code: string): Place[] {
       const [c, lon, lat, name] = line.split('\t');
       const kind = BY_CODE[c];
       if (!kind) continue;
-      out.push({ id: nextId++, kind: kind.id, lon: Number(lon) / 1e4, lat: Number(lat) / 1e4, name: name ?? '' });
+      out.push({
+        id: nextId++,
+        kind: kind.id,
+        lon: Number(lon) / 1e4,
+        lat: Number(lat) / 1e4,
+        name: name ?? '',
+      });
     }
   }
   cache[code] = out;
   return out;
 }
 
-const overlaps = (a: number[], b: number[]) => a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
+const overlaps = (a: number[], b: number[]) =>
+  a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
 
 /** States whose places could fall inside this box (west, south, east, north). */
 export function statesIn(box: number[]): string[] {
@@ -90,11 +167,21 @@ export function milesBetween(a: LonLat, b: LonLat) {
   const rad = (d: number) => (d * Math.PI) / 180;
   const dLat = rad(b[1] - a[1]);
   const dLon = rad(b[0] - a[0]);
-  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[1])) * Math.cos(rad(b[1])) * Math.sin(dLon / 2) ** 2;
+  const h =
+    Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[1])) * Math.cos(rad(b[1])) * Math.sin(dLon / 2) ** 2;
   return 3958.8 * 2 * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
-const POINTS = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest'];
+const POINTS = [
+  'north',
+  'northeast',
+  'east',
+  'southeast',
+  'south',
+  'southwest',
+  'west',
+  'northwest',
+];
 
 /** Which way to head, as a word: "northeast". */
 export function directionTo(a: LonLat, b: LonLat) {
@@ -122,8 +209,19 @@ export function nearest(from: LonLat, kind?: PlaceKind, limit = 5, reachMiles = 
   for (const miles of [10, 30, reachMiles]) {
     const box = boxAround(from, miles);
     const found = placesNear(box)
-      .filter((p) => (!kind || p.kind === kind) && p.lon >= box[0] && p.lon <= box[2] && p.lat >= box[1] && p.lat <= box[3])
-      .map((p) => ({ ...p, miles: milesBetween(from, [p.lon, p.lat]), direction: directionTo(from, [p.lon, p.lat]) }))
+      .filter(
+        (p) =>
+          (!kind || p.kind === kind) &&
+          p.lon >= box[0] &&
+          p.lon <= box[2] &&
+          p.lat >= box[1] &&
+          p.lat <= box[3],
+      )
+      .map((p) => ({
+        ...p,
+        miles: milesBetween(from, [p.lon, p.lat]),
+        direction: directionTo(from, [p.lon, p.lat]),
+      }))
       .sort((a, b) => a.miles - b.miles);
     if (found.length >= limit || miles === reachMiles) return found.slice(0, limit);
   }

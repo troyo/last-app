@@ -114,7 +114,10 @@ export function MapsScreen() {
     // A place you picked stays on the map even if its kind is switched off.
     return picked && !all.some((p) => p.id === picked.id) ? [...all, picked] : all;
   }, [box, shown, picked]);
-  const hospitals = useMemo(() => toFeatures(visible.filter((p) => p.kind === 'hospital')), [visible]);
+  const hospitals = useMemo(
+    () => toFeatures(visible.filter((p) => p.kind === 'hospital')),
+    [visible],
+  );
   const rest = useMemo(() => toFeatures(visible.filter((p) => p.kind !== 'hospital')), [visible]);
   const pickedFeature = useMemo(() => toFeatures(picked ? [picked] : []), [picked]);
 
@@ -391,7 +394,11 @@ export function MapsScreen() {
                 'text-max-width': 9,
                 'text-optional': true,
               }}
-              paint={{ 'text-color': '#14231D', 'text-halo-color': '#FFFFFF', 'text-halo-width': 2 }}
+              paint={{
+                'text-color': '#14231D',
+                'text-halo-color': '#FFFFFF',
+                'text-halo-width': 2,
+              }}
             />
           </GeoJSONSource>
 
@@ -467,7 +474,11 @@ export function MapsScreen() {
                 'text-max-width': 9,
                 'text-optional': true,
               }}
-              paint={{ 'text-color': '#8E1B1B', 'text-halo-color': '#FFFFFF', 'text-halo-width': 2 }}
+              paint={{
+                'text-color': '#8E1B1B',
+                'text-halo-color': '#FFFFFF',
+                'text-halo-width': 2,
+              }}
             />
           </GeoJSONSource>
 
@@ -652,11 +663,16 @@ export function MapsScreen() {
                     <View style={[s.quickDot, { backgroundColor: k.color }]}>
                       <Text style={s.quickLetter}>{k.letter}</Text>
                     </View>
-                    <Text style={{ color: t.text, fontSize: 15, fontWeight: '800' }} numberOfLines={1}>
+                    <Text
+                      style={{ color: t.text, fontSize: 15, fontWeight: '800' }}
+                      numberOfLines={1}
+                    >
                       {k.short}
                     </Text>
                     <Text style={{ color: t.text, fontSize: 14 }} numberOfLines={1}>
-                      {place ? `${formatMiles(place.miles)} ${shortDirection(place.direction)}` : 'None near'}
+                      {place
+                        ? `${formatMiles(place.miles)} ${shortDirection(place.direction)}`
+                        : 'None near'}
                     </Text>
                   </Pressable>
                 );
@@ -677,12 +693,17 @@ export function MapsScreen() {
                   <Pressable
                     key={k.id}
                     onPress={() => toggle(k.id)}
-                    style={[s.chip, { backgroundColor: on ? k.color : t.soft, borderColor: k.color }]}
+                    style={[
+                      s.chip,
+                      { backgroundColor: on ? k.color : t.soft, borderColor: k.color },
+                    ]}
                     accessibilityRole="switch"
                     accessibilityState={{ checked: on }}
                   >
                     <View style={[s.chipDot, { backgroundColor: on ? '#FFFFFF' : k.color }]} />
-                    <Text style={{ color: on ? '#FFFFFF' : t.text, fontSize: 15, fontWeight: '700' }}>
+                    <Text
+                      style={{ color: on ? '#FFFFFF' : t.text, fontSize: 15, fontWeight: '700' }}
+                    >
                       {k.label}
                     </Text>
                   </Pressable>
@@ -729,7 +750,11 @@ export function MapsScreen() {
                         </Text>
                       </View>
                     </Pressable>
-                    <Pressable onPress={() => remove(a)} hitSlop={10} accessibilityLabel="Remove saved map">
+                    <Pressable
+                      onPress={() => remove(a)}
+                      hitSlop={10}
+                      accessibilityLabel="Remove saved map"
+                    >
                       <Ionicons name="trash-outline" size={20} color={t.muted} />
                     </Pressable>
                   </View>
@@ -834,7 +859,13 @@ const s = StyleSheet.create({
   },
   chipDot: { width: 10, height: 10, borderRadius: 5 },
   cardHead: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  close: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
+  close: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   direction: {
     flexDirection: 'row',
     alignItems: 'center',

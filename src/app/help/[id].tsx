@@ -39,6 +39,7 @@ export default function QuickHelpScreen() {
   if (!h) return null;
   const hue = hues[h.hue];
   const show = hasShowMe(h.id) ? SHOW_ME[h.id] : null;
+  const facts = (h.know ?? '').split(/(?<=[.?!])\s+/).filter(Boolean);
 
   return (
     <>
@@ -134,7 +135,12 @@ export default function QuickHelpScreen() {
         {h.know && (
           <Card style={{ gap: 6, backgroundColor: t.soft }}>
             <Text style={[s.label, { color: t.accent }]}>Good to know</Text>
-            <Text style={[s.body, { color: t.text }]}>{h.know}</Text>
+            {/* Several facts read better as a list than as one block. */}
+            {facts.length > 2 ? (
+              <Bullets items={facts} kind="note" />
+            ) : (
+              <Text style={[s.body, { color: t.text }]}>{h.know}</Text>
+            )}
           </Card>
         )}
 

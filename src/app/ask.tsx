@@ -77,7 +77,7 @@ export default function Ask() {
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: t.bg }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={insets.top + 44}
+      keyboardVerticalOffset={insets.top + 56}
     >
       <Stack.Screen options={{ title: 'Ask anything' }} />
       <ScrollView

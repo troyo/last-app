@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { LaunchAnimation } from '../components/LaunchAnimation';
 import { LibraryProvider } from '../lib/LibraryContext';
+import { TitleBar } from '../components/ui';
 import { useTheme } from '../lib/theme';
 import { hasSeenWelcome } from '../lib/welcome';
 
@@ -23,12 +24,13 @@ export default function RootLayout() {
       <StatusBar style="auto" />
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: t.bg },
-          headerTintColor: t.accent,
-          headerTitleStyle: { color: t.text, fontWeight: '600', fontSize: 18 },
-          headerShadowVisible: false,
-          // Just a clean back arrow, no "Back"/screen-name label next to it.
-          headerBackButtonDisplayMode: 'minimal',
+          // One header everywhere: back arrow and title on the same line, in the app's own type.
+          header: ({ options }) => (
+            <TitleBar
+              title={typeof options.title === 'string' ? options.title : ''}
+              icon={options.headerRight?.({ canGoBack: true })}
+            />
+          ),
           contentStyle: { backgroundColor: t.bg },
         }}
       >

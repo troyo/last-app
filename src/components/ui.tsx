@@ -217,6 +217,7 @@ const BULLET = {
   do: { icon: 'checkmark-circle', bad: false },
   dont: { icon: 'close-circle', bad: true },
   warn: { icon: 'alert-circle', bad: true },
+  note: { icon: 'information-circle', bad: false },
 } as const;
 
 /** A list where order doesn't matter. Each line gets a clear icon and its own row. */

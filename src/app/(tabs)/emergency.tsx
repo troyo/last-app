@@ -174,10 +174,10 @@ const s = StyleSheet.create({
     height: 50,
   },
   input: { flex: 1, fontSize: 17, paddingVertical: 0 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 10 },
   tile: {
-    flexBasis: '47%',
-    flexGrow: 1,
+    // Two to a row, always. An odd one out stays the same size instead of stretching.
+    width: '48.5%',
     height: 124,
     borderRadius: 22,
     alignItems: 'center',
