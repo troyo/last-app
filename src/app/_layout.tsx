@@ -48,6 +48,7 @@ export default function RootLayout() {
         <Stack.Screen name="item/[id]" options={{ title: '' }} />
         <Stack.Screen name="checklist/[id]" options={{ title: '' }} />
         <Stack.Screen name="help/[id]" options={{ title: '' }} />
+        <Stack.Screen name="situation/[id]" options={{ title: '' }} />
         <Stack.Screen name="show/[id]" options={{ headerShown: false }} />
       </Stack>
       {opening && <LaunchAnimation onDone={() => setOpening(false)} />}

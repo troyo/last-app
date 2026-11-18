@@ -8,7 +8,7 @@
 import { getChecklists } from './checklists';
 import { HAZARDS } from './hazards';
 import { fileFor, isDownloaded } from './library';
-import { QUICK_HELP } from './quick-help';
+import { helpText, QUICK_HELP } from './quick-help';
 import { search, SYNONYMS, wordsOf } from './search';
 
 export type Answer = {
@@ -115,7 +115,7 @@ export async function ask(question: string): Promise<Answer[]> {
 
   // 1. Emergency cards: the most carefully written steps we have.
   for (const h of QUICK_HELP) {
-    const about = hits(words, `${h.title} ${h.when}`); // the card is about this
+    const about = hits(words, helpText(h)); // the card is about this
     const inside = hits(words, h.steps.join(' ')); // or its steps mention it a lot
     if (about < 2 && inside < 4) continue;
     answers.push({

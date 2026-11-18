@@ -1,10 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { minutesIn, StepTimer } from '../../components/StepTimer';
 import { Bullets, Card, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
 import { DiagramId, DIAGRAMS } from '../../lib/diagrams';
 import { findQuickHelp } from '../../lib/quick-help';
+import { noteOpened } from '../../lib/recent';
 import { hasShowMe, SHOW_ME } from '../../lib/show-me';
 import { HUES, useDark, useHues, useTheme } from '../../lib/theme';
 
@@ -29,6 +31,10 @@ export default function QuickHelpScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const h = findQuickHelp(id);
   const hues = useHues();
+  // So this card is one tap away from Home next time.
+  useEffect(() => {
+    if (id && findQuickHelp(id)) noteOpened(id);
+  }, [id]);
   const dark = useDark();
   if (!h) return null;
   const hue = hues[h.hue];

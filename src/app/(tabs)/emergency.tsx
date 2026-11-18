@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconName, IconTile, Text } from '../../components/ui';
 import { HAZARDS } from '../../lib/hazards';
 import { getProfile } from '../../lib/place';
-import { QUICK_HELP } from '../../lib/quick-help';
+import { helpText, QUICK_HELP } from '../../lib/quick-help';
 import { HUES, useTheme } from '../../lib/theme';
 
 // Every "what do I do right now" card as big tiles you can hit with a shaking
@@ -20,7 +20,7 @@ export default function Emergency() {
 
   const want = filter.trim().toLowerCase();
   const fits = (...texts: string[]) => !want || texts.join(' ').toLowerCase().includes(want);
-  const all = QUICK_HELP.filter((h) => fits(h.title, h.when));
+  const all = QUICK_HELP.filter((h) => fits(helpText(h)));
   const cards = all.filter((h) => !h.group);
   // Do-it-yourself fixes for life with no power: light, cooking, toilet, food, phone.
   const outage = all.filter((h) => h.group === 'outage');

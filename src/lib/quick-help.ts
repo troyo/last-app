@@ -646,4 +646,36 @@ export const QUICK_HELP: QuickHelp[] = [
   },
 ];
 
+// Everyday words people type when something is going wrong, so "blood" finds Bad bleeding
+// and "dark" finds Make light. Searched along with each card's title.
+const WORDS: Record<string, string> = {
+  bleeding: 'blood bleed cut gash wound stab knife gunshot shot tourniquet deep cut',
+  cpr: 'not breathing no pulse heart attack heart stopped collapsed unconscious passed out drowned drowning dead unresponsive',
+  choking:
+    'choke can’t breathe cant breathe something stuck in throat swallowed gagging heimlich food stuck',
+  burn: 'burned burnt scald scalded hot water fire boiling blister',
+  'broken-bone': 'fracture broke arm leg wrist ankle twisted sprained fell fall splint sling',
+  heat: 'heat stroke heatstroke too hot hot dizzy sunstroke dehydrated dehydration fainted sun',
+  cold: 'hypothermia freezing frozen shivering frostbite frost bite fell in water numb',
+  water: 'drink dirty water purify boil bleach filter tap water safe thirsty',
+  lost: 'lost woods forest hike hiking can’t find way stranded wilderness',
+  power: 'blackout outage no electricity lights out power cut dark fridge generator',
+  fire: 'campfire light a fire matches lighter tinder kindling cook outside',
+  shelter: 'tent tarp lean-to sleep outside rain cover night outdoors',
+  'find-water': 'thirsty no water find water stream rain dew well',
+  signal: 'rescue help sos whistle mirror flare radio call for help be found',
+  warm: 'cold house no heat heating furnace freezing home blanket winter',
+  'snake-bite': 'snake bitten bite venom rattlesnake copperhead',
+  light: 'dark candle candles lamp lantern flashlight torch batteries see at night',
+  cook: 'cooking stove hot food grill camp stove boil meal no gas microwave oven',
+  toilet: 'bathroom poop pee sewage flush sanitation bucket latrine no water toilet',
+  'food-cold': 'fridge freezer spoil spoiled rotten meat milk food safe cooler ice thaw',
+  cool: 'hot house no ac air conditioning fan heat wave sweating can’t sleep',
+  phone: 'battery charge charging dying dead phone power bank solar car charger',
+  'store-water': 'fill bathtub tub store water taps running water heater gallons jugs storm coming',
+};
+
+/** Everything a card can be found by: its title, when to use it, and everyday words. */
+export const helpText = (h: QuickHelp) => `${h.title} ${h.when} ${WORDS[h.id] ?? ''}`;
+
 export const findQuickHelp = (id: string) => QUICK_HELP.find((h) => h.id === id);

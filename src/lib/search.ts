@@ -7,7 +7,7 @@ import { Catalog, getCatalog, Item, PackId } from './catalog';
 import { File, Paths } from './fs';
 import { Hazard, HAZARDS } from './hazards';
 import { isDownloaded } from './library';
-import { QUICK_HELP, QuickHelp } from './quick-help';
+import { helpText, QUICK_HELP, QuickHelp } from './quick-help';
 
 // Everyday word -> the words guides actually use.
 export const SYNONYMS: Record<string, string[]> = {
@@ -135,7 +135,7 @@ export function search(query: string, limit = 60): SearchResults {
   ensureIndex();
 
   const help = QUICK_HELP.filter((h) => {
-    const hay = `${h.title} ${h.when}`.toLowerCase();
+    const hay = helpText(h).toLowerCase();
     return words.every((w) => wordScore(w, hay, '') > 0);
   });
 

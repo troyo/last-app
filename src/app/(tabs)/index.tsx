@@ -13,7 +13,9 @@ import { isDownloaded, remainingBytes } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
 import { CLIMATES, getProfile, placeAsked } from '../../lib/place';
 import { packOffered } from '../../lib/first-pack';
-import { QUICK_HELP } from '../../lib/quick-help';
+import { findQuickHelp, QUICK_HELP, QuickHelp } from '../../lib/quick-help';
+import { recentHelp } from '../../lib/recent';
+import { SITUATIONS } from '../../lib/situations';
 import { HUES, useHues, useTheme } from '../../lib/theme';
 import { hasSeenWelcome } from '../../lib/welcome';
 
@@ -73,6 +75,9 @@ export default function Home() {
   if (!state.pack && !packOffered()) return <Redirect href="/first-pack" />;
 
   const profile = getProfile();
+  const recent = recentHelp()
+    .map(findQuickHelp)
+    .filter((h): h is QuickHelp => !!h);
   const myHazards = profile ? HAZARDS.filter((h) => profile.hazards.includes(h.id)) : [];
 
   const topics = getCatalog().topics;
@@ -195,6 +200,64 @@ export default function Home() {
             </FadeIn>
           ) : null}
 
+          <Section title="What’s happening?" />
+          {/* Start from the situation, not the topic. Each one opens a short plan. */}
+          <View style={s.grid}>
+            {SITUATIONS.map((sit) => (
+              <View key={sit.id} style={s.half}>
+                <Pressable
+                  onPress={() => router.push(`/situation/${sit.id}`)}
+                  accessibilityRole="button"
+                  style={({ pressed }) => [
+                    s.sit,
+                    { backgroundColor: t.card, borderColor: t.border },
+                    pressed && { opacity: 0.8 },
+                  ]}
+                >
+                  <IconTile name={sit.icon as IconName} {...HUES[sit.hue]} size={40} />
+                  <Text
+                    style={{
+                      color: t.text,
+                      fontSize: 16,
+                      fontWeight: '700',
+                      lineHeight: 20,
+                      flex: 1,
+                    }}
+                    numberOfLines={2}
+                  >
+                    {sit.title}
+                  </Text>
+                </Pressable>
+              </View>
+            ))}
+          </View>
+
+          {recent.length > 0 && (
+            <>
+              <Section title="Opened lately" />
+              <View style={{ gap: 8 }}>
+                {recent.map((h) => (
+                  <Pressable
+                    key={h.id}
+                    onPress={() => router.push(`/help/${h.id}`)}
+                    accessibilityRole="button"
+                    style={({ pressed }) => [
+                      s.sit,
+                      { backgroundColor: t.card, borderColor: t.border },
+                      pressed && { opacity: 0.8 },
+                    ]}
+                  >
+                    <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={40} />
+                    <Text style={{ color: t.text, fontSize: 16, fontWeight: '700', flex: 1 }}>
+                      {h.title}
+                    </Text>
+                    <Ionicons name="chevron-forward" size={20} color={t.text} />
+                  </Pressable>
+                ))}
+              </View>
+            </>
+          )}
+
           <Section title="Right now" action="See all" onAction={() => router.push('/emergency')} />
           {/* Six most urgent cards in two short rows; the rest are one tap away. */}
           <View style={s.grid}>
@@ -225,37 +288,6 @@ export default function Home() {
               </View>
             ))}
           </View>
-
-          <Section
-            title="When the power is out"
-            action="See all"
-            onAction={() => router.push('/emergency')}
-          />
-          {/* Do-it-yourself fixes people reach for most in an outage. Swipe sideways for more. */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ marginHorizontal: -18 }}
-            contentContainerStyle={{ paddingHorizontal: 18, gap: 10 }}
-          >
-            {QUICK_HELP.filter((h) => h.group === 'outage').map((h) => (
-              <Pressable
-                key={h.id}
-                onPress={() => router.push(`/help/${h.id}`)}
-                accessibilityRole="button"
-                style={({ pressed }) => [
-                  s.diy,
-                  { backgroundColor: t.card, borderColor: t.border },
-                  pressed && { opacity: 0.8 },
-                ]}
-              >
-                <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={40} />
-                <Text style={{ color: t.text, fontSize: 16, fontWeight: '700', lineHeight: 20 }}>
-                  {h.title}
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
 
           <Section
             title={profile ? `For ${profile.place}` : 'For your area'}
@@ -479,13 +511,15 @@ const s = StyleSheet.create({
   },
   listTrack: { height: 6, borderRadius: 3, overflow: 'hidden' },
   listFill: { height: 6, borderRadius: 3 },
-  diy: {
-    width: 132,
-    minHeight: 112,
+  sit: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    minHeight: 64,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     borderRadius: 20,
     borderWidth: StyleSheet.hairlineWidth,
-    padding: 12,
-    gap: 10,
   },
   half: { width: '50%', padding: 5 },
   halfGrow: { flexBasis: '50%', flexGrow: 1, padding: 5 },
