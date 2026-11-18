@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Bullets, Card, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
 import { findHazard } from '../../lib/hazards';
+import { SHOW_ME } from '../../lib/show-me';
 import { HUES, useTheme } from '../../lib/theme';
 
 const PARTS = [
@@ -20,6 +21,7 @@ export default function HazardScreen() {
   const h = findHazard(id);
   if (!h) return null;
   const now = PARTS.find((p) => p.key === part)!;
+  const show = SHOW_ME[`hazard-${h.id}`];
   const lines = h[part];
 
   return (
@@ -63,6 +65,33 @@ export default function HazardScreen() {
           })}
         </View>
 
+        {now.key === 'during' && show && (
+          <Pressable
+            onPress={() => router.push(`/show/hazard-${h.id}`)}
+            accessibilityRole="button"
+            accessibilityLabel={`Show me what to do, in ${show.length} pictures, read aloud`}
+            style={({ pressed }) => [
+              s.show,
+              { backgroundColor: t.card, borderColor: t.border },
+              pressed && { opacity: 0.85 },
+            ]}
+          >
+            <View style={s.thumb}>
+              <Image source={show[0].pics[0]} style={{ width: '100%', height: '100%' }} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: t.text, fontSize: 18, fontWeight: '700' }}>
+                Show me what to do
+              </Text>
+              <Text style={{ color: t.text, fontSize: 15, lineHeight: 20 }}>
+                {show.length} pictures, read aloud
+              </Text>
+            </View>
+            <View style={[s.play, { backgroundColor: t.accent }]}>
+              <Ionicons name="play" size={20} color={t.accentText} style={{ marginLeft: 2 }} />
+            </View>
+          </Pressable>
+        )}
         <Text style={[s.label, { color: t.accent, marginTop: 4 }]}>{now.head}</Text>
         <Steps steps={lines} />
 
@@ -101,6 +130,23 @@ const s = StyleSheet.create({
   num: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   stepText: { flex: 1, fontSize: 16, lineHeight: 24, paddingTop: 3 },
   label: { fontSize: 15, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 },
+  show: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 8,
+    paddingRight: 12,
+    borderRadius: 18,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  thumb: {
+    width: 84,
+    height: 60,
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#E9EFEC',
+  },
+  play: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   bullet: { flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
   more: { flexDirection: 'row', alignItems: 'center', gap: 10 },
 });

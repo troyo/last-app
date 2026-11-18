@@ -223,7 +223,7 @@ export default function SituationScreen() {
                       </Text>
                       <Text
                         style={{ color: t.text, fontSize: 15, lineHeight: 20 }}
-                        numberOfLines={2}
+                        numberOfLines={3}
                       >
                         {r.sub}
                       </Text>

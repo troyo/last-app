@@ -8,6 +8,7 @@ import { Image, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StepTimer } from '../../components/StepTimer';
 import { Text } from '../../components/ui';
+import { findHazard } from '../../lib/hazards';
 import { findQuickHelp } from '../../lib/quick-help';
 import { SHOW_ME } from '../../lib/show-me';
 import { useDark, useTheme } from '../../lib/theme';
@@ -22,7 +23,10 @@ export default function ShowMe() {
   const dark = useDark();
   useKeepAwake(); // the screen must not go dark in the middle of CPR
   const { id } = useLocalSearchParams<{ id: string }>();
-  const help = findQuickHelp(id);
+  // Cards are keyed by their own id, disaster guides by "hazard-" plus theirs.
+  const title = id?.startsWith('hazard-')
+    ? findHazard(id.slice(7))?.title
+    : findQuickHelp(id)?.title;
   const steps = SHOW_ME[id ?? ''];
   const [at, setAt] = useState(0);
   const [tick, setTick] = useState(0);
@@ -58,7 +62,7 @@ export default function ShowMe() {
     [],
   );
 
-  if (!help || !steps || !step) return null;
+  if (!title || !steps || !step) return null;
   const last = at === steps.length - 1;
   const pic = step.pics[tick % step.pics.length];
   // 1, 2, 3 … up to the count, then round again.
@@ -79,7 +83,7 @@ export default function ShowMe() {
         </Pressable>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }} numberOfLines={1}>
-            {help.title}
+            {title}
           </Text>
           <View style={s.dots}>
             {steps.map((_, i) => (
@@ -108,7 +112,7 @@ export default function ShowMe() {
       </View>
 
       <View style={s.body}>
-        <View style={s.picture}>
+        <View style={[s.picture, dark && { backgroundColor: '#C9D1CB' }]}>
           <Image
             source={pic}
             style={{ width: '100%', height: '100%', opacity: dark ? 0.86 : 1 }}
@@ -178,7 +182,14 @@ const s = StyleSheet.create({
   dot: { height: 8, borderRadius: 4 },
   // Pinned to the top so the picture stays put from one step to the next.
   body: { flex: 1, paddingHorizontal: 18, paddingTop: 28, paddingBottom: 12, gap: 22 },
-  picture: { width: '100%', aspectRatio: 720 / 520, borderRadius: 28, overflow: 'hidden' },
+  // Always the same panel, so a picture of another shape sits inside it without the card moving.
+  picture: {
+    width: '100%',
+    aspectRatio: 720 / 520,
+    borderRadius: 28,
+    overflow: 'hidden',
+    backgroundColor: '#EAF3EC',
+  },
   count: {
     position: 'absolute',
     right: 14,

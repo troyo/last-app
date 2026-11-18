@@ -216,7 +216,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'staples',
         text: 'Plant filling crops first. Potatoes, beans, corn and squash give the most food for the work.',
-        open: { label: 'Guides on staple crops', search: 'staple food' },
+        open: { label: 'Guides on potatoes', search: 'potato' },
       },
       {
         id: 'soil',
@@ -231,7 +231,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'animals',
         text: 'Start small animals if you can. Chickens and rabbits turn scraps and weeds into eggs and meat.',
-        open: { label: 'Guides on chickens', search: 'raising chickens' },
+        open: { label: 'Guides on chickens', search: 'chicken' },
       },
       {
         id: 'repair',
