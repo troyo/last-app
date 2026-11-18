@@ -230,7 +230,7 @@ export default function Packs() {
       {state.pack && (
         <Button
           label="Remove all downloads from this phone"
-          kind="quiet"
+          kind="danger"
           onPress={() =>
             Alert.alert('Remove all downloads?', 'You’ll need internet to save them again.', [
               { text: 'Keep them', style: 'cancel' },
