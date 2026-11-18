@@ -964,9 +964,12 @@ function build(list: RawList, p: Profile | undefined): Checklist {
 }
 
 /** The three lists, written for this household. */
+let built: { of: Profile | undefined; lists: Checklist[] } | null = null;
 export const getChecklists = (): Checklist[] => {
   const p = getProfile();
-  return LISTS.map((l) => build(l, p));
+  // Only write the lists again when the household's answers change.
+  if (!built || built.of !== p) built = { of: p, lists: LISTS.map((l) => build(l, p)) };
+  return built.lists;
 };
 export const findChecklist = (id: string) => getChecklists().find((c) => c.id === id);
 export const itemKey = (listId: string, itemId: string) => `${listId}|${itemId}`;

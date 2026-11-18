@@ -10,7 +10,7 @@ import { formatBytes, getCatalog, itemsForPack } from '../../lib/catalog';
 import { getChecklists, progressOf } from '../../lib/checklists';
 import { CLIMATE_TIPS, HAZARDS } from '../../lib/hazards';
 import { isDownloaded, remainingBytes } from '../../lib/library';
-import { useLibrary } from '../../lib/LibraryContext';
+import { useLibrary, useProgress } from '../../lib/LibraryContext';
 import { CLIMATES, getProfile, placeAsked } from '../../lib/place';
 import { packOffered } from '../../lib/first-pack';
 import { findQuickHelp, QUICK_HELP, QuickHelp } from '../../lib/quick-help';
@@ -35,6 +35,33 @@ function greeting() {
   return h < 5 ? 'Hi there' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
 }
 
+/** "42% · 12 MB of 21 MB". On its own so a download only redraws this line. */
+function SavedSoFar() {
+  const progress = useProgress();
+  if (!progress) return 'Getting started';
+  const got = progress.doneBytes + progress.currentBytes;
+  const pct = Math.round(
+    (Math.min(got, progress.totalBytes) / Math.max(progress.totalBytes, 1)) * 100,
+  );
+  return `${pct}% · ${formatBytes(got)} of ${formatBytes(progress.totalBytes)}`;
+}
+
+function Section(p: { title: string; action?: string; onAction?: () => void }) {
+  const t = useTheme();
+  return (
+    <View style={s.sectionHead}>
+      <Text style={[s.section, { color: t.text }]} numberOfLines={1}>
+        {p.title}
+      </Text>
+      {p.action && (
+        <Pressable onPress={p.onAction} hitSlop={12} accessibilityRole="button">
+          <Text style={{ color: t.accent, fontSize: 16, fontWeight: '800' }}>{p.action}</Text>
+        </Pressable>
+      )}
+    </View>
+  );
+}
+
 // Home, laid out the way a prepper thinks:
 //   Right now  -> emergency steps
 //   Your area  -> what can happen where you live, and how to get through it
@@ -47,13 +74,11 @@ export default function Home() {
   // Tapping the Home tab again jumps back to the top.
   const scroller = useRef<React.ComponentRef<typeof ScrollView>>(null);
   useScrollToTop(scroller);
-  const { state, downloading, progress, version } = useLibrary();
-  const [, refresh] = useState(0);
-  // Checklist progress may have changed while we were on another screen.
-  useFocusEffect(useCallback(() => refresh((n) => n + 1), []));
+  const { state, downloading, version } = useLibrary();
   // White clock and battery on the green header; back to normal on other screens.
   // Rendered (not set imperatively) so the root layout's <StatusBar> can't
   // override it; it unmounts when another tab is focused.
+  // Coming back also redraws Home, since checklist progress may have changed.
   const [focused, setFocused] = useState(false);
   useFocusEffect(
     useCallback(() => {
@@ -83,21 +108,9 @@ export default function Home() {
   const myHazards = profile ? HAZARDS.filter((h) => profile.hazards.includes(h.id)) : [];
 
   const topics = getCatalog().topics;
-  const ready = !!state.pack && state.complete && remainingBytes(state.pack) === 0;
+  const left = state.pack ? remainingBytes(state.pack) : 0;
+  const ready = !!state.pack && state.complete && left === 0;
   const missing = state.pack ? itemsForPack(state.pack).length - onPhone.length : 0;
-
-  const Section = (p: { title: string; action?: string; onAction?: () => void }) => (
-    <View style={s.sectionHead}>
-      <Text style={[s.section, { color: t.text }]} numberOfLines={1}>
-        {p.title}
-      </Text>
-      {p.action && (
-        <Pressable onPress={p.onAction} hitSlop={12} accessibilityRole="button">
-          <Text style={{ color: t.accent, fontSize: 16, fontWeight: '800' }}>{p.action}</Text>
-        </Pressable>
-      )}
-    </View>
-  );
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
@@ -160,9 +173,7 @@ export default function Home() {
                       Saving your guides…
                     </Text>
                     <Text style={{ color: t.text, marginTop: 2, fontSize: 15 }} numberOfLines={1}>
-                      {progress
-                        ? `${Math.round((Math.min(progress.doneBytes + progress.currentBytes, progress.totalBytes) / Math.max(progress.totalBytes, 1)) * 100)}% · ${formatBytes(progress.doneBytes + progress.currentBytes)} of ${formatBytes(progress.totalBytes)}`
-                        : 'Getting started'}
+                      <SavedSoFar />
                     </Text>
                   </View>
                   <Ionicons name="chevron-forward" size={20} color={t.text} />
@@ -192,8 +203,8 @@ export default function Home() {
                     <Text
                       style={{ color: t.accentText, marginTop: 2, fontSize: 15, lineHeight: 20 }}
                     >
-                      Tap to get the latest guides ({formatBytes(remainingBytes(state.pack))}). Do
-                      it while you have internet.
+                      Tap to get the latest guides ({formatBytes(left)}). Do it while you have
+                      internet.
                     </Text>
                   </View>
                   <Ionicons name="chevron-forward" size={22} color={t.accentText} />

@@ -20,6 +20,7 @@ import { Directory, File, Paths } from './fs';
 const ROOT = new Directory(Paths.document, 'library');
 const STATE_FILE = new File(Paths.document, 'library-state.json');
 const CATALOG_FILE = new File(Paths.document, 'catalog.json');
+const CATALOG_TAG = new File(Paths.document, 'catalog.tag');
 
 export type LibraryState = {
   pack: PackId | null; // the pack the user chose
@@ -122,11 +123,25 @@ export function loadSavedCatalog(): Catalog {
  */
 export async function refreshCatalog(): Promise<boolean> {
   try {
-    const res = await fetch(CATALOG_URL, { cache: 'no-store' });
+    const cur = getCatalog();
+    // The list is big (over 1 MB). Tell the server which copy we hold, so it
+    // only sends the list again when there is a newer one.
+    let tag = '';
+    try {
+      if (cur !== DEMO_CATALOG && CATALOG_TAG.exists) tag = CATALOG_TAG.textSync();
+    } catch {}
+    const res = await fetch(CATALOG_URL, {
+      cache: 'no-store',
+      headers: tag ? { 'If-None-Match': tag } : undefined,
+    });
+    if (res.status === 304) return false; // nothing new
     if (!res.ok) return false;
     const c = await res.json();
     if (!isValidCatalog(c)) return false;
-    const cur = getCatalog();
+    try {
+      const fresh = res.headers.get('etag');
+      if (fresh) CATALOG_TAG.writeSync(fresh);
+    } catch {}
     if (cur !== DEMO_CATALOG && cur.generated && c.generated && c.generated <= cur.generated) {
       return false; // already have this one
     }

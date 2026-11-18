@@ -118,6 +118,10 @@ export default function ShowMe() {
             style={{ width: '100%', height: '100%', opacity: dark ? 0.86 : 1 }}
             resizeMode="contain"
           />
+          {/* Get the coming pictures ready out of sight, so each swap is instant. */}
+          {[...step.pics, ...(steps[at + 1]?.pics ?? [])].map((next, i) => (
+            <Image key={i} source={next} style={s.warm} fadeDuration={0} />
+          ))}
           {counted > 0 && (
             <View style={[s.count, { backgroundColor: t.accent }]}>
               <Text style={{ color: t.accentText, fontSize: 34, fontWeight: '800' }}>
@@ -164,6 +168,7 @@ export default function ShowMe() {
 }
 
 const s = StyleSheet.create({
+  warm: { position: 'absolute', width: 1, height: 1, opacity: 0 },
   top: {
     flexDirection: 'row',
     alignItems: 'center',

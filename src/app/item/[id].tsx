@@ -16,7 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '../../components/ui';
 import { HtmlView, HtmlViewHandle } from '../../components/HtmlView';
 import { findItem, Item } from '../../lib/catalog';
-import { fileFor } from '../../lib/library';
+import { fileFor, isDownloaded } from '../../lib/library';
 import { buildReaderPage } from '../../lib/reader-page';
 import { getTextSize, nextTextSize, TEXT_SIZES } from '../../lib/text-size';
 import { useTheme } from '../../lib/theme';
@@ -89,7 +89,8 @@ function Article({ item }: { item: Item }) {
             colors: t,
             isSaved: (other) => {
               const target = findItem(other);
-              return !!target && fileFor(target).exists;
+              // A long guide links to hundreds of others: look them up in memory, not on disk.
+              return !!target && isDownloaded(target);
             },
           }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -66,10 +66,24 @@ export const setCatalog = (c: Catalog) => {
   current = { ...c, items: c.items.filter(looksEnglish).map(tidyTitle) };
 };
 
+// Screens ask the same questions about the catalog over and over ("what is
+// in my pack?", "which guide is this?"). Work each answer out once per catalog.
+let memo: {
+  of: Catalog;
+  packs: Partial<Record<PackId, Item[]>>;
+  byId?: Map<string, Item>;
+  byTopic?: Map<string, number>;
+} | null = null;
+function memoFor(cat: Catalog) {
+  if (!memo || memo.of !== cat) memo = { of: cat, packs: {} };
+  return memo;
+}
+
 // A safety net on the phone: packs are built English-only, but an older pack
 // may still list translated pages. Hide anything that isn't English.
 const NON_LATIN =
   /[\u0370-\u03FF\u0400-\u052F\u0590-\u08FF\u0900-\u0DFF\u0E00-\u0FFF\u1100-\u11FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]/;
+const NON_LATIN_ALL = new RegExp(NON_LATIN.source, 'g');
 const EN_WORDS = new Set(
   'the of and to in is for that with as are on be by it this or from an can at which not have you your when if will should was these'.split(
     ' ',
@@ -85,8 +99,12 @@ function looksEnglish(item: Item): boolean {
   if (NON_LATIN.test(item.title) || /\/[a-z]{2,3}$/.test(item.title)) return false;
   // English guides often quote a foreign word or two ("from Greek ..."), so
   // only a summary that is mostly in another script counts.
-  const odd = (item.summary ?? '').match(new RegExp(NON_LATIN.source, 'g'))?.length ?? 0;
-  if (odd > (item.summary ?? '').length * 0.2) return false;
+  // Nearly every summary is plain English, so only count when there is something to count.
+  const summary = item.summary ?? '';
+  if (NON_LATIN.test(summary)) {
+    const odd = summary.match(NON_LATIN_ALL)?.length ?? 0;
+    if (odd > summary.length * 0.2) return false;
+  }
   let en = 0;
   let other = 0;
   for (const w of text.toLowerCase().match(/[a-zà-ÿ']+/g) ?? []) {
@@ -111,7 +129,18 @@ const inPack = (tier: PackId, pack: PackId) => ORDER.indexOf(tier) <= ORDER.inde
 
 /** Everything readable in a pack (including the smaller packs it builds on). */
 export function itemsForPack(pack: PackId, cat: Catalog = current): Item[] {
-  return cat.items.filter((i) => inPack(i.tier, pack));
+  const m = memoFor(cat);
+  return (m.packs[pack] ??= cat.items.filter((i) => inPack(i.tier, pack)));
+}
+
+/** How many guides a topic has across every pack. */
+export function topicSize(topic: string, cat: Catalog = current): number {
+  const m = memoFor(cat);
+  if (!m.byTopic) {
+    m.byTopic = new Map();
+    for (const i of cat.items) m.byTopic.set(i.topic, (m.byTopic.get(i.topic) ?? 0) + 1);
+  }
+  return m.byTopic.get(topic) ?? 0;
 }
 
 export function downloadsForPack(pack: PackId, cat: Catalog = current): Download[] {
@@ -123,7 +152,9 @@ export function packBytes(pack: PackId, cat: Catalog = current): number {
 }
 
 export function findItem(id: string, cat: Catalog = current): Item | undefined {
-  return cat.items.find((i) => i.id === id);
+  const m = memoFor(cat);
+  if (!m.byId) m.byId = new Map(cat.items.map((i) => [i.id, i]));
+  return m.byId.get(id);
 }
 
 export function findTopic(id: string, cat: Catalog = current): Topic | undefined {

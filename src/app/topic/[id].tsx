@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import { Button, Card, IconName, IconTile, Text, TitleBar } from '../../components/ui';
-import { findTopic, getCatalog, itemsForPack } from '../../lib/catalog';
+import { findTopic, itemsForPack, topicSize } from '../../lib/catalog';
 import { isDownloaded } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
 import { HUES, TOPIC_LOOK, useTheme } from '../../lib/theme';
@@ -57,7 +57,7 @@ export default function TopicScreen() {
   }, [sorted, filter, pick]);
   const look = TOPIC_LOOK[id] ?? { icon: 'book-open-variant', hue: 'teal' as const };
   // Is there more for this topic in a bigger pack?
-  const inAnyPack = getCatalog().items.filter((i) => i.topic === id).length;
+  const inAnyPack = topicSize(id);
 
   return (
     <>

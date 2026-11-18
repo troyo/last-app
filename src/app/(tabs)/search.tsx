@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card, IconName, IconTile, Text } from '../../components/ui';
@@ -40,10 +40,12 @@ export default function Search() {
     if (q) setQuery(q);
   }, [q]);
 
+  // The letters show up at once; the list catches up a beat later.
+  const asked = useDeferredValue(query);
   const results = useMemo(
-    () => search(query),
+    () => search(asked),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [query, version],
+    [asked, version],
   );
   const rows: Row[] = [
     ...results.help.map((help) => ({ kind: 'help', help }) as Row),

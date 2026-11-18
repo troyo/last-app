@@ -8,6 +8,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -27,7 +28,6 @@ import {
 type Ctx = {
   state: LibraryState;
   downloading: boolean;
-  progress: Progress | null;
   lastFailed: string[];
   start: (pack: PackId) => void;
   pause: () => void;
@@ -42,6 +42,9 @@ loadSavedCatalog();
 initPurchases();
 
 const LibraryContext = createContext<Ctx | null>(null);
+// Download progress ticks several times a second. It lives on its own so only
+// the progress bars redraw, not every screen that shows guides.
+const ProgressContext = createContext<Progress | null>(null);
 
 export function LibraryProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<LibraryState>(() => readState());
@@ -104,7 +107,9 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
     return changed;
   }, []);
   useEffect(() => {
-    checkForUpdates();
+    // Wait until the first screen is up and settled, so this never competes with a tap.
+    const timer = setTimeout(checkForUpdates, 4000);
+    return () => clearTimeout(timer);
   }, [checkForUpdates]);
 
   const pause = useCallback(() => {
@@ -120,24 +125,19 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
     setVersion((v) => v + 1);
   }, [pause]);
 
+  const value = useMemo(
+    () => ({ state, downloading, lastFailed, start, pause, removeAll, version, checkForUpdates }),
+    [state, downloading, lastFailed, start, pause, removeAll, version, checkForUpdates],
+  );
   return (
-    <LibraryContext.Provider
-      value={{
-        state,
-        downloading,
-        progress,
-        lastFailed,
-        start,
-        pause,
-        removeAll,
-        version,
-        checkForUpdates,
-      }}
-    >
-      {children}
+    <LibraryContext.Provider value={value}>
+      <ProgressContext.Provider value={progress}>{children}</ProgressContext.Provider>
     </LibraryContext.Provider>
   );
 }
+
+/** How far the current download is. Only for the parts that draw a progress bar. */
+export const useProgress = () => useContext(ProgressContext);
 
 export function useLibrary(): Ctx {
   const ctx = useContext(LibraryContext);

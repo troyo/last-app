@@ -4,7 +4,7 @@ import { Alert, Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Card, Text } from '../components/ui';
 import { formatBytes, getCatalog, itemsForPack, packBytes, PackId } from '../lib/catalog';
 import { freeSpaceBytes, remainingBytes } from '../lib/library';
-import { useLibrary } from '../lib/LibraryContext';
+import { useLibrary, useProgress } from '../lib/LibraryContext';
 import {
   buy,
   initPurchases,
@@ -30,8 +30,8 @@ const SAFETY_MARGIN = 500 * 1024 * 1024;
 
 export default function Packs() {
   const t = useTheme();
-  const { state, downloading, progress, lastFailed, start, pause, removeAll, version } =
-    useLibrary();
+  const { state, downloading, lastFailed, start, pause, removeAll, version } = useLibrary();
+  const progress = useProgress();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const free = useMemo(() => freeSpaceBytes(), [version]);
 
