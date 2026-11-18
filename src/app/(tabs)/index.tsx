@@ -17,6 +17,7 @@ import { findQuickHelp, QUICK_HELP, QuickHelp } from '../../lib/quick-help';
 import { recentHelp } from '../../lib/recent';
 import { SITUATIONS } from '../../lib/situations';
 import { HUES, useHues, useTheme } from '../../lib/theme';
+import { currentPhase, planProgress } from '../../lib/year-plan';
 import { hasSeenWelcome } from '../../lib/welcome';
 
 // Short names so six cards fit in two tidy rows.
@@ -75,6 +76,7 @@ export default function Home() {
   if (!state.pack && !packOffered()) return <Redirect href="/first-pack" />;
 
   const profile = getProfile();
+  const plan = planProgress();
   const recent = recentHelp()
     .map(findQuickHelp)
     .filter((h): h is QuickHelp => !!h);
@@ -231,6 +233,40 @@ export default function Home() {
               </View>
             ))}
           </View>
+
+          {/* The long view: what to get done this hour, this week, this month and each season. */}
+          <Pressable
+            onPress={() => router.push('/plan')}
+            accessibilityRole="button"
+            style={({ pressed }) => [
+              s.plan,
+              { backgroundColor: t.card, borderColor: t.border },
+              pressed && { opacity: 0.8 },
+            ]}
+          >
+            <IconTile name="map-marker-path" {...HUES.green} size={44} />
+            <View style={{ flex: 1, gap: 4 }}>
+              <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>
+                Your one-year plan
+              </Text>
+              <Text style={{ color: t.text, fontSize: 15, lineHeight: 20 }}>
+                {plan.done === 0
+                  ? 'What to do first, this week, this month and each season.'
+                  : `${plan.done} of ${plan.total} jobs done. Next: ${currentPhase().tab.toLowerCase()}.`}
+              </Text>
+              <View style={[s.planTrack, { backgroundColor: t.border }]}>
+                <View
+                  style={{
+                    width: `${(plan.done / plan.total) * 100}%`,
+                    height: '100%',
+                    borderRadius: 3,
+                    backgroundColor: t.accent,
+                  }}
+                />
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={22} color={t.text} />
+          </Pressable>
 
           {recent.length > 0 && (
             <>
@@ -532,6 +568,16 @@ const s = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
   },
   half: { width: '50%', padding: 5 },
+  plan: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 14,
+    marginTop: 10,
+    borderRadius: 20,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  planTrack: { height: 6, borderRadius: 3, overflow: 'hidden', marginTop: 2 },
   halfGrow: { flexBasis: '50%', flexGrow: 1, padding: 5 },
   helpChip: {
     height: 78,
