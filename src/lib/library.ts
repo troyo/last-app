@@ -37,8 +37,35 @@ export function isDownloaded(item: Item): boolean {
 }
 
 // A small marker file says "this download finished and was unpacked".
-const markerFor = (d: Download) => new File(ROOT, `${d.id}.done`);
-const isDownloadDone = (d: Download) => markerFor(d).exists;
+//
+// The marker is named after the file's fingerprint, not just its name. When the library is
+// rebuilt, a bundle can keep its name but hold new guides; a marker by name alone would call
+// that "already saved" and the new guides would never arrive.
+const markerFor = (d: Download) =>
+  new File(ROOT, d.sha256 ? `${d.id}.${d.sha256.slice(0, 12)}.done` : `${d.id}.done`);
+// Markers written before fingerprints were used.
+const oldMarkerFor = (d: Download) => new File(ROOT, `${d.id}.done`);
+
+let byDownload: { of: Catalog; map: Map<string, Item[]> } | null = null;
+function itemsIn(d: Download): Item[] {
+  const cat = getCatalog();
+  if (!byDownload || byDownload.of !== cat) {
+    const map = new Map<string, Item[]>();
+    for (const i of cat.items) {
+      const list = map.get(i.download);
+      if (list) list.push(i);
+      else map.set(i.download, [i]);
+    }
+    byDownload = { of: cat, map };
+  }
+  return byDownload.map.get(d.id) ?? [];
+}
+
+function isDownloadDone(d: Download): boolean {
+  if (markerFor(d).exists) return true;
+  // An older marker only counts if every guide it should hold is really on the phone.
+  return oldMarkerFor(d).exists && itemsIn(d).every(isDownloaded);
+}
 
 // ---------- Saved state ----------
 
@@ -114,7 +141,10 @@ export function removeExtras(keep: PackId | null) {
   const keepNames = new Set<string>();
   if (keep) {
     for (const i of itemsForPack(keep)) keepNames.add(fileFor(i).name);
-    for (const d of downloadsForPack(keep)) keepNames.add(markerFor(d).name);
+    for (const d of downloadsForPack(keep)) {
+      keepNames.add(markerFor(d).name);
+      keepNames.add(oldMarkerFor(d).name);
+    }
   }
   if (!ROOT.exists) return;
   for (const entry of ROOT.list()) {

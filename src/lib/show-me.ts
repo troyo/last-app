@@ -217,7 +217,7 @@ export const SHOW_ME: Record<string, ShowStep[]> = {
       minutes: 1,
     },
     {
-      say: 'Can’t boil? Add plain bleach with no scent. 8 drops for each gallon. 16 drops if the water is cloudy.',
+      say: 'Can’t boil? Add plain bleach with no scent. Check the label. 6 percent bleach: 8 drops for each gallon. 8 percent bleach: 6 drops. Double it if the water is cloudy.',
       pics: [P.waterBleach],
     },
     { say: 'Stir it. Wait 30 minutes before you drink.', pics: [P.waterWait], minutes: 30 },

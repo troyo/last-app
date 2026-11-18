@@ -77,7 +77,7 @@ export default function Home() {
 
   const topics = getCatalog().topics;
   const ready = !!state.pack && state.complete && remainingBytes(state.pack) === 0;
-  const packName = state.pack ? state.pack[0].toUpperCase() + state.pack.slice(1) : '';
+  const missing = state.pack ? itemsForPack(state.pack).length - onPhone.length : 0;
 
   const Section = (p: { title: string; action?: string; onAction?: () => void }) => (
     <View style={s.sectionHead}>
@@ -145,24 +145,53 @@ export default function Home() {
             </FadeIn>
           ) : !ready || downloading ? (
             <FadeIn style={{ marginTop: 20 }}>
-              <Card onPress={() => router.push('/packs')} style={s.row}>
-                <IconTile name={downloading ? 'cloud-download' : 'clock-outline'} {...HUES.sun} />
-                <View style={{ flex: 1 }}>
-                  <Text style={{ color: t.text, fontWeight: '800', fontSize: 17 }}>
-                    {downloading
-                      ? 'Saving your guides…'
-                      : state.complete
-                        ? 'New guides are ready for you'
-                        : 'Almost there. Tap to finish'}
-                  </Text>
-                  <Text style={{ color: t.muted, marginTop: 2, fontSize: 15 }} numberOfLines={1}>
-                    {downloading && progress
-                      ? `${Math.round((Math.min(progress.doneBytes + progress.currentBytes, progress.totalBytes) / Math.max(progress.totalBytes, 1)) * 100)}% · ${formatBytes(progress.doneBytes + progress.currentBytes)} of ${formatBytes(progress.totalBytes)}`
-                      : `${packName} pack · ${onPhone.length.toLocaleString()} guides on this phone`}
-                  </Text>
-                </View>
-                <Ionicons name="chevron-forward" size={20} color={t.text} />
-              </Card>
+              {downloading ? (
+                <Card onPress={() => router.push('/packs')} style={s.row}>
+                  <IconTile name="cloud-download" {...HUES.sun} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ color: t.text, fontWeight: '800', fontSize: 17 }}>
+                      Saving your guides…
+                    </Text>
+                    <Text style={{ color: t.text, marginTop: 2, fontSize: 15 }} numberOfLines={1}>
+                      {progress
+                        ? `${Math.round((Math.min(progress.doneBytes + progress.currentBytes, progress.totalBytes) / Math.max(progress.totalBytes, 1)) * 100)}% · ${formatBytes(progress.doneBytes + progress.currentBytes)} of ${formatBytes(progress.totalBytes)}`
+                        : 'Getting started'}
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color={t.text} />
+                </Card>
+              ) : (
+                // An alert, not a quiet row: guides that aren't on the phone can't help offline.
+                <Pressable
+                  onPress={() => router.push('/packs')}
+                  accessibilityRole="button"
+                  style={({ pressed }) => [
+                    s.alert,
+                    { backgroundColor: t.accent },
+                    pressed && { opacity: 0.88 },
+                  ]}
+                >
+                  <View style={s.alertIcon}>
+                    <Ionicons name="arrow-down" size={22} color={t.accent} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ color: t.accentText, fontWeight: '800', fontSize: 18 }}>
+                      {missing > 0
+                        ? `${missing.toLocaleString()} new ${missing === 1 ? 'guide is' : 'guides are'} ready`
+                        : state.complete
+                          ? 'New guides are ready'
+                          : 'Your guides aren’t all saved yet'}
+                    </Text>
+                    <Text
+                      style={{ color: t.accentText, marginTop: 2, fontSize: 15, lineHeight: 20 }}
+                    >
+                      Tap to get the latest guides ({formatBytes(remainingBytes(state.pack))}). Do
+                      it while you have internet.
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={22} color={t.accentText} />
+                </Pressable>
+              )}
             </FadeIn>
           ) : null}
 
@@ -431,6 +460,15 @@ const s = StyleSheet.create({
   section: { fontSize: 24, fontWeight: '800', lineHeight: 30, flex: 1 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', margin: -5 },
   third: { width: '33.333%', padding: 5 },
+  alert: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 22 },
+  alertIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   listRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 },
   listIcon: {
     width: 44,

@@ -120,19 +120,21 @@ export default function Emergency() {
                   accessibilityRole="button"
                   style={({ pressed }) => [
                     s.tile,
+                    s.tall,
                     { backgroundColor: t.card },
                     pressed && { opacity: 0.75, transform: [{ scale: 0.98 }] },
                   ]}
                 >
+                  <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={48} />
+                  <Text style={[s.tileText, { color: t.text }]} numberOfLines={2}>
+                    {h.title}
+                  </Text>
+                  {/* In the flow under the name, so it can never sit on top of the icon. */}
                   {mine.includes(h.id) && (
                     <View style={[s.badge, { backgroundColor: t.sun }]}>
                       <Text style={s.badgeText}>Your area</Text>
                     </View>
                   )}
-                  <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={48} />
-                  <Text style={[s.tileText, { color: t.text }]} numberOfLines={2}>
-                    {h.title}
-                  </Text>
                 </Pressable>
               ))}
             </View>
@@ -191,13 +193,7 @@ const s = StyleSheet.create({
     elevation: 1,
   },
   tileText: { fontSize: 17, fontWeight: '800', lineHeight: 21, textAlign: 'center' },
-  badge: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 999,
-  },
-  badgeText: { fontSize: 12, fontWeight: '800', color: '#3D2A00' },
+  tall: { height: undefined, minHeight: 124, paddingBottom: 14 },
+  badge: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 },
+  badgeText: { fontSize: 14, fontWeight: '800', color: '#3D2A00' },
 });

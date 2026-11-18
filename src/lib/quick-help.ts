@@ -48,7 +48,7 @@ export const QUICK_HELP: QuickHelp[] = [
       'Keep pressing for at least 10 minutes. Do not lift to peek.',
       'If blood soaks through, put more cloth on top and press harder.',
       'Arm or leg still pouring blood? Tie a belt or strip of cloth 2 to 3 inches above the wound, not on a joint. Twist it tight with a stick until the bleeding stops. Write down the time.',
-      'Lay them down, raise their legs a little, and keep them warm.',
+      'Lay them down and keep them warm.',
     ],
     pictures: { 3: 'tourniquet' },
     next: [
@@ -90,7 +90,7 @@ export const QUICK_HELP: QuickHelp[] = [
       'Stay with them. Check their breathing every minute and be ready to start again.',
       'If there’s a defibrillator (AED) in the building, send someone for it. Turn it on and follow its voice.',
     ],
-    know: 'Baby under 1: use two fingers and push about 1.5 inches deep. Cover the nose and mouth with your mouth for small puffs of breath.',
+    know: 'Child 1 to 8: one hand, about 2 inches deep. Baby under 1: use two fingers and push about 1.5 inches deep. Cover the nose and mouth with your mouth for small puffs of breath. If there’s no sign of life after 30 minutes of pushing, it is okay to stop. You did everything you could.',
   },
   {
     id: 'choking',
@@ -110,7 +110,7 @@ export const QUICK_HELP: QuickHelp[] = [
       'Alone and choking? Push your belly hard against the back of a chair or the edge of a table.',
     ],
     danger: ['Belly pain, trouble swallowing or a cough that won’t stop afterwards'],
-    know: 'Baby under 1: lay them face down along your arm, give 5 back slaps, then 5 chest pushes with two fingers. No belly thrusts.',
+    know: 'Baby under 1: lay them face down along your arm, give 5 back slaps, then 5 chest pushes with two fingers. No belly thrusts. Pregnant or very large? Push on the middle of the chest instead of the belly.',
   },
   {
     id: 'burn',
@@ -201,7 +201,12 @@ export const QUICK_HELP: QuickHelp[] = [
       'Put warm (not hot) water bottles, wrapped in cloth, at the chest and armpits.',
       'Stay with them for several hours. Keep feeding them.',
     ],
-    dont: ['No alcohol.', 'Don’t rub arms and legs.', 'No hot bath.'],
+    dont: [
+      'No alcohol.',
+      'Don’t rub arms and legs.',
+      'No hot bath.',
+      'Don’t thaw frozen fingers or toes if they might freeze again. Don’t rub them.',
+    ],
     danger: ['Shivering stops but they are still cold', 'Confused or hard to wake'],
   },
   {
@@ -213,7 +218,7 @@ export const QUICK_HELP: QuickHelp[] = [
     steps: [
       'Cloudy? Let it settle, then pour it through a clean cloth or coffee filter.',
       'Best way: bring it to a full rolling boil for 1 minute (3 minutes high in the mountains). Let it cool.',
-      'Can’t boil? Use plain, unscented household bleach: 8 drops per gallon of clear water, 16 drops if it’s cloudy.',
+      'Can’t boil? Use plain, unscented household bleach. Check the label: 6% bleach, 8 drops per gallon. 8.25% bleach, 6 drops. Double it if the water is cloudy.',
       'Stir and wait 30 minutes before drinking.',
       'Store it in clean, covered containers.',
     ],
@@ -268,7 +273,7 @@ export const QUICK_HELP: QuickHelp[] = [
     ],
     dont: [
       'Never run a generator, grill or camp stove indoors or in a garage. The fumes can kill.',
-      'Don’t eat fridge food that has been warm for more than 4 hours.',
+      'Throw out meat, milk, eggs and leftovers once the fridge has been off more than 4 hours and they’re no longer cold.',
     ],
   },
   {
@@ -292,6 +297,7 @@ export const QUICK_HELP: QuickHelp[] = [
       'To put it out: spread the coals, pour on water, stir, and repeat until you can hold your hand on the ashes.',
     ],
     dont: [
+      'Don’t light one in dry, windy weather near grass or brush. It can turn into a wildfire.',
       'Never light a fire inside a tent, car or closed room. The smoke and fumes can kill.',
       'Don’t use gasoline to start it.',
       'Don’t leave it burning with no one watching.',
@@ -333,7 +339,7 @@ export const QUICK_HELP: QuickHelp[] = [
     title: 'Find water',
     when: 'The taps are dry or you are away from home with none left.',
     steps: [
-      'At home first: the water heater tank, the toilet tank (not the bowl), melted ice cubes, and liquid from canned food are all usable.',
+      'At home first: the water heater tank (let it cool first), the toilet tank (not the bowl, and only if there’s no blue cleaner or tablet in it), melted ice cubes, and liquid from canned food are all usable.',
       'Catch rain. Spread a tarp, sheet or trash bags to run into pots and buckets. Rain you catch yourself is the safest wild water.',
       'Outdoors, walk downhill. Water collects in valleys. Look for green plants, animal trails, and swarms of insects.',
       'Flowing water is better than still water. Clear is better than cloudy. Take it upstream of camps, roads and animals.',
@@ -438,6 +444,7 @@ export const QUICK_HELP: QuickHelp[] = [
       'Don’t put ice on it.',
       'Don’t give alcohol, coffee or painkillers like aspirin or ibuprofen.',
     ],
+    know: 'In Australia, wrap the whole limb firmly with a bandage from the bite outward, then splint it. Elsewhere, don’t wrap it tight.',
     danger: [
       'Swelling that keeps spreading past your pen marks',
       'Trouble breathing, swallowing or speaking',
@@ -470,7 +477,7 @@ export const QUICK_HELP: QuickHelp[] = [
       'Don’t use gasoline, lighter fluid or alcohol in a homemade lamp. Cooking oil only.',
       'Don’t use a flame if you smell gas.',
     ],
-    know: 'Olive oil and other cooking oils burn slowly and do not flare up if the jar tips. A jar this size can burn for many hours.',
+    know: 'Olive oil and other cooking oils burn slowly and are much safer than fuel. A tipped lamp can still start a fire, so keep it on a plate.',
   },
   {
     id: 'cook',
@@ -489,7 +496,7 @@ export const QUICK_HELP: QuickHelp[] = [
     ],
     next: [
       'Cook once a day and eat the rest cold. It saves fuel.',
-      'Keep food hot longer: wrap the covered pot in towels or blankets inside a box. It keeps cooking for an hour or more.',
+      'Keep food hot longer: wrap the covered pot in towels or blankets inside a box. It keeps cooking for an hour or more. Eat it within 2 hours, or bring it back to a boil first.',
       'Eat fridge food first, then freezer food, then cans. Canned food is already cooked and safe to eat cold.',
     ],
     dont: [
@@ -621,7 +628,7 @@ export const QUICK_HELP: QuickHelp[] = [
       'Fill every clean pot, bottle, jug and bowl with tap water right now. Put lids or plates on them.',
       'Fill the bathtub and sinks. Use this water for washing and flushing, not drinking, unless you treat it.',
       'Plan on 1 gallon for each person each day, for drinking and cooking. Add more for pets, heat and washing.',
-      'Your water heater holds 30 to 80 gallons of clean water. Turn off its power or gas, shut the cold water valve on top, then open the tap at the bottom into a bucket.',
+      'Your water heater holds 30 to 80 gallons of clean water. Turn off its power or gas and let it cool for a few hours. Shut the cold water valve on top, then open the tap at the bottom into a bucket.',
       'Put out buckets, bins and tarps to catch rain.',
     ],
     next: [
@@ -634,6 +641,7 @@ export const QUICK_HELP: QuickHelp[] = [
       'Don’t drink water from a waterbed, a radiator, a pool or a toilet bowl.',
       'Don’t ration water to nothing. Drink what you need today and look for more.',
       'Don’t store water in containers that held chemicals, fuel or bleach.',
+      'Don’t turn the water heater’s power or gas back on until the tank is full again. An empty heater can burn out or start a fire.',
     ],
   },
 ];
