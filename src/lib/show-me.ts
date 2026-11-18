@@ -329,6 +329,8 @@ const P = {
   deathSpot: require('../../assets/show/death-spot.png'),
   deathGrave: require('../../assets/show/death-grave.png'),
   deathMark: require('../../assets/show/death-mark.png'),
+  keepStew: require('../../assets/show/keep-stew.png'),
+  trapCook: require('../../assets/show/trap-cook.png'),
   hands: DIAGRAMS.cpr.image,
   tourniquet: DIAGRAMS.tourniquet.image,
   recovery: DIAGRAMS.recovery.image,
@@ -1190,8 +1192,7 @@ export const SHOW_ME: Record<string, ShowStep[]> = {
     },
     {
       say: 'Boil dried meat in a soup or stew before you eat it.',
-      pics: [P.foodCookA, P.foodCookB],
-      holdMs: 900,
+      pics: [P.keepStew],
     },
   ],
   firewood: [
@@ -1291,8 +1292,7 @@ export const SHOW_ME: Record<string, ShowStep[]> = {
     { say: 'Set many traps. Check every one at dawn and at dusk.', pics: [P.trapCheck] },
     {
       say: 'Gut your catch right away and cook it all the way through.',
-      pics: [P.foodCookA, P.foodCookB],
-      holdMs: 900,
+      pics: [P.trapCook],
     },
   ],
   chickens: [

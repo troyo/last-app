@@ -1266,7 +1266,7 @@ export const QUICK_HELP: QuickHelp[] = [
   {
     id: 'mend',
     group: 'long',
-    icon: 'needle',
+    icon: 'tools',
     hue: 'violet',
     title: 'Mend and sharpen',
     when: 'There are no new clothes, shoes or tools coming. What you have must last.',
