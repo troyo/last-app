@@ -556,13 +556,14 @@ export const SHOW_ME: Record<string, ShowStep[]> = {
     { say: 'Move away from the snake. Do not try to catch it.', pics: [P.snakeAway] },
     { say: 'Lay them down. Keep them calm and still.', pics: [P.snakeStill] },
     {
-      say: 'Take off rings, watches and shoes before it swells.',
+      say: 'Take off rings, watches and anything tight before it swells.',
       pics: [P.burnRings],
     },
     {
-      say: 'Keep the bitten arm or leg still. Splint it loosely.',
+      say: 'Keep the bitten arm or leg still, level with the heart. Splint it loosely.',
       pics: [P.boneSplint],
     },
+    { say: 'Wash the bite gently. Cover it with a clean, dry cloth.', pics: [P.burnCover] },
     {
       say: 'Mark the edge of the swelling with a pen and write the time. Mark it again every 30 minutes.',
       pics: [P.snakeMark],

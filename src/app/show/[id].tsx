@@ -176,7 +176,8 @@ const s = StyleSheet.create({
   },
   dots: { flexDirection: 'row', gap: 5, marginTop: 8 },
   dot: { height: 8, borderRadius: 4 },
-  body: { flex: 1, paddingHorizontal: 18, paddingVertical: 12, gap: 22, justifyContent: 'center' },
+  // Pinned to the top so the picture stays put from one step to the next.
+  body: { flex: 1, paddingHorizontal: 18, paddingTop: 28, paddingBottom: 12, gap: 22 },
   picture: { width: '100%', aspectRatio: 720 / 520, borderRadius: 28, overflow: 'hidden' },
   count: {
     position: 'absolute',
