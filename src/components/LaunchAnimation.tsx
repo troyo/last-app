@@ -12,7 +12,7 @@ const k = S / 1024;
 // Plays every time the app opens: the sun comes up behind the book, the name
 // fades in, then it gets out of the way. A little over a second. Tap to skip.
 // While it fades out, taps go straight through to the screen underneath.
-export function LaunchAnimation({ onDone }: { onDone: () => void }) {
+export function LaunchAnimation({ onDone, onReady }: { onDone: () => void; onReady?: () => void }) {
   const t = useRef(new Animated.Value(0)).current; // 0 → 1 over the show
   const out = useRef(new Animated.Value(1)).current; // whole screen fading away
   const [gone, setGone] = useState(false);
@@ -29,7 +29,24 @@ export function LaunchAnimation({ onDone }: { onDone: () => void }) {
     });
   };
 
+  // The phone's own launch screen stays up until our book is really drawn, so there is never
+  // an empty frame between the two. The show starts at that moment, not before.
+  const [drawn, setDrawn] = useState(false);
+  const told = useRef(false);
+  const ready = () => {
+    if (told.current) return;
+    told.current = true;
+    setDrawn(true);
+    requestAnimationFrame(() => onReady?.());
+  };
   useEffect(() => {
+    const safety = setTimeout(ready, 600); // never wait forever on a picture
+    return () => clearTimeout(safety);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!drawn) return;
     let alive = true;
     AccessibilityInfo.isReduceMotionEnabled()
       .catch(() => false)
@@ -52,7 +69,7 @@ export function LaunchAnimation({ onDone }: { onDone: () => void }) {
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [drawn]);
 
   if (gone) return null;
 
@@ -98,6 +115,9 @@ export function LaunchAnimation({ onDone }: { onDone: () => void }) {
           />
           <Animated.Image
             source={require('../../assets/launch-book.png')}
+            onLoad={ready}
+            onError={ready}
+            fadeDuration={0}
             style={{
               position: 'absolute',
               width: S,

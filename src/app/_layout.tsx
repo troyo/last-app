@@ -15,8 +15,11 @@ export default function RootLayout() {
   const t = useTheme();
   // On the very first launch the welcome film is the opening; two in a row is too much.
   const [opening, setOpening] = useState(hasSeenWelcome);
+  // With the opening animation, the launch screen is only let go once the animation has drawn
+  // its first frame (see onReady below). Hiding it earlier showed a black flash in between.
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => {});
+    if (!opening) SplashScreen.hideAsync().catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -55,7 +58,12 @@ export default function RootLayout() {
         <Stack.Screen name="situation/[id]" options={{ title: '' }} />
         <Stack.Screen name="show/[id]" options={{ headerShown: false }} />
       </Stack>
-      {opening && <LaunchAnimation onDone={() => setOpening(false)} />}
+      {opening && (
+        <LaunchAnimation
+          onReady={() => SplashScreen.hideAsync().catch(() => {})}
+          onDone={() => setOpening(false)}
+        />
+      )}
     </LibraryProvider>
   );
 }
