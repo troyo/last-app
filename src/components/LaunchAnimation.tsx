@@ -10,16 +10,19 @@ const S = 230;
 const k = S / 1024;
 
 // Plays every time the app opens: the sun comes up behind the book, the name
-// fades in, then it gets out of the way. About two seconds. Tap to skip.
+// fades in, then it gets out of the way. A little over a second. Tap to skip.
+// While it fades out, taps go straight through to the screen underneath.
 export function LaunchAnimation({ onDone }: { onDone: () => void }) {
   const t = useRef(new Animated.Value(0)).current; // 0 → 1 over the show
   const out = useRef(new Animated.Value(1)).current; // whole screen fading away
   const [gone, setGone] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const finished = useRef(false);
 
   const leave = (ms: number) => {
     if (finished.current) return;
     finished.current = true;
+    setLeaving(true);
     Animated.timing(out, { toValue: 0, duration: ms, useNativeDriver: true }).start(() => {
       setGone(true);
       onDone();
@@ -40,10 +43,10 @@ export function LaunchAnimation({ onDone }: { onDone: () => void }) {
         }
         Animated.timing(t, {
           toValue: 1,
-          duration: 1500,
+          duration: 1050,
           easing: Easing.linear,
           useNativeDriver: true,
-        }).start(() => setTimeout(() => leave(380), 420));
+        }).start(() => setTimeout(() => leave(240), 120));
       });
     return () => {
       alive = false;
@@ -64,8 +67,11 @@ export function LaunchAnimation({ onDone }: { onDone: () => void }) {
   const ray = (i: number) => span(0.55 + i * 0.07, 0.72 + i * 0.07, 0, 1);
 
   return (
-    <Animated.View style={[StyleSheet.absoluteFill, s.wrap, { opacity: out }]}>
-      <Pressable style={s.fill} onPress={() => leave(200)} accessibilityLabel="Last App is opening">
+    <Animated.View
+      style={[StyleSheet.absoluteFill, s.wrap, { opacity: out }]}
+      pointerEvents={leaving ? 'none' : 'auto'}
+    >
+      <Pressable style={s.fill} onPress={() => leave(120)} accessibilityLabel="Last App is opening">
         <View style={{ width: S, height: S }}>
           {/* Everything above the "horizon" (the middle of the book). */}
           <View style={s.sky}>

@@ -3,17 +3,22 @@ import { File, Paths } from './fs';
 
 const FLAG = new File(Paths.document, 'welcome-seen.json');
 
+// Checked once, then remembered: Home asks this every time it draws.
+let seen = false;
 export function hasSeenWelcome(): boolean {
+  if (seen) return true;
   try {
-    return FLAG.exists;
+    seen = FLAG.exists;
   } catch {
-    return true; // never trap someone on the welcome screen
+    seen = true; // never trap someone on the welcome screen
   }
+  return seen;
 }
 
 export function markWelcomeSeen() {
   try {
     FLAG.writeSync('{"seen":true}');
+    seen = true;
   } catch {
     // not worth interrupting anyone over
   }
