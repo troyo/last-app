@@ -72,6 +72,8 @@ const QUESTIONS = [
 export default function SituationScreen() {
   const t = useTheme();
   const dark = useDark();
+  // The urgent answer is filled red. In dark mode that red is light, so its words go dark.
+  const onBad = dark ? '#2B0B07' : '#FFFFFF';
   const { id } = useLocalSearchParams<{ id: string }>();
   const sit = findSituation(id);
   // Which question we're on. 3 = all answered fine; 'side' = breathing but not awake.
@@ -131,7 +133,7 @@ export default function SituationScreen() {
                     >
                       <Text
                         style={{
-                          color: bad ? '#FFFFFF' : t.accent,
+                          color: bad ? onBad : t.accent,
                           fontSize: 22,
                           fontWeight: '800',
                         }}
@@ -139,7 +141,7 @@ export default function SituationScreen() {
                         {label}
                       </Text>
                       {bad && !!q.goLabel && (
-                        <Text style={{ color: '#FFFFFF', fontSize: 15, textAlign: 'center' }}>
+                        <Text style={{ color: onBad, fontSize: 15, textAlign: 'center' }}>
                           {q.goLabel}
                         </Text>
                       )}
