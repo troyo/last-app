@@ -61,7 +61,7 @@ FULLY OFFLINE, FULLY PRIVATE
 - No account and no ads
 - Your location stays on your phone
 
-Start free with the Small pack: the essentials for first aid, water, fire and shelter. Unlock the Medium and Large packs with one purchase for the full library. No subscription.
+Start free with the Small pack: the essentials for first aid, water, fire and shelter. Go bigger with the Medium or Large pack, each a one-time purchase. Own Medium? Upgrade to Large for the difference. No subscription, ever.
 
 Whether you are a seasoned prepper, getting ready for storm season, heading off-grid, or just want your family to be ready for anything, Last App is the one app to have when everything else stops working.
 
@@ -82,10 +82,4 @@ Eight iPhone screenshots are in `store/screenshots/` at 6.9 inch (1320 x 2868) a
 
 ## Still needed before submitting
 
-- A paid Apple Developer Program membership on the account that will own the app
-- Real in-app purchase for the pack unlock (the app is in test mode today)
-- A privacy policy web page and a support web page (Apple requires both links)
-- Remove the "preview" wording in the app
-- Lawyer review of the terms and medical review of the emergency cards and pictures
-- Decide on iPad: the app is marked as supporting iPad, which means Apple also requires iPad screenshots
-- The offline maps line above assumes the emergency places feature ships in this version
+See `store/launch-checklist.md` for the full, step-by-step list (who does what, every App Store Connect field, and the in-app purchase setup).

@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react';
 import { PackId } from './catalog';
-import { needsUnlock } from './purchases';
+import { initPurchases, needsUnlock } from './purchases';
 import {
   downloadPack,
   LibraryState,
@@ -38,6 +38,8 @@ type Ctx = {
 
 // Load the catalog saved on the phone before any screen renders.
 loadSavedCatalog();
+// Connect to the App Store / Google Play early, so an unfinished purchase is picked up.
+initPurchases();
 
 const LibraryContext = createContext<Ctx | null>(null);
 
