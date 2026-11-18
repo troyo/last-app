@@ -112,6 +112,8 @@ export default function GroupScreen() {
         style={{ flex: 1, backgroundColor: t.bg }}
         contentContainerStyle={s.wrap}
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        automaticallyAdjustKeyboardInsets
       >
         <Text style={{ color: t.text, fontSize: 16, lineHeight: 23 }}>
           Count what you have, so you can decide early. Everything here stays on this phone.
