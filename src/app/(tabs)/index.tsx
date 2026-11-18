@@ -290,35 +290,55 @@ export default function Home() {
             </>
           )}
 
-          <Section title="Get ready" action="See lists" onAction={() => router.push('/prep')} />
-          <Card style={s.prep}>
-            {getChecklists().map((list) => {
+          <Section
+            title="Get ready checklists"
+            action="See all"
+            onAction={() => router.push('/prep')}
+          />
+          {/* One row per list, so it is plain these open: a tick box, how far along, an arrow. */}
+          <Card style={{ paddingVertical: 4 }}>
+            {getChecklists().map((list, i) => {
               const p = progressOf(list);
               const pct = p.total ? p.done / p.total : 0;
+              const all = p.total > 0 && p.done === p.total;
               return (
                 <Pressable
                   key={list.id}
                   onPress={() => router.push(`/checklist/${list.id}`)}
-                  accessibilityLabel={`Ready for ${list.title}, ${Math.round(pct * 100)} percent done`}
-                  style={({ pressed }) => [s.prepCol, pressed && { opacity: 0.7 }]}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Checklist: ready for ${list.title}. ${p.done} of ${p.total} done`}
+                  style={({ pressed }) => [
+                    s.listRow,
+                    i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: t.border },
+                    pressed && { opacity: 0.7 },
+                  ]}
                 >
-                  {/* A little jar that fills up as you tick things off. */}
-                  <View
-                    style={[s.jar, { backgroundColor: t.soft, borderColor: hues[list.hue].color }]}
-                  >
-                    <View
-                      style={[
-                        s.jarFill,
-                        { height: `${pct * 100}%`, backgroundColor: hues[list.hue].tint },
-                      ]}
+                  <View style={[s.listIcon, { backgroundColor: hues[list.hue].tint }]}>
+                    <MaterialCommunityIcons
+                      name={all ? 'checkbox-marked' : 'checkbox-marked-outline'}
+                      size={24}
+                      color={hues[list.hue].color}
                     />
-                    <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>
-                      {Math.round(pct * 100)}%
+                  </View>
+                  <View style={{ flex: 1, gap: 6 }}>
+                    <Text style={{ color: t.text, fontSize: 17, fontWeight: '700' }}>
+                      Ready for {list.title}
+                    </Text>
+                    <View style={[s.listTrack, { backgroundColor: t.soft }]}>
+                      <View
+                        style={[
+                          s.listFill,
+                          { width: `${pct * 100}%`, backgroundColor: hues[list.hue].color },
+                        ]}
+                      />
+                    </View>
+                    <Text style={{ color: t.text, fontSize: 15 }}>
+                      {p.done === 0
+                        ? `${p.total} things to tick off`
+                        : `${p.done} of ${p.total} ticked off`}
                     </Text>
                   </View>
-                  <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>
-                    {list.title}
-                  </Text>
+                  <Ionicons name="chevron-forward" size={20} color={t.text} />
                 </Pressable>
               );
             })}
@@ -411,6 +431,16 @@ const s = StyleSheet.create({
   section: { fontSize: 24, fontWeight: '800', lineHeight: 30, flex: 1 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', margin: -5 },
   third: { width: '33.333%', padding: 5 },
+  listRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 },
+  listIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  listTrack: { height: 6, borderRadius: 3, overflow: 'hidden' },
+  listFill: { height: 6, borderRadius: 3 },
   diy: {
     width: 132,
     minHeight: 112,
