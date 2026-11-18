@@ -268,6 +268,26 @@ export default function Home() {
             <Ionicons name="chevron-forward" size={22} color={t.text} />
           </Pressable>
 
+          {/* The leader's notebook: people, water, food, the sick and the jobs. */}
+          <Pressable
+            onPress={() => router.push('/group')}
+            accessibilityRole="button"
+            style={({ pressed }) => [
+              s.plan,
+              { backgroundColor: t.card, borderColor: t.border },
+              pressed && { opacity: 0.8 },
+            ]}
+          >
+            <IconTile name="account-group" {...HUES.violet} size={44} />
+            <View style={{ flex: 1, gap: 4 }}>
+              <Text style={{ color: t.text, fontSize: 17, fontWeight: '800' }}>Your group</Text>
+              <Text style={{ color: t.text, fontSize: 15, lineHeight: 20 }}>
+                Count people, water and food. Keep a sick list and a job list.
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={22} color={t.text} />
+          </Pressable>
+
           {recent.length > 0 && (
             <>
               <Section title="Opened lately" />

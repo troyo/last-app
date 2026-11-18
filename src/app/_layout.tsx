@@ -43,6 +43,7 @@ export default function RootLayout() {
         <Stack.Screen name="hazard/[id]" options={{ title: '' }} />
         <Stack.Screen name="prep" options={{ title: 'Get ready' }} />
         <Stack.Screen name="plan" options={{ title: 'Your one-year plan' }} />
+        <Stack.Screen name="group" options={{ title: 'Your group' }} />
         <Stack.Screen name="packs" options={{ title: 'My packs' }} />
         <Stack.Screen name="about" options={{ title: 'How Last App works' }} />
         <Stack.Screen name="legal" options={{ title: 'Safety and terms' }} />
