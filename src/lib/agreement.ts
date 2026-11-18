@@ -5,17 +5,22 @@ import { File, Paths } from './fs';
 export const TERMS_VERSION = 1;
 const FILE = new File(Paths.document, 'agreement.json');
 
+// Read from the phone once. Home asks this every time it draws.
+let agreed: boolean | null = null;
 export function hasAgreed(): boolean {
+  if (agreed) return true;
   try {
-    return FILE.exists && JSON.parse(FILE.textSync()).version === TERMS_VERSION;
+    agreed = FILE.exists && JSON.parse(FILE.textSync()).version === TERMS_VERSION;
   } catch {
-    return false; // when in doubt, ask again
+    agreed = false; // when in doubt, ask again
   }
+  return agreed;
 }
 
 export function recordAgreement() {
   try {
     FILE.writeSync(JSON.stringify({ version: TERMS_VERSION, agreedAt: new Date().toISOString() }));
+    agreed = true;
   } catch {
     // if it can't be saved we'll simply ask again next time
   }

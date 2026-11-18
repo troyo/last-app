@@ -32,8 +32,27 @@ export function fileFor(item: Item): File {
   return new File(ROOT, `${item.id}.${EXT[item.type]}`);
 }
 
+// Asking the phone "is this file there?" thousands of times makes every screen slow, so the
+// folder is listed once and remembered. Anything that adds or removes files calls forgetFiles().
+let names: Set<string> | null = null;
+function onPhone(file: File): boolean {
+  if (!names) {
+    names = new Set();
+    try {
+      if (ROOT.exists) for (const entry of ROOT.list()) names.add(entry.name);
+    } catch {
+      // an unreadable folder counts as empty
+    }
+  }
+  return names.has(file.name);
+}
+/** Call after files are added or removed, so the next check looks at the phone again. */
+export function forgetFiles() {
+  names = null;
+}
+
 export function isDownloaded(item: Item): boolean {
-  return fileFor(item).exists;
+  return onPhone(fileFor(item));
 }
 
 // A small marker file says "this download finished and was unpacked".
@@ -62,9 +81,9 @@ function itemsIn(d: Download): Item[] {
 }
 
 function isDownloadDone(d: Download): boolean {
-  if (markerFor(d).exists) return true;
+  if (onPhone(markerFor(d))) return true;
   // An older marker only counts if every guide it should hold is really on the phone.
-  return oldMarkerFor(d).exists && itemsIn(d).every(isDownloaded);
+  return onPhone(oldMarkerFor(d)) && itemsIn(d).every(isDownloaded);
 }
 
 // ---------- Saved state ----------
@@ -150,6 +169,7 @@ export function removeExtras(keep: PackId | null) {
   for (const entry of ROOT.list()) {
     if (entry instanceof File && !keepNames.has(entry.name)) entry.delete();
   }
+  forgetFiles();
 }
 
 // ---------- Downloading ----------
@@ -197,6 +217,7 @@ export async function downloadPack(
 ): Promise<{ finished: boolean; failed: string[] }> {
   if (!ROOT.exists) ROOT.create({ intermediates: true });
   writeState({ pack, complete: false });
+  forgetFiles();
 
   const downloads = downloadsForPack(pack);
   const items = itemsForPack(pack);
@@ -277,6 +298,7 @@ export async function downloadPack(
         partial.move(dest);
       }
       markerFor(d).writeSync('ok');
+      forgetFiles();
       done++;
       doneBytes += d.bytes;
       report(label, d.bytes, d.bytes);
@@ -289,6 +311,7 @@ export async function downloadPack(
     }
   }
 
+  forgetFiles();
   const finished = failed.length === 0;
   writeState({ pack, complete: finished });
   return { finished, failed };
