@@ -96,6 +96,9 @@ export function MapsScreen() {
   const [me, setMe] = useState<LonLat | null>(null); // last GPS fix
   const [shown, setShown] = useState<PlaceKind[]>(KINDS.filter((k) => k.on).map((k) => k.id));
   const [picked, setPicked] = useState<Place | null>(null); // the place whose card is open
+  // Where the card measures from when we don't know where you are: the map's middle at
+  // the moment you opened it, so flying to the place doesn't turn every answer into "<0.1 mi".
+  const [pickedFrom, setPickedFrom] = useState<LonLat | null>(null);
   const [ready, setReady] = useState(false); // has the map drawn its first full view?
   const moved = useRef(false); // has GPS already sent the map somewhere useful?
 
@@ -208,8 +211,12 @@ export function MapsScreen() {
   };
 
   // ----- Picking a place -----
-  const focus = (p: Place, zoom = 15) => {
+  const pick = (p: Place | null) => {
+    if (p && !picked) setPickedFrom(center);
     setPicked(p);
+  };
+  const focus = (p: Place, zoom = 15) => {
+    pick(p);
     camera.current?.flyTo({ center: [p.lon, p.lat], zoom, duration: 900 });
   };
 
@@ -230,7 +237,7 @@ export function MapsScreen() {
       return;
     }
     const p = placeById(Number(props.id));
-    if (p) setPicked(p);
+    if (p) pick(p);
   };
 
   // ----- Saving -----
@@ -287,7 +294,9 @@ export function MapsScreen() {
     setShown((cur) => (cur.includes(id) ? cur.filter((c) => c !== id) : [...cur, id]));
 
   const pickedKind = picked ? kindOf(picked.kind) : undefined;
-  const pickedMiles = picked ? milesBetween(from, [picked.lon, picked.lat]) : 0;
+  const cardFrom: LonLat = me ?? pickedFrom ?? center;
+  const cardFromWords = me ? 'from you' : 'from where the map was centered';
+  const pickedMiles = picked ? milesBetween(cardFrom, [picked.lon, picked.lat]) : 0;
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
@@ -320,7 +329,8 @@ export function MapsScreen() {
             </GeoJSONSource>
           )}
 
-          {/* Everything but hospitals: grouped into numbered bubbles when zoomed out. */}
+          {/* Everything but hospitals: grouped into numbered bubbles when zoomed out.
+              Hidden at state level, where their bubbles would pile on top of the hospitals'. */}
           <GeoJSONSource
             id="places"
             ref={others}
@@ -333,6 +343,7 @@ export function MapsScreen() {
           >
             <Layer
               id="places-clusters"
+              minzoom={8}
               type="circle"
               filter={['has', 'point_count']}
               paint={{
@@ -345,6 +356,7 @@ export function MapsScreen() {
             />
             <Layer
               id="places-cluster-count"
+              minzoom={8}
               type="symbol"
               filter={['has', 'point_count']}
               layout={{
@@ -357,6 +369,7 @@ export function MapsScreen() {
             />
             <Layer
               id="places-pins"
+              minzoom={8}
               type="circle"
               filter={['!', ['has', 'point_count']]}
               paint={{
@@ -408,7 +421,7 @@ export function MapsScreen() {
             ref={hospitalSource}
             data={hospitals}
             cluster
-            clusterRadius={36}
+            clusterRadius={52}
             clusterMaxZoom={8}
             onPress={(e) => onPlacePress(e, hospitalSource)}
             hitbox={{ top: 14, right: 14, bottom: 14, left: 14 }}
@@ -596,7 +609,7 @@ export function MapsScreen() {
                 <Text style={{ color: t.muted, fontSize: 15 }}>{pickedKind.one}</Text>
               </View>
               <Pressable
-                onPress={() => setPicked(null)}
+                onPress={() => pick(null)}
                 hitSlop={10}
                 accessibilityLabel="Close"
                 style={[s.close, { backgroundColor: t.soft }]}
@@ -607,9 +620,9 @@ export function MapsScreen() {
             <View style={[s.direction, { backgroundColor: t.soft }]}>
               <Ionicons name="navigate" size={22} color={t.accent} />
               <Text style={{ color: t.text, fontSize: 17, fontWeight: '700', flex: 1 }}>
-                {formatMiles(pickedMiles)} {directionTo(from, [picked.lon, picked.lat])}{' '}
+                {formatMiles(pickedMiles)} {directionTo(cardFrom, [picked.lon, picked.lat])}{' '}
                 <Text style={{ color: t.muted, fontSize: 15, fontWeight: '400' }}>
-                  {fromWords}, as the crow flies
+                  {cardFromWords}, as the crow flies
                 </Text>
               </Text>
             </View>
@@ -623,7 +636,7 @@ export function MapsScreen() {
               <Button
                 label="Next closest"
                 onPress={() => {
-                  const list = nearest(from, picked.kind, 6);
+                  const list = nearest(cardFrom, picked.kind, 6);
                   const at = list.findIndex((p) => p.id === picked.id);
                   const next = list[at + 1] ?? list[0];
                   if (next) focus(next, 14);
