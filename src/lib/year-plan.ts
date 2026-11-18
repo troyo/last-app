@@ -137,7 +137,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'neighbors',
         text: 'Meet the people around you. Share skills and tools, and agree to look out for each other.',
-        open: { label: 'Guides on working together', search: 'mutual aid' },
+        open: { label: 'Night watch and group rules', href: '/help/watch' },
       },
       {
         id: 'rhythm',
@@ -176,7 +176,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'wild',
         text: 'Find food beyond the cupboard. Fish, set traps, and gather only the wild plants you are sure of.',
-        open: { label: 'Guides on wild food', search: 'foraging' },
+        open: { label: 'Wild food you can trust', href: '/help/forage' },
       },
       {
         id: 'plant',
@@ -226,12 +226,12 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'greens',
         text: 'Pick spring greens. Dandelion and nettle are easy to know and full of vitamins after winter.',
-        open: { label: 'Guides on edible plants', search: 'edible wild plants' },
+        open: { label: 'Wild food you can trust', href: '/help/forage' },
       },
       {
         id: 'animals',
         text: 'Start small animals if you can. Chickens and rabbits turn scraps and weeds into eggs and meat.',
-        open: { label: 'Guides on chickens', search: 'chicken' },
+        open: { label: 'Keep chickens', href: '/help/chickens' },
       },
       {
         id: 'repair',
@@ -305,7 +305,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'clothes',
         text: 'Get winter clothes ready. Mend them, and make sure everyone has dry socks, a hat and gloves.',
-        open: { label: 'Guides on mending', search: 'darning' },
+        open: { label: 'Mend and sharpen', href: '/help/mend' },
       },
       {
         id: 'chimney',
@@ -345,7 +345,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'mend',
         text: 'Use the dark months to mend and make. Sharpen tools, fix clothes, and teach skills to the young.',
-        open: { label: 'Guides on sharpening', search: 'sharpening' },
+        open: { label: 'Mend and sharpen', href: '/help/mend' },
       },
       {
         id: 'planspring',
