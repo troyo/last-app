@@ -1,18 +1,21 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Card, Text } from '../components/ui';
 import { formatBytes, getCatalog, itemsForPack, packBytes, PackId } from '../lib/catalog';
 import { freeSpaceBytes, remainingBytes } from '../lib/library';
 import { useLibrary } from '../lib/LibraryContext';
 import {
+  buy,
+  initPurchases,
   needsUnlock,
-  PRICE_LABEL,
-  purchase,
+  priceOf,
+  ProductKey,
+  productFor,
   resetForTesting,
   restore,
   TEST_MODE,
-  useUnlocked,
+  useTier,
 } from '../lib/purchases';
 import { useTheme } from '../lib/theme';
 
@@ -33,19 +36,33 @@ export default function Packs() {
   const free = useMemo(() => freeSpaceBytes(), [version]);
 
   const catalog = getCatalog();
-  const unlocked = useUnlocked();
+  const tier = useTier();
+  useEffect(() => {
+    initPurchases();
+  }, []);
 
-  const buy = async () => {
-    try {
-      await purchase();
-    } catch {
+  const unlock = async (key: ProductKey) => {
+    const r = await buy(key);
+    if (r === 'offline')
+      Alert.alert(
+        'No connection to the App Store',
+        'Buying a pack needs internet for a moment. Once it’s yours, it works offline forever.',
+      );
+    else if (r === 'failed')
       Alert.alert('That didn’t go through', 'You were not charged. Please try again in a moment.');
-    }
+    else if (r === 'pending')
+      Alert.alert(
+        'Waiting for approval',
+        'Your purchase is waiting to be approved. The pack unlocks by itself once it is.',
+      );
   };
   const restorePurchase = async () => {
-    const ok = await restore().catch(() => false);
-    if (!ok)
+    const r = await restore();
+    if (r === 'offline')
+      Alert.alert('No connection', 'Restoring needs internet for a moment. Please try again.');
+    else if (r === 'nothing')
       Alert.alert('Nothing to restore', 'We couldn’t find an earlier purchase on this account.');
+    else Alert.alert('All set', 'Your packs are unlocked again.');
   };
 
   const choose = (pack: PackId) => {
@@ -80,6 +97,7 @@ export default function Packs() {
         const isCurrent = state.pack === p.id;
         const count = itemsForPack(p.id).length;
         const locked = needsUnlock(p.id);
+        const product = productFor(p.id);
         const done = isCurrent && state.complete && remainingBytes(p.id) === 0;
         return (
           <Card
@@ -154,8 +172,15 @@ export default function Packs() {
                 }
                 onPress={() => choose(p.id)}
               />
-            ) : locked ? (
-              <Button label={`Unlock Medium and Large · ${PRICE_LABEL}`} onPress={buy} />
+            ) : locked && product ? (
+              <Button
+                label={
+                  product === 'upgrade'
+                    ? `Upgrade to Large · ${priceOf('upgrade')}`
+                    : `Unlock ${p.title} · ${priceOf(product)}`
+                }
+                onPress={() => unlock(product)}
+              />
             ) : (
               <Button
                 label={state.pack ? `Switch to ${p.title}` : `Save ${p.title} to my phone`}
@@ -176,11 +201,13 @@ export default function Packs() {
         </Card>
       )}
 
-      {!unlocked && (
+      {tier !== 'large' && (
         <>
           <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>
-            Small is free forever. One payment of {PRICE_LABEL} unlocks Medium and Large, including
-            future updates. No subscription, ever.
+            {tier === 'medium'
+              ? `You own Medium, so Large is just ${priceOf('upgrade')} more. `
+              : `Small is free forever. Medium is ${priceOf('medium')} and Large is ${priceOf('large')}, one time each. Buy Medium first and Large is ${priceOf('upgrade')} more later. `}
+            Updates included. No subscription, ever.
           </Text>
           <Button
             label="I already paid. Restore my purchase"
@@ -193,10 +220,10 @@ export default function Packs() {
       {TEST_MODE && (
         <Text
           style={{ color: t.warn, fontSize: 14 }}
-          onPress={unlocked ? resetForTesting : undefined}
+          onPress={tier !== 'free' ? resetForTesting : undefined}
         >
-          Test mode: unlocking is free and nobody is charged.
-          {unlocked ? ' Tap here to lock the packs again.' : ''}
+          Test mode (web preview): unlocking is free and nobody is charged.
+          {tier !== 'free' ? ' Tap here to lock the packs again.' : ''}
         </Text>
       )}
 
