@@ -120,15 +120,27 @@ export function wordsOf(query: string): string[] {
     .map((w) => (w.length > 4 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w));
 }
 
+// Short words hide inside longer ones ("ink" in "drinking", "tin" in "testing"),
+// so a word of 4 letters or fewer has to start a word in the text to count.
+const found = (text: string, word: string): boolean => {
+  if (word.length > 4) return text.includes(word);
+  let at = text.indexOf(word);
+  while (at !== -1) {
+    if (at === 0 || !/[a-z0-9]/.test(text[at - 1])) return true;
+    at = text.indexOf(word, at + 1);
+  }
+  return false;
+};
+
 /** How well one typed word matches one guide (0 = not at all). */
 function wordScore(word: string, title: string, rest: string): number {
   if (title.startsWith(word)) return 12;
-  if (title.includes(word)) return 8;
-  if (rest.includes(word)) return 3;
+  if (found(title, word)) return 8;
+  if (found(rest, word)) return 3;
   let best = 0;
   for (const alt of SYNONYMS[word] ?? []) {
-    if (title.includes(alt)) best = Math.max(best, 5);
-    else if (rest.includes(alt)) best = Math.max(best, 2);
+    if (found(title, alt)) best = Math.max(best, 5);
+    else if (found(rest, alt)) best = Math.max(best, 2);
   }
   return best;
 }

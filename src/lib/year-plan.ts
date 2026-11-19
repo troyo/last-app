@@ -375,7 +375,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'rules',
         text: 'Agree how you decide things. Hold a regular meeting, write the rules down, and settle fights in the open.',
-        open: { label: 'Guides on running a community', search: 'town meeting mediation' },
+        open: { label: 'Guides on meetings', search: 'town meeting mediation' },
       },
       {
         id: 'seed',
