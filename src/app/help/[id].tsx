@@ -7,19 +7,21 @@ import { Bullets, Card, IconName, IconTile, Steps, Text, TitleBar } from '../../
 import { DiagramId, DIAGRAMS } from '../../lib/diagrams';
 import { findQuickHelp } from '../../lib/quick-help';
 import { readNext } from '../../lib/read-next';
+import { stepPicture } from '../../lib/step-pictures';
 import { useLibrary } from '../../lib/LibraryContext';
 import { noteOpened } from '../../lib/recent';
 import { hasShowMe, SHOW_ME } from '../../lib/show-me';
 import { HUES, useDark, useHues, useTheme } from '../../lib/theme';
 
-function Diagram({ id }: { id: DiagramId }) {
+function Diagram({ id, source }: { id?: DiagramId; source?: number }) {
   // The drawings are on a light panel. In dark mode they are dimmed a little so they don't glare.
   const dim = useDark() ? 0.86 : 1;
   return (
     <View style={s.diagram}>
       <Image
-        source={DIAGRAMS[id].image}
-        accessibilityLabel={DIAGRAMS[id].alt}
+        source={id ? DIAGRAMS[id].image : source}
+        accessibilityLabel={id ? DIAGRAMS[id].alt : undefined}
+        accessibilityIgnoresInvertColors
         style={{ width: '100%', height: '100%', opacity: dim }}
         resizeMode="contain"
       />
@@ -145,7 +147,11 @@ export default function QuickHelpScreen() {
           extra={(i) => (
             <>
               {minutesIn(h.steps[i]) !== null && <StepTimer minutes={minutesIn(h.steps[i])!} />}
-              {h.pictures?.[i] && <Diagram id={h.pictures[i]} />}
+              {h.pictures?.[i] ? (
+                <Diagram id={h.pictures[i]} />
+              ) : stepPicture(h.id, i) ? (
+                <Diagram source={stepPicture(h.id, i)} />
+              ) : null}
             </>
           )}
         />
@@ -249,7 +255,7 @@ const s = StyleSheet.create({
   diagram: {
     marginTop: 10,
     width: '100%',
-    aspectRatio: 720 / 420,
+    aspectRatio: 720 / 520,
     borderRadius: 16,
     overflow: 'hidden',
   },

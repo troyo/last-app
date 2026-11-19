@@ -5,8 +5,12 @@
 // Each step shows one picture, or two that swap back and forth to show the
 // movement. The words here are deliberately shorter than on the full card.
 import { DIAGRAMS } from './diagrams';
+import { REBUILD_CARDS } from './rebuild-cards';
+import { REBUILD_PICS } from './rebuild-pictures';
 
 const P = {
+  cprShout: require('../../assets/show/cpr-shout.png'),
+  layWarm: require('../../assets/show/lay-warm.png'),
   layFlat: require('../../assets/show/lay-flat.png'),
   pushA: require('../../assets/show/cpr-push-a.png'),
   pushB: require('../../assets/show/cpr-push-b.png'),
@@ -335,6 +339,9 @@ const P = {
   tourniquet: DIAGRAMS.tourniquet.image,
   recovery: DIAGRAMS.recovery.image,
 };
+/** Every picture by name, so the cards can show the same drawings under their steps. */
+export const SHOW_PICS = P;
+export type ShowPic = keyof typeof P;
 
 export type ShowStep = {
   /** A few plain words. Shown big and read aloud. */
@@ -353,6 +360,7 @@ export type ShowStep = {
 
 export const SHOW_ME: Record<string, ShowStep[]> = {
   cpr: [
+    { say: 'Shout for anyone nearby to come and help.', pics: [P.cprShout] },
     { say: 'Lay them on their back on a hard floor.', pics: [P.layFlat] },
     { say: 'Kneel beside them. Put both hands on the middle of the chest.', pics: [P.hands] },
     {
@@ -394,7 +402,7 @@ export const SHOW_ME: Record<string, ShowStep[]> = {
       say: 'Arm or leg still pouring? Tie a belt above the wound. Twist it tight with a stick.',
       pics: [P.tourniquet],
     },
-    { say: 'Lay them down and keep them warm.', pics: [P.layFlat] },
+    { say: 'Lay them down and keep them warm.', pics: [P.layWarm] },
   ],
   choking: [
     {
@@ -1387,5 +1395,20 @@ export const SHOW_ME: Record<string, ShowStep[]> = {
     },
   ],
 };
+
+// The Rebuild cards: one screen for each step that has a picture, in the card's own words.
+// The words are the step's first sentence, plus the next one when the first is only a few words.
+const sayOf = (step: string) => {
+  const parts = step.split(/(?<=[.?!])\s+/);
+  return parts[0].split(' ').length <= 4 && parts[1] ? `${parts[0]} ${parts[1]}` : parts[0];
+};
+for (const card of REBUILD_CARDS) {
+  const pics = REBUILD_PICS[card.id];
+  if (!pics || SHOW_ME[card.id]) continue;
+  SHOW_ME[card.id] = Object.keys(pics)
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map((i) => ({ say: sayOf(card.steps[i]), pics: [pics[i]] }));
+}
 
 export const hasShowMe = (id: string) => !!SHOW_ME[id];
