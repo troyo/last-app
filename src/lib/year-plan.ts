@@ -410,7 +410,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'metal',
         text: 'Set up a forge. Start by reshaping scrap steel into tools, nails and blades before trying to smelt ore.',
-        open: { label: 'Simple forge: shape steel', href: '/help/forge' },
+        open: { label: 'Shape steel in a forge', href: '/help/forge' },
       },
       {
         id: 'mill',

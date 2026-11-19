@@ -225,6 +225,8 @@ const BULLET = {
   dont: { icon: 'close-circle', bad: true },
   warn: { icon: 'alert-circle', bad: true },
   note: { icon: 'information-circle', bad: false },
+  // A tip, not something done or safe: a plain arrow.
+  tip: { icon: 'arrow-forward-circle-outline', bad: false },
 } as const;
 
 /** A list where order doesn't matter. Each line gets a clear icon and its own row. */

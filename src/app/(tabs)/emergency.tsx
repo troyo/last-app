@@ -58,6 +58,7 @@ export default function Emergency() {
             placeholderTextColor={t.muted}
             autoCorrect={false}
             clearButtonMode="while-editing"
+            maxFontSizeMultiplier={1.25}
             style={[s.input, { color: t.text }]}
           />
         </View>
@@ -244,7 +245,9 @@ const s = StyleSheet.create({
   tile: {
     // Two to a row, always. An odd one out stays the same size instead of stretching.
     width: '48.5%',
-    height: 124,
+    // A floor, not a fixed height, so large text sizes never clip a two-line name.
+    minHeight: 124,
+    paddingBottom: 14,
     borderRadius: 22,
     alignItems: 'center',
     // Pinned to the top so the icons line up across a row, whether the name takes one line or two.

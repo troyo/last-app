@@ -46,6 +46,20 @@ export default function QuickHelpScreen() {
   const show = hasShowMe(h.id) ? SHOW_ME[h.id] : null;
   const facts = (h.know ?? '').split(/(?<=[.?!])\s+/).filter(Boolean);
 
+  const NEXT = h.next ? (
+    <Card style={{ paddingBottom: 6 }}>
+      <Text style={[s.label, { color: t.accent }]}>
+        {h.group === 'rebuild' ? 'After that' : 'Over the next hours and days'}
+      </Text>
+      {h.nextPicture && (
+        <View style={{ marginTop: 8 }}>
+          <Diagram id={h.nextPicture} />
+        </View>
+      )}
+      <Bullets items={h.next} kind={h.group === 'rebuild' ? 'tip' : 'do'} />
+    </Card>
+  ) : null;
+
   return (
     <>
       <Stack.Screen
@@ -92,28 +106,38 @@ export default function QuickHelpScreen() {
               </View>
             </View>
           </Pressable>
+        ) : h.group === 'rebuild' ? (
+          <View style={[s.hero, { backgroundColor: hue.tint }]}>
+            <Text style={[s.when, { color: t.text }]}>{h.when}</Text>
+          </View>
         ) : (
           <Text style={[s.when, { color: t.text }]}>{h.when}</Text>
         )}
 
         {h.level && (
-          <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
-            <Text style={{ color: t.text, fontSize: 15, fontWeight: '800' }}>
-              {h.level === 'basic' ? 'Basic. ' : 'Advanced. '}
+          <View style={s.levelRow}>
+            <View style={[s.levelPill, { borderColor: t.border, backgroundColor: t.card }]}>
+              <Text style={{ color: t.text, fontSize: 15, fontWeight: '800' }}>
+                {h.level === 'basic' ? 'Basic' : 'Advanced'}
+              </Text>
+            </View>
+            <Text style={{ color: t.muted, fontSize: 15, lineHeight: 20, flex: 1 }}>
+              {h.level === 'basic'
+                ? 'Anyone can start today with what is around.'
+                : 'Takes practice, a few tools or a helper.'}
             </Text>
-            {h.level === 'basic'
-              ? 'Anyone can start this today with what is around.'
-              : 'Takes practice, a few tools or a helper. Expect some failed tries.'}
-          </Text>
+          </View>
         )}
         {h.risky && (
-          <Card style={{ backgroundColor: t.dangerTint, flexDirection: 'row', gap: 10 }}>
+          <Card
+            style={{ backgroundColor: t.dangerTint, flexDirection: 'row', gap: 10, marginTop: 6 }}
+          >
             <Ionicons name="warning" size={22} color={t.bad} />
             <Text style={{ color: t.text, fontSize: 16, lineHeight: 23, flex: 1 }}>{h.risky}</Text>
           </Card>
         )}
 
-        <Text style={[s.label, { color: t.accent, marginTop: 4 }]}>
+        <Text style={[s.label, { color: t.accent, marginTop: h.group === 'rebuild' ? 12 : 4 }]}>
           {h.group === 'rebuild' ? 'How to do it' : 'Do this now'}
         </Text>
         <Steps
@@ -126,6 +150,7 @@ export default function QuickHelpScreen() {
           )}
         />
 
+        {h.group === 'rebuild' && NEXT}
         {h.dont && (
           <Card style={{ paddingBottom: 6 }}>
             <Text style={[s.label, { color: t.bad }]}>Don’t</Text>
@@ -133,20 +158,7 @@ export default function QuickHelpScreen() {
           </Card>
         )}
 
-        {h.next && (
-          <Card style={{ paddingBottom: 6 }}>
-            <Text style={[s.label, { color: t.accent }]}>
-              {h.group === 'rebuild' ? 'After that' : 'Over the next hours and days'}
-            </Text>
-            {h.nextPicture && (
-              <View style={{ marginTop: 8 }}>
-                <Diagram id={h.nextPicture} />
-              </View>
-            )}
-            <Bullets items={h.next} />
-          </Card>
-        )}
-
+        {h.group !== 'rebuild' && NEXT}
         {h.danger && (
           <Card style={{ backgroundColor: t.dangerTint, paddingBottom: 6 }}>
             <Text style={[s.label, { color: t.bad }]}>This needs more than home care</Text>
@@ -213,8 +225,9 @@ export default function QuickHelpScreen() {
             textAlign: 'center',
           }}
         >
-          Steps for when you’re on your own. If phones work or help is nearby, get help first.
-          General information, not medical advice.
+          {h.group === 'rebuild'
+            ? 'General information, not expert training. Start small, and practice before you depend on it.'
+            : 'Steps for when you’re on your own. If phones work or help is nearby, get help first. General information, not medical advice.'}
         </Text>
       </ScrollView>
     </>
@@ -274,6 +287,13 @@ const s = StyleSheet.create({
     letterSpacing: 0.5,
   },
   body: { fontSize: 16, lineHeight: 24 },
+  levelRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 2 },
+  levelPill: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 999,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
   nextRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8 },
   nextTitle: { flex: 1, fontSize: 17, fontWeight: '700', lineHeight: 22 },
   bullet: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },

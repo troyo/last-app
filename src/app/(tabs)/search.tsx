@@ -110,6 +110,7 @@ export default function Search() {
             onChangeText={setQuery}
             placeholder="Try “cut”, “no water” or “knots”"
             placeholderTextColor={t.muted}
+            maxFontSizeMultiplier={1.25}
             style={[s.input, { color: t.text }]}
             clearButtonMode="while-editing"
             returnKeyType="search"
