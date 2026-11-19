@@ -11,7 +11,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { Button, Card, IconName, IconTile, Text, TitleBar } from '../../components/ui';
+import { Button, Card, Go, IconName, IconTile, Text, TitleBar } from '../../components/ui';
 import { findTopic, itemsForPack, topicSize } from '../../lib/catalog';
 import { cardsForTopic, isEasy, pairUp, plainTitle } from '../../lib/guide-rows';
 import { isDownloaded } from '../../lib/library';
@@ -106,7 +106,7 @@ export default function TopicScreen() {
                   <Card key={h.id} onPress={() => router.push(`/help/${h.id}`)} style={s.row}>
                     <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={42} />
                     <Text style={[s.title, { color: t.text, flex: 1 }]}>{h.title}</Text>
-                    <Ionicons name="chevron-forward" size={18} color={t.text} />
+                    <Go />
                   </Card>
                 ))}
                 {cards.length > FEW && (
@@ -218,7 +218,7 @@ export default function TopicScreen() {
                       : 'Save a pack and they are yours offline.'}
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color={t.accent} />
+                <Go />
               </Card>
             )
           ) : (
@@ -250,7 +250,7 @@ export default function TopicScreen() {
               <Text style={{ color: t.text, fontSize: 16, fontWeight: '800', flex: 1 }}>
                 {(inAnyPack - items.length).toLocaleString()} more to save from your pack
               </Text>
-              <Ionicons name="chevron-forward" size={18} color={t.accent} />
+              <Go />
             </Card>
           ) : undefined
         }
@@ -298,7 +298,7 @@ export default function TopicScreen() {
                   </Text>
                 </Pressable>
               ) : (
-                <Ionicons name="chevron-forward" size={18} color={t.text} />
+                <Go />
               )}
             </Card>
           );

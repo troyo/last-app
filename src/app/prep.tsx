@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Card, IconName, IconTile, Text } from '../components/ui';
+import { Card, Go, IconName, IconTile, Text } from '../components/ui';
 import { getChecklists, progressOf } from '../lib/checklists';
 import { getProfile } from '../lib/place';
 import { HUES, useTheme } from '../lib/theme';
@@ -36,7 +36,7 @@ export default function Prep() {
                 </Text>
                 <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>{list.blurb}</Text>
               </View>
-              <Ionicons name="chevron-forward" size={18} color={t.muted} style={{ marginTop: 4 }} />
+              <Go style={{ marginTop: 4 }} />
             </View>
             {p.done === 0 ? (
               <View style={[s.chip, { backgroundColor: t.soft }]}>

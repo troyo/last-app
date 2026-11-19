@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, Card, FadeIn, IconName, IconTile, Text } from '../../components/ui';
+import { Button, Card, FadeIn, Go, IconName, IconTile, Text } from '../../components/ui';
 import { UpgradeCard } from '../../components/UpgradeCard';
 import { hasAgreed } from '../../lib/agreement';
 import { formatBytes, itemsForPack } from '../../lib/catalog';
@@ -182,7 +182,7 @@ export default function Home() {
                       <SavedSoFar />
                     </Text>
                   </View>
-                  <Ionicons name="chevron-forward" size={20} color={t.text} />
+                  <Go />
                 </Card>
               ) : (
                 // An alert, not a quiet row: guides that aren't on the phone can't help offline.
@@ -213,7 +213,7 @@ export default function Home() {
                       internet.
                     </Text>
                   </View>
-                  <Ionicons name="chevron-forward" size={22} color={t.accentText} />
+                  <Go inverse />
                 </Pressable>
               )}
             </FadeIn>
@@ -282,7 +282,7 @@ export default function Home() {
                 />
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={22} color={t.text} />
+            <Go />
           </Pressable>
 
           {/* The leader's notebook: people, water, food, the sick and the jobs. */}
@@ -302,7 +302,7 @@ export default function Home() {
                 Count people, water and food. Keep a sick list and a job list.
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={22} color={t.text} />
+            <Go />
           </Pressable>
 
           {recent.length > 0 && (
@@ -324,7 +324,7 @@ export default function Home() {
                     <Text style={{ color: t.text, fontSize: 16, fontWeight: '700', flex: 1 }}>
                       {h.title}
                     </Text>
-                    <Ionicons name="chevron-forward" size={20} color={t.text} />
+                    <Go />
                   </Pressable>
                 ))}
               </View>
@@ -378,7 +378,7 @@ export default function Home() {
                   Takes about a minute.
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={20} color={t.text} />
+              <Go />
             </Card>
           ) : (
             <>
@@ -474,7 +474,7 @@ export default function Home() {
                         : `${p.done} of ${p.total} ticked off`}
                     </Text>
                   </View>
-                  <Ionicons name="chevron-forward" size={20} color={t.text} />
+                  <Go />
                 </Pressable>
               );
             })}
@@ -514,7 +514,7 @@ export default function Home() {
                   {today.step.why}
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={22} color={t.text} />
+              <Go />
             </Pressable>
           )}
           <ScrollView
@@ -572,7 +572,7 @@ export default function Home() {
                 Every guide on this phone, sorted by topic.
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={t.text} />
+            <Go />
           </Card>
 
           {/* More guides in a bigger pack. Low on the page, and easy to put away. */}

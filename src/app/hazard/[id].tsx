@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Bullets, Card, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
+import { Bullets, Card, Go, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
 import { findHazard } from '../../lib/hazards';
 import { SHOW_ME } from '../../lib/show-me';
 import { HUES, useTheme } from '../../lib/theme';
@@ -108,7 +108,7 @@ export default function HazardScreen() {
           <Text style={{ color: t.text, fontSize: 15, fontWeight: '700', flex: 1 }}>
             Find more guides about this
           </Text>
-          <Ionicons name="chevron-forward" size={18} color={t.muted} />
+          <Go />
         </Card>
 
         <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21, textAlign: 'center' }}>

@@ -3,7 +3,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Card, IconName, IconTile, Text } from '../../components/ui';
+import { Card, Go, IconName, IconTile, Text } from '../../components/ui';
 import { formatBytes, packBytes } from '../../lib/catalog';
 import { getProfile } from '../../lib/place';
 import { useLibrary } from '../../lib/LibraryContext';
@@ -96,7 +96,7 @@ export default function More() {
                 {r.sub}
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={18} color={t.muted} />
+            <Go />
           </Card>
         ))}
       </ScrollView>

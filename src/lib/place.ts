@@ -6,6 +6,7 @@
 // ships inside the app. People outside the US (or anyone unsure) answer three
 // plain questions instead.
 
+import { STATE_SHAPES } from '../data/state-shapes';
 import { File, Paths } from './fs';
 
 export type Climate = 'cold' | 'mixed' | 'humid' | 'dry' | 'mild';
@@ -166,27 +167,97 @@ export const STATES: USState[] = RAW.map(([code, name, lat, lon, climate, h]) =>
 
 export const findState = (code?: string) => STATES.find((s) => s.code === code);
 
-function milesBetween(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const rad = Math.PI / 180;
-  const a =
-    Math.sin(((lat2 - lat1) * rad) / 2) ** 2 +
-    Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(((lon2 - lon1) * rad) / 2) ** 2;
-  return 3959 * 2 * Math.asin(Math.sqrt(a));
+type Outline = { code: string; rings: number[][]; box: [number, number, number, number] };
+let outlines: Outline[] | null = null;
+function getOutlines(): Outline[] {
+  if (!outlines) {
+    outlines = Object.entries(STATE_SHAPES).map(([code, rings]) => {
+      const box: [number, number, number, number] = [90, 180, -90, -180];
+      for (const ring of rings)
+        for (let i = 0; i < ring.length; i += 2) {
+          box[0] = Math.min(box[0], ring[i]);
+          box[1] = Math.min(box[1], ring[i + 1]);
+          box[2] = Math.max(box[2], ring[i]);
+          box[3] = Math.max(box[3], ring[i + 1]);
+        }
+      return { code, rings, box };
+    });
+  }
+  return outlines;
 }
 
+/** Is the point inside this outline? (Classic ray casting on lat/lon.) */
+function inRing(lat: number, lon: number, ring: number[]) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 2; i < ring.length; j = i, i += 2) {
+    const [ya, xa, yb, xb] = [ring[i], ring[i + 1], ring[j], ring[j + 1]];
+    if (ya > lat !== yb > lat && lon < ((xb - xa) * (lat - ya)) / (yb - ya) + xa) inside = !inside;
+  }
+  return inside;
+}
+
+/** Miles from the point to the nearest edge of this outline. */
+function milesToRing(lat: number, lon: number, ring: number[]) {
+  // Flatten the map around the point, in miles. Plenty accurate over the
+  // few dozen miles we care about.
+  const my = 69.05;
+  const mx = 69.17 * Math.cos((lat * Math.PI) / 180);
+  let best = Infinity;
+  for (let i = 0, j = ring.length - 2; i < ring.length; j = i, i += 2) {
+    const ax = (ring[j + 1] - lon) * mx;
+    const ay = (ring[j] - lat) * my;
+    const bx = (ring[i + 1] - lon) * mx;
+    const by = (ring[i] - lat) * my;
+    const dx = bx - ax;
+    const dy = by - ay;
+    const len = dx * dx + dy * dy;
+    const t = len ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / len)) : 0;
+    best = Math.min(best, Math.hypot(ax + t * dx, ay + t * dy));
+  }
+  return best;
+}
+
+export type Found = {
+  /** Best guess first, then close neighbors. Empty when clearly outside the US. */
+  states: USState[];
+  /** True when the position is inside the first state, not just near it. */
+  inside: boolean;
+};
+
 /**
- * The states closest to a GPS position, nearest first. We only know each
- * state's middle, so near a border the first guess can be the neighbor: the
- * screen shows the top three and lets the person tap the right one.
- * Returns an empty list when the position is clearly outside the US.
+ * Which state a GPS position is in, using real (simplified) state outlines
+ * that ship in the app. Near a border, neighbors within a few miles are
+ * offered too, so the person can tap the right one.
+ *
+ * (The first version measured to each state's middle, which got big states
+ * badly wrong: New York City is closer to the middle of New Jersey, Connecticut
+ * and Delaware than to the middle of New York.)
  */
-export function statesNear(lat: number, lon: number): USState[] {
-  const ranked = STATES.map((st) => ({ st, d: milesBetween(lat, lon, st.lat, st.lon) })).sort(
-    (a, b) => a.d - b.d,
-  );
-  // Alaska and Texas are huge, so allow a long reach before giving up.
-  if (ranked[0].d > 700) return [];
-  return ranked.slice(0, 3).map((r) => r.st);
+export function statesNear(lat: number, lon: number): Found {
+  const NEIGHBOR = 10; // miles: also offer a state this close to the border
+  const OFFSHORE = 30; // miles: on a boat or a beach, still count the nearest state
+  // A degree box around the point, so far-away states are skipped quickly.
+  const pad = 0.6;
+  const scored: { code: string; d: number }[] = [];
+  for (const o of getOutlines()) {
+    const [s, w, n, e] = o.box;
+    if (lat < s - pad || lat > n + pad || lon < w - pad * 2 || lon > e + pad * 2) continue;
+    if (o.rings.some((r) => inRing(lat, lon, r))) {
+      scored.push({ code: o.code, d: 0 });
+      continue;
+    }
+    const d = Math.min(...o.rings.map((r) => milesToRing(lat, lon, r)));
+    if (d <= OFFSHORE) scored.push({ code: o.code, d });
+  }
+  scored.sort((a, b) => a.d - b.d);
+  if (scored.length === 0) return { states: [], inside: false };
+  const first = scored[0];
+  const rest = scored.slice(1).filter((x) => x.d <= Math.max(NEIGHBOR, first.d + NEIGHBOR));
+  const states = [first, ...rest]
+    .slice(0, 3)
+    .map((x) => findState(x.code))
+    .filter((st): st is USState => !!st);
+  return { states, inside: first.d === 0 };
 }
 
 // ---------- The three-question way ----------

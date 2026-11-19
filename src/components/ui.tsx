@@ -63,6 +63,7 @@ export function Button(props: {
   style?: StyleProp<ViewStyle>;
 }) {
   const t = useTheme();
+  const isDark = useDark();
   const kind = props.kind ?? 'primary';
   return (
     <Pressable
@@ -71,9 +72,20 @@ export function Button(props: {
       accessibilityRole="button"
       style={({ pressed }) => [
         s.btn,
-        kind === 'primary' && { backgroundColor: t.accent },
-        kind === 'secondary' && { backgroundColor: t.soft },
-        (pressed || props.disabled) && { opacity: props.disabled ? 0.4 : 0.8 },
+        // Primary sits up off the page with a soft green glow, so it reads as
+        // something to press, not a colored label.
+        kind === 'primary' && {
+          backgroundColor: t.accent,
+          boxShadow: isDark ? undefined : '0px 4px 12px rgba(11, 107, 79, 0.3)',
+        },
+        // Secondary gets a clear green edge.
+        kind === 'secondary' && {
+          backgroundColor: t.soft,
+          borderWidth: 1.5,
+          borderColor: t.accent,
+        },
+        pressed && { opacity: 0.85, transform: [{ scale: 0.97 }] },
+        props.disabled && { opacity: 0.4 },
         props.style,
       ]}
     >
@@ -84,11 +96,11 @@ export function Button(props: {
             color:
               kind === 'primary'
                 ? t.accentText
-                : kind === 'secondary'
-                  ? t.text
-                  : kind === 'danger'
-                    ? t.bad
-                    : t.muted,
+                : kind === 'danger'
+                  ? t.bad
+                  : // Secondary and quiet buttons use the link green, never gray,
+                    // so they don't look like plain text.
+                    t.accent,
           },
           (kind === 'quiet' || kind === 'danger') && { fontWeight: '700', fontSize: 16 },
         ]}
@@ -155,6 +167,38 @@ export function IconTile(props: { name: IconName; color: string; tint: string; s
  * The top of a page: back arrow, title and (optionally) the page's icon, all on one line,
  * so the page's own content starts right underneath instead of below an empty bar.
  */
+/**
+ * The "this opens something" sign at the end of a tappable row: a chevron in a
+ * small green circle. Testers missed that plain chevrons meant "tap me".
+ * Use `inverse` on a green background.
+ */
+export function Go(props: { inverse?: boolean; style?: StyleProp<ViewStyle> }) {
+  const t = useTheme();
+  const isDark = useDark();
+  return (
+    <View
+      style={[
+        s.go,
+        {
+          backgroundColor: props.inverse
+            ? isDark
+              ? 'rgba(0,0,0,0.14)'
+              : 'rgba(255,255,255,0.22)'
+            : t.soft,
+        },
+        props.style,
+      ]}
+    >
+      <Ionicons
+        name="chevron-forward"
+        size={18}
+        color={props.inverse ? t.accentText : t.accent}
+        style={{ marginLeft: 2 }}
+      />
+    </View>
+  );
+}
+
 export function TitleBar(props: { title: string; icon?: ReactNode }) {
   const t = useTheme();
   const top = useSafeAreaInsets().top;
@@ -346,6 +390,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
   },
   btnText: { fontSize: 17, fontWeight: '800', textAlign: 'center' },
+  go: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   card: {
     padding: 16,
     borderRadius: 22,

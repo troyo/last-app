@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Card, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
+import { Card, Go, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
 import { findChecklist } from '../../lib/checklists';
 import { DIAGRAMS } from '../../lib/diagrams';
 import { HAZARDS } from '../../lib/hazards';
@@ -228,7 +228,7 @@ export default function SituationScreen() {
                         {r.sub}
                       </Text>
                     </View>
-                    <Ionicons name="chevron-forward" size={20} color={t.text} />
+                    <Go />
                   </Pressable>
                 ),
               )}

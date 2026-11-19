@@ -7,7 +7,7 @@ import { Image, Pressable, StyleSheet, useWindowDimensions, View } from 'react-n
 import { useTier } from '../lib/purchases';
 import { useTheme } from '../lib/theme';
 import { Pitch, pitchFor } from '../lib/upgrade';
-import { Button, Card, Text } from './ui';
+import { Button, Card, Go, Text } from './ui';
 
 export const UPGRADE_ART = {
   medium: require('../../assets/illustrations/upgrade-medium.png'),
@@ -146,7 +146,7 @@ export function UpgradeRow(props: { count: number }) {
             : `They come with Large, just ${p.price} more for you.`}
         </Text>
       </View>
-      <Ionicons name="chevron-forward" size={20} color={t.accent} />
+      <Go />
     </Card>
   );
 }
