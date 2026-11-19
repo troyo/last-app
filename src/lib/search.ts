@@ -87,6 +87,7 @@ export type SearchResults = {
 
 // One lowercase "haystack" per guide, built once per catalog.
 let indexedFor: Catalog | null = null;
+let easyBySlug = new Map<string, Item>();
 let index: { item: Item; title: string; rest: string; manual: boolean }[] = [];
 
 /** Get the search index ready ahead of the first search, so typing never waits on it. */
@@ -96,6 +97,7 @@ function ensureIndex() {
   const cat = getCatalog();
   if (indexedFor === cat) return;
   const topicTitle = new Map(cat.topics.map((t) => [t.id, t.title.toLowerCase()]));
+  easyBySlug = new Map(cat.items.filter(isEasy).map((i) => [slugOf(i), i]));
   index = cat.items.map((item) => ({
     item,
     title: item.title.toLowerCase(),
@@ -224,7 +226,16 @@ export function search(query: string, limit = 60): SearchResults {
       first.item = hit.item;
     }
   }
-  return { help, hazards, guides: merged.slice(0, limit), total: merged.length };
+  const shown = merged.slice(0, limit);
+  // The short version may not match the words typed ("Heat stroke" is "Hyperthermia"
+  // in simple words), so look it up as well.
+  for (const row of shown) {
+    if (row.easy || isEasy(row.item) || row.item.type !== 'article') continue;
+    const easy = easyBySlug.get(slugOf(row.item));
+    if (easy && isDownloaded(easy) && !(typeof easy.words === 'number' && easy.words < 250))
+      row.easy = easy;
+  }
+  return { help, hazards, guides: shown, total: merged.length };
 }
 
 // ---------- Recent searches ----------
