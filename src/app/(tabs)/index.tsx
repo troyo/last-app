@@ -6,7 +6,7 @@ import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, FadeIn, IconName, IconTile, Text } from '../../components/ui';
 import { hasAgreed } from '../../lib/agreement';
-import { formatBytes, getCatalog, itemsForPack } from '../../lib/catalog';
+import { formatBytes, itemsForPack } from '../../lib/catalog';
 import { getChecklists, progressOf } from '../../lib/checklists';
 import { CLIMATE_TIPS, HAZARDS } from '../../lib/hazards';
 import { isDownloaded, remainingBytes } from '../../lib/library';
@@ -16,6 +16,7 @@ import { packOffered } from '../../lib/first-pack';
 import { findQuickHelp, QUICK_HELP, QuickHelp } from '../../lib/quick-help';
 import { recentHelp } from '../../lib/recent';
 import { SITUATIONS } from '../../lib/situations';
+import { cardFor, learnedIn, SKILL_PATHS, todaysSkill } from '../../lib/skills';
 import { HUES, useHues, useTheme } from '../../lib/theme';
 import { currentPhase, planProgress } from '../../lib/year-plan';
 import { hasSeenWelcome } from '../../lib/welcome';
@@ -107,7 +108,8 @@ export default function Home() {
     .filter((h): h is QuickHelp => !!h);
   const myHazards = profile ? HAZARDS.filter((h) => profile.hazards.includes(h.id)) : [];
 
-  const topics = getCatalog().topics;
+  const today = todaysSkill();
+  const todayCard = today ? cardFor(today.step) : undefined;
   const left = state.pack ? remainingBytes(state.pack) : 0;
   const ready = !!state.pack && state.complete && left === 0;
   const missing = state.pack ? itemsForPack(state.pack).length - onPhone.length : 0;
@@ -480,6 +482,82 @@ export default function Home() {
           </Text>
 
           <Section title="Learn" />
+          {/* One small thing a day, so skills build up before they are needed. */}
+          {today && todayCard && (
+            <Pressable
+              onPress={() => router.push(`/help/${todayCard.id}`)}
+              accessibilityRole="button"
+              style={({ pressed }) => [
+                s.today,
+                { backgroundColor: hues[today.path.hue].tint },
+                pressed && { opacity: 0.85 },
+              ]}
+            >
+              <IconTile
+                name={todayCard.icon as IconName}
+                color={hues[today.path.hue].color}
+                tint={t.card}
+                size={48}
+              />
+              <View style={{ flex: 1, gap: 2 }}>
+                <Text style={{ color: t.text, fontSize: 15, fontWeight: '800' }}>
+                  Learn one thing today
+                </Text>
+                <Text style={{ color: t.text, fontSize: 18, fontWeight: '800', lineHeight: 23 }}>
+                  {todayCard.title}
+                </Text>
+                <Text style={{ color: t.text, fontSize: 15, lineHeight: 20 }}>
+                  {today.step.why}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={22} color={t.text} />
+            </Pressable>
+          )}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ marginHorizontal: -20, marginTop: 10, marginBottom: 10 }}
+            contentContainerStyle={{ paddingHorizontal: 20, gap: 10 }}
+          >
+            {SKILL_PATHS.map((p) => {
+              const got = learnedIn(p);
+              return (
+                <Pressable
+                  key={p.id}
+                  onPress={() => router.push(`/skills/${p.id}`)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${p.title} skill path. ${got} of ${p.steps.length} learned`}
+                  style={({ pressed }) => [
+                    s.path,
+                    { backgroundColor: t.card, borderColor: t.border },
+                    pressed && { opacity: 0.8 },
+                  ]}
+                >
+                  <IconTile name={p.icon as IconName} {...HUES[p.hue]} size={40} />
+                  <Text
+                    style={{ color: t.text, fontSize: 16, fontWeight: '800' }}
+                    numberOfLines={1}
+                  >
+                    {p.title}
+                  </Text>
+                  <View style={[s.listTrack, { backgroundColor: t.border, alignSelf: 'stretch' }]}>
+                    <View
+                      style={[
+                        s.listFill,
+                        {
+                          width: `${(got / p.steps.length) * 100}%`,
+                          backgroundColor: hues[p.hue].color,
+                        },
+                      ]}
+                    />
+                  </View>
+                  <Text style={{ color: t.text, fontSize: 15 }}>
+                    {got} of {p.steps.length}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
           <Card onPress={() => router.push('/search')} style={s.row}>
             <IconTile name="bookshelf" {...HUES.teal} />
             <View style={{ flex: 1 }}>
@@ -607,6 +685,15 @@ const s = StyleSheet.create({
     marginTop: 10,
     borderRadius: 20,
     borderWidth: StyleSheet.hairlineWidth,
+  },
+  today: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 20 },
+  path: {
+    width: 148,
+    padding: 12,
+    gap: 8,
+    borderRadius: 20,
+    borderWidth: StyleSheet.hairlineWidth,
+    alignItems: 'flex-start',
   },
   planTrack: { height: 6, borderRadius: 3, overflow: 'hidden', marginTop: 2 },
   halfGrow: { flexBasis: '50%', flexGrow: 1, padding: 5 },
