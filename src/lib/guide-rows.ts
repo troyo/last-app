@@ -16,6 +16,9 @@ export const isEasy = (i: Item) => i.title.endsWith(EASY);
 export const plainTitle = (i: Item) => (isEasy(i) ? i.title.slice(0, -EASY.length) : i.title);
 const isStub = (i: Item) => typeof i.words === 'number' && i.words < STUB_WORDS;
 
+// "wp-heat-stroke" and "simple-heat-stroke" are the same subject.
+export const slugOf = (i: Item) => 'id:' + i.id.replace(/^(wp|simple)-/, '');
+
 export type GuideRow = { item: Item; easy?: Item };
 
 /** One row per subject. The full guide leads; a decent easy version rides along. */
@@ -26,11 +29,16 @@ export function pairUp(items: Item[]): GuideRow[] {
     if (isEasy(item)) continue;
     const row: GuideRow = { item };
     rows.push(row);
-    if (item.type === 'article') byTitle.set(`${item.topic}/${item.title}`, row);
+    if (item.type === 'article') {
+      byTitle.set(`${item.topic}/${item.title}`, row);
+      byTitle.set(slugOf(item), row);
+    }
   }
   for (const item of items) {
     if (!isEasy(item)) continue;
-    const full = byTitle.get(`${item.topic}/${plainTitle(item)}`);
+    // The two versions can have different names ("Heat stroke" and "Hyperthermia"),
+    // so match on where they came from first, then on the name.
+    const full = byTitle.get(slugOf(item)) ?? byTitle.get(`${item.topic}/${plainTitle(item)}`);
     if (!full) rows.push({ item });
     else if (!isStub(item) && !full.easy) full.easy = item;
   }
@@ -40,7 +48,10 @@ export function pairUp(items: Item[]): GuideRow[] {
 /** The easy version of a full guide (or the full version of an easy one), if it is in this list. */
 export function otherVersion(item: Item, all: Item[]): Item | undefined {
   const want = isEasy(item) ? plainTitle(item) : item.title + EASY;
-  const other = all.find((i) => i.title === want && i.type === 'article');
+  const slug = slugOf(item);
+  const other =
+    all.find((i) => i.id !== item.id && isEasy(i) !== isEasy(item) && slugOf(i) === slug) ??
+    all.find((i) => i.title === want && i.type === 'article');
   return other && !(isEasy(other) && isStub(other)) ? other : undefined;
 }
 
@@ -82,24 +93,32 @@ export const cardsForTopic = (topic: string): QuickHelp[] =>
 
 // Which card to offer at the top of a guide: "need to act now? open the steps".
 const GUIDE_CARD: [RegExp, string][] = [
-  [/bleed|tourniquet|h(a)?emorrhage|pressure bandage/i, 'bleeding'],
+  // Water first: "disinfection" must never be read as an infected wound.
+  [
+    /water (purification|chlorination|filter|disinfection)|disinfection|make water safe|^boiling|waterborne/i,
+    'water',
+  ],
+  [/rainwater|water well|spring \(/i, 'find-water'],
+  [/bleed|tourniquet|h(a)?emorrhage|pressure bandage|^shock/i, 'bleeding'],
   [/cardiopulmonary|\bcpr\b|recovery position|drowning|cardiac arrest/i, 'cpr'],
   [/choking|heimlich|abdominal thrust/i, 'choking'],
   [/^burn|scald/i, 'burn'],
   [/fracture|splint|sprain|dislocat/i, 'broken-bone'],
   [/heat stroke|heat exhaustion|hyperthermia|heat illness/i, 'heat'],
   [/hypothermia|frostbite/i, 'cold'],
+  [/space blanket|emergency blanket/i, 'warm'],
   [/anaphyla|epinephrine|allerg/i, 'allergy'],
   [/snakebite|snake bite/i, 'snake-bite'],
   [/seizure|epilep/i, 'seizure'],
-  [/dehydration|rehydration|diarrh|cholera|foodborne|gastroenteritis/i, 'dehydration'],
-  [/^wound|bandage|dressing|infection/i, 'wound'],
+  [
+    /dehydration|rehydration|diarrh|cholera|foodborne|food poisoning|gastroenteritis/i,
+    'dehydration',
+  ],
+  [/\bwound|bandage|dressing|\binfection/i, 'wound'],
   [/childbirth|midwi/i, 'birth'],
   [/tooth|dental/i, 'tooth'],
-  [/water (purification|chlorination|filter|disinfection)|^boiling|waterborne/i, 'water'],
-  [/rainwater|water well|spring \(/i, 'find-water'],
   [/fire.?making|firelighting|tinder/i, 'fire'],
-  [/bivouac|shelter|emergency blanket|lean-to/i, 'shelter'],
+  [/bivouac|shelter|lean-to/i, 'shelter'],
   [/food preservation|drying \(food|smoking \(cooking|curing/i, 'keep-food'],
   [/food storage|rationing/i, 'ration'],
   [/latrine|sanitation/i, 'latrine'],

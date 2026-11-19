@@ -3,7 +3,7 @@
 // It looks through every guide in the catalog (title, summary and topic),
 // plus the built-in emergency cards, and puts the best matches first.
 
-import { isEasy, plainTitle } from './guide-rows';
+import { isEasy, slugOf } from './guide-rows';
 import { Catalog, getCatalog, Item, PackId } from './catalog';
 import { File, Paths } from './fs';
 import { Hazard, HAZARDS } from './hazards';
@@ -212,7 +212,7 @@ export function search(query: string, limit = 60): SearchResults {
   const merged: GuideHit[] = [];
   const seen = new Map<string, GuideHit>();
   for (const hit of hits) {
-    const key = `${have.get(hit.item.id)}/${hit.item.topic}/${plainTitle(hit.item)}`;
+    const key = `${have.get(hit.item.id)}/${slugOf(hit.item)}`;
     const first = hit.item.type === 'article' ? seen.get(key) : undefined;
     if (!first) {
       const row = { ...hit };
