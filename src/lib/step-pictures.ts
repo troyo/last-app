@@ -93,6 +93,14 @@ const STEP_PICS: Record<string, (ShowPic | null)[]> = {
     'birthWait',
     'birthRubB',
   ],
+  power: ['powerLight', 'powerFridge', 'powerUnplug', 'powerPhone', null],
+  light: ['powerLight', 'lightCeiling', null, 'lightOil', 'lightLampB'],
+  cook: ['cookOutside', 'cookMatch', 'cookBricksB', 'cookLid', 'cookSoak', 'waterBoilB'],
+  toilet: ['toiletFlushB', 'toiletBags', 'toiletCoverB', 'toiletTie', 'washHandsB'],
+  'food-cold': ['foodShut', 'powerFridge', 'foodFreezer', 'foodCooler', 'foodCookB'],
+  cool: ['sipA', 'heatCloths', 'coolCurtain', 'coolLow', 'coolNight', 'heatShade'],
+  phone: ['powerPhone', 'phoneAirplane', 'phonePaper', 'phoneTemp', 'phoneCar'],
+  'store-water': ['saveFillB', 'saveTub', 'saveGallon', 'saveHeater', 'saveRainB'],
 };
 
 /** The picture for step i of a card, if it has one. */

@@ -1,5 +1,5 @@
 // Things for the Rebuild pictures: animals, tools, furniture. Same flat style as kit.mjs.
-import { C, GROUND, shade, SKIN } from './kit.mjs';
+import { C, GROUND, shade, SKIN, flame } from './kit.mjs';
 
 export function goat(x, y = GROUND, o = {}) {
   const s = o.scale ?? 1;
@@ -134,3 +134,42 @@ export function moon(x, y, r = 34) {
 }
 
 export const SKINS = SKIN;
+
+// ---------- home things ----------
+export function fridge(x, y = GROUND, o = {}) {
+  const s = o.scale ?? 1;
+  return `<g transform="translate(${x},${y}) scale(${s})"><rect x="-80" y="-320" width="160" height="320" rx="18" fill="#E8EEF2" stroke="#B9C4CB" stroke-width="5"/><path d="M -80 -200 H 80" stroke="#B9C4CB" stroke-width="5"/><rect x="50" y="-300" width="10" height="70" rx="5" fill="${C.metalDark}"/><rect x="50" y="-180" width="10" height="90" rx="5" fill="${C.metalDark}"/>${o.label ? `<text x="0" y="-100" text-anchor="middle" font-family="Inter" font-weight="800" font-size="40" fill="${C.ink}">${o.label}</text>` : ''}</g>`;
+}
+
+export function phone(x, y, o = {}) {
+  const s = o.scale ?? 1;
+  return `<g transform="translate(${x},${y}) scale(${s}) rotate(${o.rot ?? 0})"><rect x="-50" y="-96" width="100" height="192" rx="18" fill="${C.ink}"/><rect x="-42" y="-82" width="84" height="164" rx="10" fill="${o.screen ?? '#BFD9EA'}"/>${o.body ?? ''}</g>`;
+}
+
+export function flashlight(x, y, rot = 0, s = 1, on = true) {
+  return `<g transform="translate(${x},${y}) rotate(${rot}) scale(${s})">${on ? `<path d="M 60 -20 L 260 -90 L 260 90 L 60 20 Z" fill="${C.sun}" opacity="0.35"/>` : ''}<rect x="-80" y="-18" width="120" height="36" rx="10" fill="${C.forest}"/><path d="M 40 -26 L 66 -34 L 66 34 L 40 26 Z" fill="${C.forest}"/><rect x="62" y="-30" width="8" height="60" rx="3" fill="#FFF3C4"/></g>`;
+}
+
+export function candle(x, y = GROUND, s = 1) {
+  return `<g transform="translate(${x},${y}) scale(${s})"><rect x="-18" y="-110" width="36" height="110" rx="6" fill="#F7F1E3" stroke="#E2D7BD" stroke-width="4"/>${flame(0, -112, 0.35)}</g>`;
+}
+
+export function generator(x, y = GROUND, s = 1) {
+  return `<g transform="translate(${x},${y}) scale(${s})"><rect x="-90" y="-120" width="180" height="110" rx="14" fill="${C.coral}"/><rect x="-70" y="-100" width="80" height="60" rx="8" fill="${C.ink}"/><circle cx="50" cy="-70" r="20" fill="#E8EEF2"/><circle cx="-60" cy="-6" r="16" fill="${C.ink}"/><circle cx="60" cy="-6" r="16" fill="${C.ink}"/><path d="M 90 -40 q 30 -10 30 -40" stroke="#9FA8A3" stroke-width="10" fill="none"/></g>`;
+}
+
+export function car(x, y = GROUND, s = 1, col = '#5B8DBE') {
+  return `<g transform="translate(${x},${y}) scale(${s})"><rect x="-140" y="-90" width="280" height="70" rx="22" fill="${col}"/><path d="M -90 -88 L -60 -150 L 70 -150 L 100 -88 Z" fill="${col}"/><path d="M -70 -96 L -50 -138 L 0 -138 L 0 -96 Z M 14 -96 L 14 -138 L 62 -138 L 84 -96 Z" fill="#CFE6F5"/><circle cx="-80" cy="-20" r="30" fill="${C.ink}"/><circle cx="80" cy="-20" r="30" fill="${C.ink}"/><circle cx="-80" cy="-20" r="12" fill="#9AA5AD"/><circle cx="80" cy="-20" r="12" fill="#9AA5AD"/></g>`;
+}
+
+export function toilet(x, y = GROUND, s = 1) {
+  return `<g transform="translate(${x},${y}) scale(${s})"><rect x="40" y="-230" width="70" height="120" rx="12" fill="#F4F6F5" stroke="#C9D2CE" stroke-width="5"/><path d="M -110 -120 L 80 -120 Q 80 -40 10 -30 L 20 0 L -60 0 L -50 -30 Q -110 -50 -110 -120 Z" fill="#F4F6F5" stroke="#C9D2CE" stroke-width="5"/><rect x="-120" y="-132" width="210" height="18" rx="9" fill="#E3E8E6" stroke="#C9D2CE" stroke-width="4"/></g>`;
+}
+
+export function windowFrame(x, y, w = 160, h = 160, o = {}) {
+  return `<rect x="${x - w / 2}" y="${y - h / 2}" width="${w}" height="${h}" fill="${o.night ? '#2F4A6B' : '#BFD9EA'}" stroke="#FFFFFF" stroke-width="10"/><path d="M ${x} ${y - h / 2} V ${y + h / 2} M ${x - w / 2} ${y} H ${x + w / 2}" stroke="#fff" stroke-width="8"/>${o.curtain ? `<rect x="${x - w / 2 - 10}" y="${y - h / 2 - 12}" width="${w + 20}" height="${h + 24}" fill="${o.curtain}"/><path d="M ${x} ${y - h / 2 - 12} V ${y + h / 2 + 12}" stroke="${shade(o.curtain, 0.2)}" stroke-width="6"/>` : ''}`;
+}
+
+export function tub(x, y = GROUND, s = 1, water = true) {
+  return `<g transform="translate(${x},${y}) scale(${s})"><path d="M -170 -110 L 170 -110 Q 170 0 120 0 L -120 0 Q -170 0 -170 -110 Z" fill="#F4F6F5" stroke="#C9D2CE" stroke-width="5"/>${water ? `<path d="M -160 -96 L 160 -96 Q 156 -16 116 -14 L -116 -14 Q -156 -16 -160 -96 Z" fill="${C.waterLight}"/>` : ''}<rect x="120" y="-170" width="14" height="60" rx="6" fill="${C.metalDark}"/><rect x="100" y="-176" width="50" height="14" rx="6" fill="${C.metalDark}"/></g>`;
+}
