@@ -15,6 +15,9 @@ import { Button, Card, IconName, IconTile, Text, TitleBar } from '../../componen
 import { findTopic, itemsForPack, topicSize } from '../../lib/catalog';
 import { cardsForTopic, isEasy, pairUp, plainTitle } from '../../lib/guide-rows';
 import { isDownloaded } from '../../lib/library';
+import { useTier } from '../../lib/purchases';
+import { lockedInTopic } from '../../lib/upgrade';
+import { UpgradeRow } from '../../components/UpgradeCard';
 import { useLibrary } from '../../lib/LibraryContext';
 import { HUES, TOPIC_LOOK, useTheme } from '../../lib/theme';
 
@@ -72,6 +75,9 @@ export default function TopicScreen() {
   const look = TOPIC_LOOK[id] ?? { icon: 'book-open-variant', hue: 'teal' as const };
   // Is there more for this topic in a bigger pack?
   const inAnyPack = topicSize(id);
+  // How many of those still need a bigger pack (as opposed to just not being saved yet).
+  const tier = useTier();
+  const locked = useMemo(() => lockedInTopic(tier, id), [tier, id]);
 
   return (
     <>
@@ -196,21 +202,25 @@ export default function TopicScreen() {
         ListEmptyComponent={
           items.length > 0 ? undefined : cards.length > 0 ? (
             // The built-in guides above still work; the library just has nothing here yet.
-            <Card onPress={() => router.push('/packs')} style={s.row}>
-              <View style={{ flex: 1, gap: 2 }}>
-                <Text style={[s.title, { color: t.text }]}>
-                  {inAnyPack > 0
-                    ? `${inAnyPack.toLocaleString()} more guides to read`
-                    : 'More guides'}
-                </Text>
-                <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
-                  {state.pack
-                    ? 'They come with the bigger packs.'
-                    : 'Save a pack and they are yours offline.'}
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={18} color={t.accent} />
-            </Card>
+            state.pack && locked > 0 ? (
+              <UpgradeRow count={locked} />
+            ) : (
+              <Card onPress={() => router.push('/packs')} style={s.row}>
+                <View style={{ flex: 1, gap: 2 }}>
+                  <Text style={[s.title, { color: t.text }]}>
+                    {inAnyPack > 0
+                      ? `${inAnyPack.toLocaleString()} more guides to read`
+                      : 'More guides'}
+                  </Text>
+                  <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
+                    {state.pack
+                      ? 'They come with the bigger packs.'
+                      : 'Save a pack and they are yours offline.'}
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={18} color={t.accent} />
+              </Card>
+            )
           ) : (
             <View style={s.empty}>
               <Image
@@ -233,10 +243,12 @@ export default function TopicScreen() {
           )
         }
         ListFooterComponent={
-          items.length > 0 && inAnyPack > items.length ? (
+          items.length > 0 && locked > 0 ? (
+            <UpgradeRow count={locked} />
+          ) : items.length > 0 && inAnyPack > items.length ? (
             <Card onPress={() => router.push('/packs')} style={s.row}>
               <Text style={{ color: t.text, fontSize: 16, fontWeight: '800', flex: 1 }}>
-                {(inAnyPack - items.length).toLocaleString()} more in the bigger packs
+                {(inAnyPack - items.length).toLocaleString()} more to save from your pack
               </Text>
               <Ionicons name="chevron-forward" size={18} color={t.accent} />
             </Card>
