@@ -5,6 +5,8 @@
 // Each step shows one picture, or two that swap back and forth to show the
 // movement. The words here are deliberately shorter than on the full card.
 import { DIAGRAMS } from './diagrams';
+import { REBUILD_CARDS } from './rebuild-cards';
+import { REBUILD_PICS } from './rebuild-pictures';
 
 const P = {
   cprShout: require('../../assets/show/cpr-shout.png'),
@@ -1393,5 +1395,20 @@ export const SHOW_ME: Record<string, ShowStep[]> = {
     },
   ],
 };
+
+// The Rebuild cards: one screen for each step that has a picture, in the card's own words.
+// The words are the step's first sentence, plus the next one when the first is only a few words.
+const sayOf = (step: string) => {
+  const parts = step.split(/(?<=[.?!])\s+/);
+  return parts[0].split(' ').length <= 4 && parts[1] ? `${parts[0]} ${parts[1]}` : parts[0];
+};
+for (const card of REBUILD_CARDS) {
+  const pics = REBUILD_PICS[card.id];
+  if (!pics || SHOW_ME[card.id]) continue;
+  SHOW_ME[card.id] = Object.keys(pics)
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map((i) => ({ say: sayOf(card.steps[i]), pics: [pics[i]] }));
+}
 
 export const hasShowMe = (id: string) => !!SHOW_ME[id];

@@ -325,6 +325,8 @@ export function pill(x, y, text, o = {}) {
   const fs = Math.max(o.size ?? 40, 36);
   const w = text.length * fs * 0.58 + fs * 1.3;
   const h = fs * 1.7;
+  // keep the whole label inside the picture
+  x = Math.min(Math.max(x, w / 2 + 16), W - w / 2 - 16);
   const bg = o.bg ?? C.white;
   const fg = o.color ?? C.ink;
   return `<g filter="url(#soft)"><rect x="${x - w / 2}" y="${y - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${bg}"/><text x="${x}" y="${y + fs * 0.36}" text-anchor="middle" font-family="Inter" font-weight="800" font-size="${fs}" fill="${fg}">${text}</text></g>`;

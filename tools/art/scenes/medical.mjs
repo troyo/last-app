@@ -39,23 +39,23 @@ const HURT = { shirt: '#5B8DBE', pants: '#8B6F4E', skin: SKIN[1], hair: HAIR[3] 
 const patient = (o = {}) => lier(200, 404, { ...HURT, ...o });
 
 // ---------------- CPR ----------------
-const pusher = (d, parts) =>
+const pusher = (d, parts, dx = 0) =>
   person({
-    head: [268, 206 + d],
-    neck: [286, 244 + d],
-    hip: [368, 330],
+    head: [268 + dx, 206 + d],
+    neck: [286 + dx, 244 + d],
+    hip: [368 + dx, 330],
     legs: [
-      [[350, 396], [440, 404], 1],
-      [[358, 398], [448, 406], 1],
+      [[350 + dx, 396], [440 + dx, 404], 1],
+      [[358 + dx, 398], [448 + dx, 406], 1],
     ],
     arms: [
       [
-        [278, 314 + d / 2],
-        [262, 378 + d / 3],
+        [278 + dx, 314 + d / 2],
+        [262 + dx, 378 + d / 3],
       ],
       [
-        [284, 314 + d / 2],
-        [266, 380 + d / 3],
+        [284 + dx, 314 + d / 2],
+        [266 + dx, 380 + d / 3],
       ],
     ],
     facing: -1,
@@ -151,22 +151,28 @@ const shout = () => {
 };
 
 // ---------------- bleeding ----------------
-// A close-up: their arm lies flat, the helper's two hands press a cloth on it from above.
+// The helper kneels and presses a cloth on the hurt leg with both hands, arms straight.
 const pressArm = (d, more) => {
-  const y = 350;
-  const top = y - 50 + d;
-  return (
-    forearm(60, 520, y, { skin: HURT.skin, sleeve: HURT.shirt }) +
-    `<rect x="250" y="${y - 40}" width="170" height="70" rx="14" fill="#fff" stroke="#D5DCD8" stroke-width="4"/>` +
+  const dx = 140;
+  const pad =
+    `<rect x="378" y="384" width="60" height="22" rx="6" fill="#fff" stroke="#D5DCD8" stroke-width="3"/>` +
     (more
-      ? `<rect x="240" y="${y - 58 + d}" width="190" height="34" rx="12" fill="#F6E7B2" stroke="#E2CC7E" stroke-width="4"/>`
+      ? `<rect x="372" y="374" width="72" height="16" rx="6" fill="#F6E7B2" stroke="#E2CC7E" stroke-width="3"/>`
+      : '');
+  const close =
+    `<rect x="-130" y="-130" width="260" height="260" fill="${HURT.pants}"/>` +
+    `<rect x="-80" y="-10" width="160" height="70" rx="12" fill="#fff" stroke="#D5DCD8" stroke-width="4"/>` +
+    (more
+      ? `<rect x="-90" y="-30" width="180" height="40" rx="10" fill="#F6E7B2" stroke="#E2CC7E" stroke-width="4"/>`
       : '') +
-    // helper arms come down from the top right
-    `<path d="M 700 120 L 520 ${top - 60} L 380 ${top - 8}" stroke="${shade(C.forest, 0.15)}" stroke-width="34" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` +
-    `<path d="M 690 30 L 470 ${top - 110} L 360 ${top - 20}" stroke="${C.forest}" stroke-width="34" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` +
-    `<rect x="268" y="${top - 18}" width="130" height="46" rx="23" fill="${shade(HELP.skin, 0.14)}"/>` +
-    `<rect x="290" y="${top - 30}" width="130" height="46" rx="23" fill="${HELP.skin}"/>` +
-    `<path d="M 304 ${top - 16} h 26 M 300 ${top - 2} h 30" stroke="${shade(HELP.skin, 0.28)}" stroke-width="4" stroke-linecap="round"/>`
+    handTop(0, 30, { skin: shade(HELP.skin, 0.12), scale: 0.8, rot: 6 }) +
+    handTop(6, 16, { skin: HELP.skin, scale: 0.8, rot: -4 });
+  return (
+    pusher(d, 'body', dx) +
+    patient() +
+    pad +
+    pusher(d, 'arms', dx) +
+    zoom(150, 150, 92, close, { from: [406, 388] })
   );
 };
 
@@ -522,16 +528,12 @@ export default {
       tick(620, 110),
   ),
   // bleeding
-  'press-a': frame(pressArm(0, false) + '', { noGround: true }),
-  'press-b': frame(
-    pressArm(10, false) + arrow([180, 120], [180, 230]) + pill(150, 470, '10 min') + tick(620, 110),
-    { noGround: true },
-  ),
+  'press-a': frame(pressArm(0, false)),
+  'press-b': frame(pressArm(16, false) + arrow([540, 120], [540, 220]) + pill(620, 300, '10 min')),
   'press-more': frame(
     pressArm(-4, true) +
       '' +
-      `<g filter="url(#soft)"><circle cx="160" cy="160" r="34" fill="${C.sun}"/><path d="M 140 160 h 40 M 160 140 v 40" stroke="${C.ink}" stroke-width="9" stroke-linecap="round"/></g>`,
-    { noGround: true },
+      `<g filter="url(#soft)"><circle cx="560" cy="140" r="34" fill="${C.sun}"/><path d="M 540 140 h 40 M 560 120 v 40" stroke="${C.ink}" stroke-width="9" stroke-linecap="round"/></g>`,
   ),
   'legs-up': frame(
     lier(190, 404, {

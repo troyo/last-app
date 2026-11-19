@@ -1,6 +1,7 @@
 // A picture under each step of a card, drawn in the same style as "Show me".
 // The list lines up with the card's steps: one entry per step, null where words are enough.
 // A card's own `pictures` (the labelled diagrams) win over these.
+import { REBUILD_PICS } from './rebuild-pictures';
 import { SHOW_PICS, ShowPic } from './show-me';
 
 const STEP_PICS: Record<string, (ShowPic | null)[]> = {
@@ -16,7 +17,8 @@ const STEP_PICS: Record<string, (ShowPic | null)[]> = {
 /** The picture for step i of a card, if it has one. */
 export function stepPicture(cardId: string, i: number): number | undefined {
   const key = STEP_PICS[cardId]?.[i];
-  return key ? SHOW_PICS[key] : undefined;
+  if (key) return SHOW_PICS[key];
+  return REBUILD_PICS[cardId]?.[i];
 }
 
 export const STEP_PICTURE_CARDS = Object.keys(STEP_PICS);
