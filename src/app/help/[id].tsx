@@ -123,8 +123,8 @@ export default function QuickHelpScreen() {
             </View>
             <Text style={{ color: t.muted, fontSize: 15, lineHeight: 20, flex: 1 }}>
               {h.level === 'basic'
-                ? 'Anyone can start today with what is around.'
-                : 'Takes practice, a few tools or a helper.'}
+                ? 'Anyone can start today.'
+                : 'Takes practice, tools or a helper.'}
             </Text>
           </View>
         )}
