@@ -141,6 +141,12 @@ function wordScore(word: string, title: string, rest: string): number {
   if (found(title, word)) return 8;
   if (found(rest, word)) return 3;
   let best = 0;
+  // "burned" and "burning" should still find "Burn".
+  const stem = word.length > 5 ? word.replace(/(ed|ing)$/, '') : word;
+  if (stem !== word && stem.length > 2) {
+    if (title.includes(stem)) best = 6;
+    else if (rest.includes(stem)) best = 2;
+  }
   for (const alt of SYNONYMS[word] ?? []) {
     if (found(title, alt)) best = Math.max(best, 5);
     else if (found(rest, alt)) best = Math.max(best, 2);

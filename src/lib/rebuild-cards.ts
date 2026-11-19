@@ -586,6 +586,7 @@ export const REBUILD_CARDS: QuickHelp[] = [
       'Cut away all the fat. Fat does not dry and goes bad first.',
       'Slice the lean meat with the grain into strips as thin as a pencil. Fish: split it flat and take out the guts and backbone.',
       'Rub the strips well with salt, or soak them for an hour in water with as much salt as will dissolve.',
+      'Heat it through before drying. Drop the strips into boiling salty water for 1 minute, or roast them briefly until steaming hot all the way through. Drying alone does not kill every germ.',
       'Hang the strips on a rack or line so they do not touch. Keep them in moving air, out of rain, and off the ground away from animals.',
       'Keep flies off. A small, cool, smoky fire of green hardwood underneath does this and adds flavor. The meat should feel warm, never hot.',
       'Dry for 1 to 3 days, bringing it under cover at night. It is done when a strip cracks as it bends but does not snap in two.',
@@ -601,7 +602,7 @@ export const REBUILD_CARDS: QuickHelp[] = [
       'Don’t use pine, fir or other sappy wood for smoke. It makes the meat bitter and can make you sick.',
       'Don’t eat dried meat that is slimy, smells sour, or has fuzzy mold.',
       'Don’t dry meat from an animal that looked sick or was found dead.',
-      'Don’t dry pork or bear without cooking it through first. They can carry worms that drying does not kill.',
+      'Don’t dry pork or bear without cooking it through first. They can carry worms that drying and freezing do not kill.',
     ],
     risky:
       'Meat that goes bad can make you very sick. When in doubt, throw it out or boil it hard before eating.',
@@ -618,7 +619,7 @@ export const REBUILD_CARDS: QuickHelp[] = [
     steps: [
       'Choose the spot. Low ground near green plants in the dry season is a good sign. Stay at least 50 big steps from any toilet, animal pen or grave, and uphill from them.',
       'Test first. Drive a steel rod or dig a narrow test hole. If you hit wet sand or gravel within about 15 feet, dig here.',
-      'Mark a circle about 4 feet across. Never dig a well alone. One person digs and two stay at the top at all times.',
+      'Mark a circle about 4 feet across. Never dig a well alone. One person digs and two stay at the top at all times. Tie a rope around the digger’s chest, with the other end held at the top.',
       'Dig straight down. Lift the dirt out in a bucket on a rope, and pile it well back from the edge.',
       'Line the walls as you go. Every 3 feet you dig, hold the sides back with a ring of stacked stones, bricks, a barrel with no ends, or boards braced tight.',
       'Stop and climb out at once if the walls crack, bulge or trickle sand, or if the digger gets dizzy, sleepy or short of breath.',
@@ -638,10 +639,11 @@ export const REBUILD_CARDS: QuickHelp[] = [
       'Don’t dig below unlined walls taller than your waist.',
       'Don’t use an engine or a fire near or in the hole. Bad air sinks into wells and kills without warning.',
       'Don’t leave an open well uncovered, even for a minute. Children and animals fall in.',
+      'Don’t climb in after someone who has collapsed. The same bad air will take you too. Pull them out by the rope.',
     ],
     risky:
       'Hand-dug wells collapse and kill diggers. If you can collect rain or carry water from a spring or stream, do that first.',
-    know: 'Before lowering anyone into an old or deep well, lower a lit candle. If the flame dies, the air will not keep a person alive.',
+    know: 'Bad air collects at the bottom of wells and pits and has no smell. A candle that goes out is a warning, but a candle that stays lit does not prove the air is safe. The rope is what saves the digger.',
   },
   {
     id: 'lime',
@@ -666,6 +668,7 @@ export const REBUILD_CARDS: QuickHelp[] = [
     next: [
       'Lime paste thinned with water to the look of milk is whitewash. It brightens rooms and kills germs on walls, pens and latrines.',
       'Lime paste keeps for years under water in a covered tub.',
+      'Use quicklime soon, or store it bone dry in a covered metal container away from wood. Damp quicklime heats up enough to start a fire.',
       'Lime mortar takes weeks to harden and keeps getting harder for years.',
       'Lime or ash sprinkled into a latrine cuts the smell and the flies.',
     ],
@@ -688,7 +691,7 @@ export const REBUILD_CARDS: QuickHelp[] = [
     title: 'Simple remedies that are safe',
     when: 'The medicine is gone. These few do some good and little harm. Use only what you are sure of.',
     steps: [
-      'Honey on wounds and burns. Spread plain honey on a clean wound or a small burn and cover it. Change it every day.',
+      'Honey on wounds and burns. Spread plain honey from a clean, closed jar on a clean wound or a small burn and cover it. Change it every day.',
       'Salt water for mouths and throats. Stir half a teaspoon of salt into a cup of boiled, warm water. Rinse or gargle and spit, several times a day.',
       'Salt and sugar drink for the runs. Mix 6 level teaspoons of sugar and half a teaspoon of salt in 1 quart of boiled, cooled water. Sip it all day.',
       'Steam for a blocked nose or chest. Breathe the steam from a bowl of hot water for a few minutes, with a cloth over your head. Keep children well back from the hot water.',
@@ -698,7 +701,7 @@ export const REBUILD_CARDS: QuickHelp[] = [
       'Rest, water and food. Most sickness passes with these three. Keep the person warm, drinking, and eating small amounts.',
     ],
     next: [
-      'Willow bark tea eases pain and fever like a weak aspirin. Simmer a small handful of inner bark from young branches in 2 cups of water for 10 minutes. Adults only, and not for anyone who bleeds easily, is pregnant or reacts badly to aspirin.',
+      'Willow bark tea eases pain and fever like a weak aspirin. Simmer a piece of inner bark from young branches, about the size of your palm, in 2 cups of water for 10 minutes, and drink it over the day. Adults only. Not with aspirin or blood-thinning medicine, and not for anyone who bleeds easily, is pregnant or reacts badly to aspirin.',
       'Write down what you gave, how much and when, and what happened.',
       'Learn the healing plants of your own area from someone who knows them, plant in hand. Never from a picture alone.',
       'Grow mint, garlic, ginger where it is warm, and keep bees if you can.',
