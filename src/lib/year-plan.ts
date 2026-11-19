@@ -354,6 +354,87 @@ export const YEAR_PLAN: PlanPhase[] = [
       },
     ],
   },
+  {
+    id: 'rebuild',
+    tab: 'Year two on',
+    title: 'Year two and after',
+    icon: 'hammer-wrench',
+    hue: 'teal',
+    goal: 'You stop living off what was left behind and start making what you need. The skills are written down and taught, so they outlast you.',
+    jobs: [
+      {
+        id: 'teach',
+        text: 'Start a school. Every child learns to read, write and count, and every adult teaches one skill.',
+        open: { label: 'Guides on teaching', search: 'education apprenticeship' },
+      },
+      {
+        id: 'records',
+        text: 'Write things down. Keep a record of births, deaths, stores, seed and what worked.',
+        open: { label: 'Guides on paper and ink', search: 'papermaking ink' },
+      },
+      {
+        id: 'rules',
+        text: 'Agree how you decide things. Hold a regular meeting, write the rules down, and settle fights in the open.',
+        open: { label: 'Guides on running a community', search: 'town meeting mediation' },
+      },
+      {
+        id: 'seed',
+        text: 'Save your own seed every year. Bought seed runs out, and saved seed gets better suited to your land.',
+        open: { label: 'Guides on saving seed', search: 'seed saving' },
+      },
+      {
+        id: 'animals',
+        text: 'Breed your animals. Keep the best for breeding, and learn to use an ox, horse or donkey for heavy work.',
+        open: { label: 'Guides on farm animals', search: 'animal husbandry' },
+      },
+      {
+        id: 'grain',
+        text: 'Grow a grain field and learn to thresh, store and grind it. Grain is what feeds a village through winter.',
+        open: { label: 'Guides on grain', search: 'threshing gristmill' },
+      },
+      {
+        id: 'cloth',
+        text: 'Make cloth and leather. Old clothes wear out in a few years, so learn to spin, weave and tan.',
+        open: { label: 'Guides on cloth', search: 'spinning weaving tanning' },
+      },
+      {
+        id: 'build',
+        text: 'Build to last. Learn lime mortar, brick, timber frames and a roof that sheds water.',
+        open: { label: 'Guides on building', search: 'lime mortar brick timber framing' },
+      },
+      {
+        id: 'pots',
+        text: 'Make pots and charcoal. Fired clay holds water and food, and charcoal burns hot enough to work metal.',
+        open: { label: 'Guides on pottery', search: 'pottery kiln charcoal' },
+      },
+      {
+        id: 'metal',
+        text: 'Set up a forge. Start by reshaping scrap steel into tools, nails and blades before trying to smelt ore.',
+        open: { label: 'Guides on metalwork', search: 'blacksmith forge' },
+      },
+      {
+        id: 'mill',
+        text: 'Put water and wind to work. A wheel on a stream can grind grain and saw wood all day.',
+        open: { label: 'Guides on mills', search: 'water wheel windmill' },
+      },
+      {
+        id: 'health',
+        text: 'Train healers. Pick two people to learn birth, wounds, teeth and fevers, and to keep everyone washing hands.',
+        open: { label: 'Guides on health', search: 'midwifery public health' },
+      },
+      {
+        id: 'trade',
+        text: 'Find your neighbors and trade. Other groups have skills, seed and animals you lack.',
+        open: { label: 'Guides on trade', search: 'barter trade' },
+      },
+    ],
+    notesTitle: 'Keep in mind',
+    notes: [
+      'Scrap comes first. For many years it is easier to reuse steel, glass, wire and cloth from empty buildings than to make them new.',
+      'Teach every skill to at least two people. A skill only one person knows is one accident from being lost.',
+      'These guides are encyclopedia pages. They explain how a thing is done, but expect to practice and fail a few times.',
+    ],
+  },
 ];
 
 const FILE = new File(Paths.document, 'year-plan.json');
