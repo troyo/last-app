@@ -3,7 +3,7 @@ import * as Haptics from 'expo-haptics';
 import { router, Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Card, IconName, IconTile, Text, TitleBar } from '../../components/ui';
+import { Card, Go, IconName, IconTile, Text, TitleBar } from '../../components/ui';
 import { cardFor, findSkillPath, isLearned, learnedIn, toggleLearned } from '../../lib/skills';
 import { HUES, useHues, useTheme } from '../../lib/theme';
 
@@ -112,7 +112,7 @@ export default function SkillPathScreen() {
                       {step.why}
                     </Text>
                   </View>
-                  <Ionicons name="chevron-forward" size={20} color={t.text} />
+                  <Go />
                 </Pressable>
               </View>
             );

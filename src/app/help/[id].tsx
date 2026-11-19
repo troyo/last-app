@@ -3,7 +3,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { minutesIn, StepTimer } from '../../components/StepTimer';
-import { Bullets, Card, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
+import { Bullets, Card, Go, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
 import { DiagramId, DIAGRAMS } from '../../lib/diagrams';
 import { findQuickHelp } from '../../lib/quick-help';
 import { readNext } from '../../lib/read-next';
@@ -200,7 +200,7 @@ export default function QuickHelpScreen() {
               >
                 <IconTile name={c.icon as IconName} {...HUES[c.hue]} size={40} />
                 <Text style={[s.nextTitle, { color: t.text }]}>{c.title}</Text>
-                <Ionicons name="chevron-forward" size={20} color={t.text} />
+                <Go />
               </Pressable>
             ))}
             {after.guides.map((g) => (
@@ -217,7 +217,7 @@ export default function QuickHelpScreen() {
                   </Text>
                   <Text style={{ color: t.text, fontSize: 15 }}>Full guide</Text>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color={t.text} />
+                <Go />
               </Pressable>
             ))}
           </Card>

@@ -7,7 +7,8 @@ export function locate(timeoutMs = 20000): Promise<Fix | null> {
     navigator.geolocation.getCurrentPosition(
       (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
       () => resolve(null),
-      { timeout: timeoutMs },
+      // Never reuse an old position from somewhere else.
+      { timeout: timeoutMs, maximumAge: 5 * 60 * 1000 },
     );
   });
 }

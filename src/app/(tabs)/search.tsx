@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Card, IconName, IconTile, Text } from '../../components/ui';
+import { Card, Go, IconName, IconTile, Text } from '../../components/ui';
 import { findTopic, getCatalog } from '../../lib/catalog';
 import { cardsForTopic, plainTitle } from '../../lib/guide-rows';
 import { Hazard } from '../../lib/hazards';
@@ -142,7 +142,7 @@ export default function Search() {
                 In your own words, offline
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={18} color={t.accent} />
+            <Go />
           </Pressable>
           {recent.length > 0 && (
             <>
@@ -184,7 +184,7 @@ export default function Search() {
                             : 'In the bigger packs'}
                     </Text>
                   </View>
-                  <Ionicons name="chevron-forward" size={18} color={t.text} />
+                  <Go />
                 </Pressable>
               );
             })}
@@ -231,7 +231,7 @@ export default function Search() {
                       {h.group ? 'Step-by-step guide' : 'Emergency steps'}
                     </Text>
                   </View>
-                  <Ionicons name="chevron-forward" size={18} color={t.muted} />
+                  <Go />
                 </Card>
               );
             }
@@ -246,7 +246,7 @@ export default function Search() {
                       Before, during and after
                     </Text>
                   </View>
-                  <Ionicons name="chevron-forward" size={18} color={t.muted} />
+                  <Go />
                 </Card>
               );
             }
@@ -310,7 +310,7 @@ export default function Search() {
                     </Text>
                   </Pressable>
                 ) : (
-                  <Ionicons name="chevron-forward" size={18} color={t.text} />
+                  <Go />
                 )}
               </Card>
             );

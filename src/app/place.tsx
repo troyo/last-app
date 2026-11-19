@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Card, IconName, IconTile, Text } from '../components/ui';
+import { Button, Card, Go, IconName, IconTile, Text } from '../components/ui';
 import { HAZARDS } from '../lib/hazards';
 import { locate } from '../lib/locate';
 import {
@@ -41,6 +41,7 @@ export default function Place() {
   const [finding, setFinding] = useState(false);
   const [note, setNote] = useState('');
   const [near, setNear] = useState<USState[]>([]);
+  const [inside, setInside] = useState(false);
   const [filter, setFilter] = useState('');
   const shownStates = useMemo(() => {
     const want = filter.trim().toLowerCase();
@@ -82,12 +83,13 @@ export default function Place() {
       return;
     }
     const found = statesNear(fix.lat, fix.lon);
-    if (found.length === 0) {
+    if (found.states.length === 0) {
       setNote('Looks like you’re outside the US. Two quick questions will do it.');
       go('quiz');
       return;
     }
-    setNear(found);
+    setNear(found.states);
+    setInside(found.inside);
     go('near');
   };
 
@@ -122,6 +124,8 @@ export default function Place() {
     title: string;
     sub?: string;
     on?: boolean;
+    /** Outline it as the best guess, while still showing it opens. */
+    hi?: boolean;
     onPress: () => void;
   }) => (
     <Pressable
@@ -130,8 +134,8 @@ export default function Place() {
       accessibilityState={{ selected: !!p.on }}
       style={({ pressed }) => [
         s.option,
-        { backgroundColor: t.card, borderColor: p.on ? t.accent : 'transparent' },
-        pressed && { opacity: 0.85 },
+        { backgroundColor: t.card, borderColor: p.on || p.hi ? t.accent : 'transparent' },
+        pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
       ]}
     >
       <IconTile name={p.icon} {...(p.on ? HUES.green : HUES.teal)} size={42} />
@@ -139,13 +143,15 @@ export default function Place() {
         <Text style={{ color: t.text, fontSize: 16, fontWeight: '800' }}>{p.title}</Text>
         {!!p.sub && <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}>{p.sub}</Text>}
       </View>
-      <Ionicons
-        name={
-          p.on === undefined ? 'chevron-forward' : p.on ? 'checkmark-circle' : 'ellipse-outline'
-        }
-        size={p.on === undefined ? 18 : 24}
-        color={p.on ? t.accent : t.muted}
-      />
+      {p.on === undefined ? (
+        <Go />
+      ) : (
+        <Ionicons
+          name={p.on ? 'checkmark-circle' : 'ellipse-outline'}
+          size={24}
+          color={p.on ? t.accent : t.muted}
+        />
+      )}
     </Pressable>
   );
 
@@ -230,7 +236,7 @@ export default function Place() {
             }}
             hitSlop={10}
           >
-            <Text style={{ color: t.muted, fontSize: 15, fontWeight: '600' }}>Later</Text>
+            <Text style={{ color: t.accent, fontSize: 16, fontWeight: '700' }}>Later</Text>
           </Pressable>
         )}
       </View>
@@ -274,16 +280,23 @@ export default function Place() {
 
         {step === 'near' && (
           <>
-            <Text style={[s.title, { color: t.text }]}>Found you. Which one is it?</Text>
-            <Text style={[s.lead, { color: t.muted }]}>
-              You’re in or close to these. Tap the one you live in.
+            <Text style={[s.title, { color: t.text }]}>
+              {inside ? `Found you in ${near[0].name}` : 'Found you. Which one is it?'}
             </Text>
-            {near.map((st) => (
+            <Text style={[s.lead, { color: t.muted }]}>
+              {inside
+                ? near.length > 1
+                  ? 'Tap it to keep going. You’re close to a border, so the next state over is here too.'
+                  : 'Tap it to keep going.'
+                : 'You’re close to these. Tap the one you live in.'}
+            </Text>
+            {near.map((st, i) => (
               <Option
                 key={st.code}
                 icon="map-marker"
                 title={st.name}
-                sub={CLIMATES[st.climate].title}
+                sub={inside && i === 0 ? 'You’re here' : CLIMATES[st.climate].title}
+                hi={inside && i === 0}
                 onPress={() => chooseState(st)}
               />
             ))}
@@ -324,7 +337,7 @@ export default function Place() {
                   <Text style={{ color: t.text, fontSize: 16, fontWeight: '600', flex: 1 }}>
                     {st.name}
                   </Text>
-                  <Ionicons name="chevron-forward" size={16} color={t.muted} />
+                  <Ionicons name="chevron-forward" size={18} color={t.accent} />
                 </Pressable>
               ))}
             </Card>
