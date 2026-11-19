@@ -61,10 +61,22 @@ const css = (px: number, c: ReaderColors) => `
   .magnify,.mw-cite-backlink,.nomobile,.tmbox,.ombox,.cmbox,.fmbox,.Inline-Template,.asof-tag,
   audio,video,track,.listen,.haudio,.refbegin,.citation,.printfooter{display:none !important}
 
+  /* "Need this now?" links under the title */
+  .act{display:flex;flex-direction:column;gap:10px;margin:0 0 1.3em}
+  .act a{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:18px;background:${c.soft};
+         color:${c.text};text-decoration:none;font-weight:700;line-height:1.3}
+  .act a small{display:block;font-size:.84em;font-weight:400;margin-top:2px}
+  .act a i{margin-left:auto;font-style:normal;color:${c.accent};font-size:1.3em;flex:none}
+  .act a.now{background:${c.accent};color:${c.accentText}}
+  .act a.now i{color:${c.accentText}}
+  .swipe{font-size:.84em;font-weight:700;color:${c.accent};margin:1em 0 -.5em}
+
   /* Jump-to list */
   .jump{background:${c.card};border-radius:20px;padding:6px 16px;margin:1.2em 0 1.4em;
         box-shadow:0 4px 14px rgba(23,53,44,.07)}
-  .jump .lab{font-size:.78em;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 0 4px}
+  .jump .lab{font-size:.78em;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:12px 0 4px;display:flex;align-items:center;gap:8px}
+  .jump .key{margin-left:auto;display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-weight:400;font-size:1.1em}
+  .jump .key::before{content:'';width:9px;height:9px;border-radius:5px;background:${c.sun}}
   .jump a{display:flex;align-items:center;gap:10px;padding:12px 0;font-weight:700;text-decoration:none;
           color:${c.text};border-top:1px solid ${c.border}}
   .jump a:first-of-type{border-top:0}
@@ -148,8 +160,23 @@ const SCRIPT = String.raw`
     wrap.appendChild(tb);
   }
 
+  // ---- 2b. No upsetting or pointless pictures ----
+  // The picture at the very top of an encyclopedia page is often a painting, a
+  // famous person or a graphic photo. Someone opening "Bleeding" in a hurry needs
+  // none of that, so pictures before the first section go, and so does any picture
+  // whose caption shows it is a chart, a portrait or a piece of history.
+  var BAD_PIC = /\b(painting|painted by|portrait|engraving|illustration from|woodcut|statue|memorial|poster|stamp|film still|movie|album|wrestl|actor|singer|president|chart|graph|map of|deaths?|died|mortality|per 100,000|per million|prevalence|incidence|percentage|\d{4}s?\b)/i;
+  var boxOf = function (im) { return im.closest('figure,.thumb,.gallerybox,.tsingle,.tmulti') || im; };
+  var firstHead = inner.querySelector('h2');
+  Array.prototype.slice.call(inner.querySelectorAll('img')).forEach(function (im) {
+    var box = boxOf(im);
+    if (!box.parentNode || box.closest('table')) return;
+    var lead = firstHead ? !!(firstHead.compareDocumentPosition(im) & 2) : true;
+    if (lead || BAD_PIC.test(box.textContent || '')) box.parentNode.removeChild(box);
+  });
+
   // ---- 3. Fold the guide into sections, practical ones first ----
-  var DROP = /^(references?|notes?|footnotes?|citations?|sources?|bibliography|external links?|further reading|other websites|works cited|gallery|etymology|names?|naming|in popular culture|popular culture|in fiction|in media|notable .*|awards?|see also|related pages)$/i;
+  var DROP = /^(references?|notes?|footnotes?|citations?|sources?|bibliography|external links?|further reading|other websites|works cited|gallery|etymology|names?|naming|in popular culture|popular culture|in fiction|in media|notable .*|awards?|see also|related pages|epidemiology|history|society and culture|research|research directions|terminology|other animals|in other animals|veterinary( use)?|economics|legal (status|issues))$/i;
   // Never stretch a small picture past its real size: that is what makes photos look blurry.
   var sharp = function (im) { if (im.naturalWidth) im.style.maxWidth = 'min(100%, ' + im.naturalWidth + 'px)'; };
   Array.prototype.forEach.call(document.images, function (im) { if (im.complete) sharp(im); else im.addEventListener('load', function () { sharp(im); }); });
@@ -210,9 +237,25 @@ const SCRIPT = String.raw`
     built.push({ el: holder, title: s.title, rank: FIRST.test(s.title) ? 0 : DO.test(s.title) ? 1 : ABOUT.test(s.title) ? 3 : 2 });
   }
 
+  // A table wider than the screen scrolls sideways. Say so, or it just looks cut off.
+  var swipeHints = function (within) {
+    var wraps = within.querySelectorAll('.scroll');
+    for (var w = 0; w < wraps.length; w++) {
+      var el = wraps[w];
+      if (el.getAttribute('data-hint') || !el.clientWidth) continue;
+      el.setAttribute('data-hint', '1');
+      if (el.scrollWidth > el.clientWidth + 12) {
+        var note = document.createElement('div');
+        note.className = 'swipe';
+        note.textContent = 'Swipe the table sideways to see it all \u2192';
+        el.parentNode.insertBefore(note, el);
+      }
+    }
+  };
   var toggle = function (sec, open) {
     if (open === undefined) open = !sec.classList.contains('open');
     sec.classList.toggle('open', open);
+    if (open) swipeHints(sec);
   };
 
   if (built.length >= 2) {
@@ -223,6 +266,12 @@ const SCRIPT = String.raw`
     var lab = document.createElement('div');
     lab.className = 'lab';
     lab.textContent = 'Jump to';
+    if (ordered[0].rank <= 1) {
+      var key = document.createElement('span');
+      key.className = 'key';
+      key.textContent = 'What to do';
+      lab.appendChild(key);
+    }
     jump.appendChild(lab);
     var saidMore = false;
     ordered.forEach(function (b, n) {
@@ -262,6 +311,8 @@ const SCRIPT = String.raw`
     // A short guide: no folding needed.
     built.forEach(function (b) { toggle(b.el, true); });
   }
+
+  swipeHints(root);
 
   // ---- 4. Find in this guide ----
   var marks = [], at = -1;
@@ -339,6 +390,8 @@ export function buildReaderPage(opts: {
   colors: ReaderColors;
   /** Is this other guide on the phone? Links to guides that are not become plain text. */
   isSaved?: (id: string) => boolean;
+  /** Shortcuts shown under the title: the matching step-by-step card, the other version. */
+  links?: { href: string; label: string; sub?: string; now?: boolean }[];
 }): string {
   // Only our own script may run: anything else in a guide is refused.
   const body = opts.isSaved
@@ -347,12 +400,22 @@ export function buildReaderPage(opts: {
         (whole, id: string, text: string) => (opts.isSaved!(decodeURIComponent(id)) ? whole : text),
       )
     : opts.html;
+  const act = opts.links?.length
+    ? `<nav class="act">${opts.links
+        .map(
+          (l) =>
+            `<a href="${escapeHtml(l.href)}"${l.now ? ' class="now"' : ''}><span>${escapeHtml(l.label)}${
+              l.sub ? `<small>${escapeHtml(l.sub)}</small>` : ''
+            }</span><i>›</i></a>`,
+        )
+        .join('')}</nav>`
+    : '';
   const nonce = Math.random().toString(36).slice(2) + Date.now().toString(36);
   return `<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; script-src 'nonce-${nonce}'">
-<style>${css(opts.px, opts.colors)}</style></head><body><div id="doc"><h1>${escapeHtml(opts.title)}</h1>${body}</div>
+<style>${css(opts.px, opts.colors)}</style></head><body><div id="doc"><h1>${escapeHtml(opts.title)}</h1>${act}${body}</div>
 <p class="credit">Source: ${escapeHtml(opts.source)} · ${escapeHtml(opts.license)}.
-General information, not medical advice. If you can reach emergency services, please do that first.</p>
+General information, not medical advice. If you can reach a doctor or emergency services, do that first.</p>
 <script nonce="${nonce}">${SCRIPT}</script></body></html>`;
 }

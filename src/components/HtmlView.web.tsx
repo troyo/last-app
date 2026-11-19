@@ -3,6 +3,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 const LINK_PREFIX = 'lastapp://item/';
+const HELP_PREFIX = 'lastapp://help/';
 
 export type ReaderCommand =
   | { type: 'find'; query: string }
@@ -19,6 +20,8 @@ export const HtmlView = forwardRef<
     background: string;
     dark: boolean;
     onOpenItem: (id: string) => void;
+    /** A link to one of the app's own step-by-step cards. */
+    onOpenHelp?: (id: string) => void;
     onMessage?: (msg: ReaderMessage) => void;
     onReady?: () => void;
   }
@@ -57,6 +60,7 @@ export const HtmlView = forwardRef<
           const href = a.getAttribute('href') ?? '';
           ev.preventDefault();
           if (href.startsWith(LINK_PREFIX)) props.onOpenItem(href.slice(LINK_PREFIX.length));
+          else if (href.startsWith(HELP_PREFIX)) props.onOpenHelp?.(href.slice(HELP_PREFIX.length));
         });
       }}
       style={{ flex: 1, border: 0, width: '100%', height: '100%', background: props.background }}

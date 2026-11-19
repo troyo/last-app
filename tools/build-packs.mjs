@@ -564,6 +564,8 @@ for (const tier of TIERS) {
       license: wiki.license,
       sourceUrl: a.sourceUrl,
       summary: summaryOf(a.html),
+      // Rough length, so the app can skip stub-sized easy versions.
+      words: a.html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length,
     });
     chunk[a.id] = a.html;
     chunkBytes += a.html.length;

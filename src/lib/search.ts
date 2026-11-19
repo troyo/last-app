@@ -3,6 +3,7 @@
 // It looks through every guide in the catalog (title, summary and topic),
 // plus the built-in emergency cards, and puts the best matches first.
 
+import { isEasy, plainTitle } from './guide-rows';
 import { Catalog, getCatalog, Item, PackId } from './catalog';
 import { File, Paths } from './fs';
 import { Hazard, HAZARDS } from './hazards';
@@ -76,7 +77,7 @@ export const SYNONYMS: Record<string, string[]> = {
 
 const PACK_ORDER: PackId[] = ['small', 'medium', 'large'];
 
-export type GuideHit = { item: Item; score: number };
+export type GuideHit = { item: Item; score: number; easy?: Item };
 export type SearchResults = {
   help: QuickHelp[];
   hazards: Hazard[];
@@ -207,7 +208,23 @@ export function search(query: string, limit = 60): SearchResults {
       b.score - a.score ||
       a.item.title.localeCompare(b.item.title),
   );
-  return { help, hazards, guides: hits.slice(0, limit), total: hits.length };
+  // A guide and its "in simple words" version share one row, in the better of their two places.
+  const merged: GuideHit[] = [];
+  const seen = new Map<string, GuideHit>();
+  for (const hit of hits) {
+    const key = `${have.get(hit.item.id)}/${hit.item.topic}/${plainTitle(hit.item)}`;
+    const first = hit.item.type === 'article' ? seen.get(key) : undefined;
+    if (!first) {
+      const row = { ...hit };
+      merged.push(row);
+      if (hit.item.type === 'article') seen.set(key, row);
+    } else if (isEasy(hit.item)) first.easy = hit.item;
+    else if (isEasy(first.item)) {
+      first.easy = first.item;
+      first.item = hit.item;
+    }
+  }
+  return { help, hazards, guides: merged.slice(0, limit), total: merged.length };
 }
 
 // ---------- Recent searches ----------

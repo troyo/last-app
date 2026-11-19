@@ -3,6 +3,7 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { WebView } from 'react-native-webview';
 
 const LINK_PREFIX = 'lastapp://item/';
+const HELP_PREFIX = 'lastapp://help/';
 
 export type ReaderCommand =
   | { type: 'find'; query: string }
@@ -19,6 +20,8 @@ export const HtmlView = forwardRef<
     background: string;
     dark: boolean;
     onOpenItem: (id: string) => void;
+    /** A link to one of the app's own step-by-step cards. */
+    onOpenHelp?: (id: string) => void;
     onMessage?: (msg: ReaderMessage) => void;
     onReady?: () => void;
   }
@@ -53,6 +56,10 @@ export const HtmlView = forwardRef<
       onShouldStartLoadWithRequest={(req) => {
         if (req.url.startsWith(LINK_PREFIX)) {
           props.onOpenItem(req.url.slice(LINK_PREFIX.length));
+          return false;
+        }
+        if (req.url.startsWith(HELP_PREFIX)) {
+          props.onOpenHelp?.(req.url.slice(HELP_PREFIX.length));
           return false;
         }
         return req.url === 'about:blank' || req.url.startsWith('data:');

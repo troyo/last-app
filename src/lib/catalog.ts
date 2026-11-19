@@ -43,6 +43,7 @@ export type Item = {
   license: string;
   sourceUrl?: string;
   summary?: string; // first sentence or two, for search
+  words?: number; // rough length of an article, when the library says
 };
 
 export type Catalog = {

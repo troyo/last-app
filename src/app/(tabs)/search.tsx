@@ -5,6 +5,7 @@ import { FlatList, Pressable, ScrollView, StyleSheet, TextInput, View } from 're
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card, IconName, IconTile, Text } from '../../components/ui';
 import { findTopic, getCatalog } from '../../lib/catalog';
+import { cardsForTopic, plainTitle } from '../../lib/guide-rows';
 import { Hazard } from '../../lib/hazards';
 import { isDownloaded } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
@@ -176,9 +177,11 @@ export default function Search() {
                     <Text style={{ color: t.text, fontSize: 15 }} numberOfLines={1}>
                       {savedCount[topic.id]
                         ? `${savedCount[topic.id].toLocaleString()} ${savedCount[topic.id] === 1 ? 'guide' : 'guides'} on this phone`
-                        : Object.keys(savedCount).length === 0
-                          ? 'Not saved yet'
-                          : 'In the bigger packs'}
+                        : cardsForTopic(topic.id).length > 0
+                          ? `${cardsForTopic(topic.id).length} step-by-step guides`
+                          : Object.keys(savedCount).length === 0
+                            ? 'Not saved yet'
+                            : 'In the bigger packs'}
                     </Text>
                   </View>
                   <Ionicons name="chevron-forward" size={18} color={t.text} />
@@ -261,37 +264,54 @@ export default function Search() {
                   </Text>
                 </View>
               );
-            const { item } = row.hit;
+            const { item, easy } = row.hit;
             const saved = isDownloaded(item);
             const look = TOPIC_LOOK[item.topic] ?? { icon: 'book-open-variant', hue: 'teal' };
+            // Keep a topic name like "First aid & health" from breaking after the "&".
+            const topicName = (findTopic(item.topic)?.title ?? '').replace(/ & /g, ' &\u00A0');
             return (
               <Card
                 onPress={() => open(() => router.push(saved ? `/item/${item.id}` : '/packs'))}
-                style={[s.row, { alignItems: 'flex-start' }]}
+                style={s.row}
               >
                 <IconTile name={look.icon as IconName} {...HUES[look.hue]} size={42} />
                 <View style={{ flex: 1, gap: 2 }}>
                   <Text style={[s.title, { color: t.text }]} numberOfLines={2}>
-                    {item.title}
+                    {plainTitle(item)}
                   </Text>
-                  {!!item.summary && (
-                    <Text
-                      style={{ color: t.muted, fontSize: 15, lineHeight: 21 }}
-                      numberOfLines={2}
-                    >
+                  {/* Manuals come with a line we wrote; article openings read like a dictionary. */}
+                  {item.type === 'pdf' && !!item.summary && (
+                    <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }} numberOfLines={2}>
                       {item.summary}
                     </Text>
                   )}
-                  <Text style={{ color: saved ? t.good : t.warn, fontSize: 15, fontWeight: '700' }}>
-                    {saved
-                      ? 'On this phone'
-                      : `In the ${PACK_NAME[item.tier]} pack · tap to get it`}
-                    <Text style={{ color: t.muted, fontWeight: '400' }}>
-                      {'  ·  '}
-                      {findTopic(item.topic)?.title ?? ''}
-                    </Text>
+                  <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
+                    {item.type === 'pdf' ? 'Full manual · ' : ''}
+                    {topicName}
                   </Text>
+                  {!saved && (
+                    <Text
+                      style={{ color: t.warn, fontSize: 15, fontWeight: '700', lineHeight: 21 }}
+                    >
+                      In the {PACK_NAME[item.tier]} pack
+                    </Text>
+                  )}
                 </View>
+                {saved && easy ? (
+                  <Pressable
+                    onPress={() => open(() => router.push(`/item/${easy.id}`))}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${plainTitle(item)}, short version in simple words`}
+                    hitSlop={8}
+                    style={[s.easy, { backgroundColor: t.soft }]}
+                  >
+                    <Text style={{ color: t.accent, fontSize: 15, fontWeight: '800' }}>
+                      Short version
+                    </Text>
+                  </Pressable>
+                ) : (
+                  <Ionicons name="chevron-forward" size={18} color={t.text} />
+                )}
               </Card>
             );
           }}
@@ -332,5 +352,6 @@ const s = StyleSheet.create({
   },
   list: { padding: 18, gap: 10, paddingBottom: 32 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  title: { fontSize: 16, fontWeight: '800', lineHeight: 21 },
+  title: { fontSize: 17, fontWeight: '800', lineHeight: 22 },
+  easy: { paddingHorizontal: 12, minHeight: 36, borderRadius: 18, justifyContent: 'center' },
 });

@@ -15,10 +15,11 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '../../components/ui';
 import { HtmlView, HtmlViewHandle } from '../../components/HtmlView';
-import { findItem, Item } from '../../lib/catalog';
+import { findItem, getCatalog, Item } from '../../lib/catalog';
+import { cardForGuide, isEasy, otherVersion, plainTitle } from '../../lib/guide-rows';
 import { fileFor, isDownloaded } from '../../lib/library';
 import { buildReaderPage } from '../../lib/reader-page';
-import { getTextSize, nextTextSize, TEXT_SIZES } from '../../lib/text-size';
+import { getTextSize, stepTextSize, TEXT_SIZE_NAMES, TEXT_SIZES } from '../../lib/text-size';
 import { useTheme } from '../../lib/theme';
 
 export default function ItemScreen() {
@@ -75,14 +76,36 @@ function Article({ item }: { item: Item }) {
     fileFor(item).text().then(setHtml);
   }, [item]);
 
+  // Shortcuts under the title: the steps to follow right now, and the other version of this guide.
+  const links = useMemo(() => {
+    const out: { href: string; label: string; sub?: string; now?: boolean }[] = [];
+    const card = cardForGuide(item);
+    if (card)
+      out.push({
+        href: `lastapp://help/${card.id}`,
+        label: card.group ? `Step by step: ${card.title}` : `Happening now? ${card.title}`,
+        sub: 'Short steps you can follow right away',
+        now: true,
+      });
+    const other = otherVersion(item, getCatalog().items);
+    if (other && isDownloaded(other))
+      out.push({
+        href: `lastapp://item/${other.id}`,
+        label: isEasy(other) ? 'Read the short version' : 'Read the full guide',
+        sub: isEasy(other) ? 'The same thing in simple words' : 'Longer, with more detail',
+      });
+    return out;
+  }, [item]);
+
   // Our own simple, readable page. Nothing is loaded from the internet.
   const page = useMemo(
     () =>
       html === null
         ? null
         : buildReaderPage({
-            title: item.title,
+            title: plainTitle(item),
             html,
+            links,
             source: item.source,
             license: item.license,
             px: TEXT_SIZES[size],
@@ -132,25 +155,35 @@ function Article({ item }: { item: Item }) {
               >
                 <Ionicons name="search" size={24} color={t.accent} />
               </Pressable>
-              {/* Tap "Aa" to make the words bigger. The choice is remembered. */}
-              <Pressable
-                onPress={() => {
-                  stopFinding();
-                  const next = nextTextSize();
-                  setSize(next);
-                  // Say which size this is, since the button just cycles round.
-                  setSizeNote(
-                    ['Text: regular', 'Text: large', 'Text: extra large'][next] ??
-                      'Text size changed',
-                  );
-                  if (noteTimer.current) clearTimeout(noteTimer.current);
-                  noteTimer.current = setTimeout(() => setSizeNote(null), 1600);
-                }}
-                hitSlop={12}
-                accessibilityLabel="Change text size"
-              >
-                <Text style={{ color: t.accent, fontSize: 20, fontWeight: '800' }}>Aa</Text>
-              </Pressable>
+              {/* A− and A+ make the words smaller or bigger. The choice is remembered. */}
+              {([-1, 1] as const).map((by) => {
+                const end = by < 0 ? size === 0 : size === TEXT_SIZES.length - 1;
+                return (
+                  <Pressable
+                    key={by}
+                    disabled={end}
+                    onPress={() => {
+                      stopFinding();
+                      const next = stepTextSize(by);
+                      setSize(next);
+                      setSizeNote(TEXT_SIZE_NAMES[next]);
+                      if (noteTimer.current) clearTimeout(noteTimer.current);
+                      noteTimer.current = setTimeout(() => setSizeNote(null), 1600);
+                    }}
+                    hitSlop={10}
+                    accessibilityRole="button"
+                    accessibilityLabel={by < 0 ? 'Smaller text' : 'Bigger text'}
+                    style={{ opacity: end ? 0.35 : 1 }}
+                  >
+                    <Text
+                      maxFontSizeMultiplier={1.2}
+                      style={{ color: t.accent, fontSize: by < 0 ? 17 : 22, fontWeight: '800' }}
+                    >
+                      {by < 0 ? 'A−' : 'A+'}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
           ),
         }}
@@ -166,6 +199,7 @@ function Article({ item }: { item: Item }) {
           const target = findItem(id);
           if (target && fileFor(target).exists) router.push(`/item/${id}`);
         }}
+        onOpenHelp={(card) => router.push(`/help/${card}`)}
       />
       {!ready && (
         <View style={StyleSheet.absoluteFill} pointerEvents="none">

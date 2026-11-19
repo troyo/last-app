@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Button, Card, IconName, IconTile, Text, TitleBar } from '../../components/ui';
 import { findTopic, itemsForPack, topicSize } from '../../lib/catalog';
+import { cardsForTopic, isEasy, pairUp, plainTitle } from '../../lib/guide-rows';
 import { isDownloaded } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
 import { HUES, TOPIC_LOOK, useTheme } from '../../lib/theme';
@@ -38,23 +39,36 @@ export default function TopicScreen() {
   const [filter, setFilter] = useState('');
   // 'all', 'easy' (plain-language versions), 'manual' (PDF books), or one letter.
   const [pick, setPick] = useState('all');
-  const sorted = useMemo(() => [...items].sort((x, y) => x.title.localeCompare(y.title)), [items]);
+  // One row per subject: a guide and its "in simple words" version share a row.
+  const sorted = useMemo(
+    () => pairUp(items).sort((x, y) => plainTitle(x.item).localeCompare(plainTitle(y.item))),
+    [items],
+  );
   const letters = useMemo(
-    () => [...new Set(sorted.map((i) => i.title[0]?.toUpperCase()).filter((c) => /[A-Z]/.test(c)))],
+    () => [
+      ...new Set(
+        sorted.map((r) => plainTitle(r.item)[0]?.toUpperCase()).filter((c) => /[A-Z]/.test(c)),
+      ),
+    ],
     [sorted],
   );
-  const hasEasy = useMemo(() => items.some((i) => i.title.includes('simple words')), [items]);
+  const hasEasy = useMemo(() => sorted.some((r) => r.easy || isEasy(r.item)), [sorted]);
   const hasManuals = useMemo(() => items.some((i) => i.type === 'pdf'), [items]);
   const shown = useMemo(() => {
     const f = filter.trim().toLowerCase();
-    return sorted.filter((i) => {
-      if (f && !i.title.toLowerCase().includes(f)) return false;
-      if (pick === 'easy') return i.title.includes('simple words');
-      if (pick === 'manual') return i.type === 'pdf';
-      if (pick !== 'all') return i.title[0]?.toUpperCase() === pick;
+    return sorted.filter((r) => {
+      const title = plainTitle(r.item);
+      if (f && !title.toLowerCase().includes(f)) return false;
+      if (pick === 'easy') return !!r.easy || isEasy(r.item);
+      if (pick === 'manual') return r.item.type === 'pdf';
+      if (pick !== 'all') return title[0]?.toUpperCase() === pick;
       return true;
     });
   }, [sorted, filter, pick]);
+  // The step-by-step guides that come with the app, shown before the library.
+  const cards = useMemo(() => cardsForTopic(id), [id]);
+  const [allCards, setAllCards] = useState(false);
+  const FEW = 4;
   const look = TOPIC_LOOK[id] ?? { icon: 'book-open-variant', hue: 'teal' as const };
   // Is there more for this topic in a bigger pack?
   const inAnyPack = topicSize(id);
@@ -78,84 +92,126 @@ export default function TopicScreen() {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
         ListHeaderComponent={
-          items.length > 0 ? (
-            <View style={{ gap: 12, marginBottom: 2 }}>
-              <Text style={{ color: t.muted, fontSize: 16 }}>
-                {items.length.toLocaleString()} {items.length === 1 ? 'guide' : 'guides'} on this
-                phone
+          <View style={{ gap: 10, marginBottom: 2 }}>
+            {cards.length > 0 && (
+              <>
+                <Text style={[s.label, { color: t.text }]}>Step by step</Text>
+                {(allCards ? cards : cards.slice(0, FEW)).map((h) => (
+                  <Card key={h.id} onPress={() => router.push(`/help/${h.id}`)} style={s.row}>
+                    <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={42} />
+                    <Text style={[s.title, { color: t.text, flex: 1 }]}>{h.title}</Text>
+                    <Ionicons name="chevron-forward" size={18} color={t.text} />
+                  </Card>
+                ))}
+                {cards.length > FEW && (
+                  <Pressable
+                    onPress={() => setAllCards(!allCards)}
+                    accessibilityRole="button"
+                    hitSlop={6}
+                    style={[s.moreBtn, { backgroundColor: t.soft }]}
+                  >
+                    <Text style={{ color: t.accent, fontSize: 16, fontWeight: '800' }}>
+                      {allCards ? 'Show fewer' : `Show all ${cards.length}`}
+                    </Text>
+                    <Ionicons
+                      name={allCards ? 'chevron-up' : 'chevron-down'}
+                      size={18}
+                      color={t.accent}
+                    />
+                  </Pressable>
+                )}
+              </>
+            )}
+            {items.length > 0 && (
+              <Text style={[s.label, { color: t.text, marginTop: cards.length ? 10 : 0 }]}>
+                {sorted.length.toLocaleString()} {sorted.length === 1 ? 'guide' : 'guides'} to read
               </Text>
-              {items.length > 12 && (
-                <View style={[s.filter, { backgroundColor: t.card, borderColor: t.border }]}>
-                  <Ionicons name="search" size={18} color={t.muted} />
-                  <TextInput
-                    value={filter}
-                    onChangeText={setFilter}
-                    placeholder={`Find in ${topic?.title ?? 'this topic'}`}
-                    placeholderTextColor={t.muted}
-                    style={[s.input, { color: t.text }]}
-                    clearButtonMode="while-editing"
-                    autoCorrect={false}
-                  />
-                </View>
-              )}
-              {items.length > 12 && (
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  // A fixed screen width: a stretched header row inside a list keeps the
-                  // list's width, so negative margins alone left the chips clipped.
-                  style={{ width, marginLeft: -18 }}
-                  contentContainerStyle={{ paddingHorizontal: 18, gap: 8 }}
-                >
-                  {[
-                    ['all', 'All'],
-                    ...(hasEasy ? [['easy', 'Easy reads']] : []),
-                    ...(hasManuals ? [['manual', 'Full manuals']] : []),
-                    ...letters.map((l) => [l, l]),
-                  ].map(([key, label]) => {
-                    const on = pick === key;
-                    return (
-                      <Pressable
-                        key={key}
-                        onPress={() => setPick(key)}
-                        accessibilityRole="button"
-                        accessibilityState={{ selected: on }}
-                        style={[
-                          s.pick,
-                          { backgroundColor: on ? t.accent : t.card },
-                          label.length === 1 && { width: 44, paddingHorizontal: 0 },
-                        ]}
+            )}
+            {sorted.length > 12 && (
+              <View style={[s.filter, { backgroundColor: t.card, borderColor: t.border }]}>
+                <Ionicons name="search" size={18} color={t.text} />
+                <TextInput
+                  value={filter}
+                  onChangeText={setFilter}
+                  placeholder={`Find in ${topic?.title ?? 'this topic'}`}
+                  placeholderTextColor={t.muted}
+                  maxFontSizeMultiplier={1.25}
+                  style={[s.input, { color: t.text }]}
+                  clearButtonMode="while-editing"
+                  autoCorrect={false}
+                />
+              </View>
+            )}
+            {sorted.length > 12 && (hasEasy || hasManuals || sorted.length > 100) && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                // A fixed screen width: a stretched header row inside a list keeps the
+                // list's width, so negative margins alone left the chips clipped.
+                style={{ width, marginLeft: -18 }}
+                contentContainerStyle={{ paddingHorizontal: 18, gap: 8 }}
+              >
+                {[
+                  ['all', 'All'],
+                  ...(hasEasy ? [['easy', 'Easy reads']] : []),
+                  ...(hasManuals ? [['manual', 'Full manuals']] : []),
+                  // Letters only earn their space on a really long list.
+                  ...(sorted.length > 100 ? letters.map((l) => [l, l]) : []),
+                ].map(([key, label]) => {
+                  const on = pick === key;
+                  return (
+                    <Pressable
+                      key={key}
+                      onPress={() => setPick(key)}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: on }}
+                      style={[
+                        s.pick,
+                        { backgroundColor: on ? t.accent : t.card },
+                        label.length === 1 && { width: 44, paddingHorizontal: 0 },
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          color: on ? t.accentText : t.text,
+                          fontSize: 16,
+                          fontWeight: '800',
+                        }}
                       >
-                        <Text
-                          style={{
-                            color: on ? t.accentText : t.text,
-                            fontSize: 16,
-                            fontWeight: '800',
-                          }}
-                        >
-                          {label}
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
-                </ScrollView>
-              )}
-              {items.length > 12 && (
-                <Text style={{ color: t.text, fontSize: 15, fontWeight: '700' }}>
-                  {shown.length.toLocaleString()} {shown.length === 1 ? 'guide' : 'guides'}, A to Z
-                </Text>
-              )}
-              {shown.length === 0 && (
-                <Text style={{ color: t.muted, fontSize: 15 }}>
-                  Nothing here matches. Try “All” or a shorter word.
-                </Text>
-              )}
-            </View>
-          ) : undefined
+                        {label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            )}
+            {items.length > 0 && shown.length === 0 && (
+              <Text style={{ color: t.text, fontSize: 16, lineHeight: 23 }}>
+                Nothing here matches. Try “All” or a shorter word.
+              </Text>
+            )}
+          </View>
         }
-        keyExtractor={(i) => i.id}
+        keyExtractor={(r) => r.item.id}
         ListEmptyComponent={
-          items.length > 0 ? undefined : (
+          items.length > 0 ? undefined : cards.length > 0 ? (
+            // The built-in guides above still work; the library just has nothing here yet.
+            <Card onPress={() => router.push('/packs')} style={s.row}>
+              <View style={{ flex: 1, gap: 2 }}>
+                <Text style={[s.title, { color: t.text }]}>
+                  {inAnyPack > 0
+                    ? `${inAnyPack.toLocaleString()} more guides to read`
+                    : 'More guides'}
+                </Text>
+                <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
+                  {state.pack
+                    ? 'They come with the bigger packs.'
+                    : 'Save a pack and they are yours offline.'}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={t.accent} />
+            </Card>
+          ) : (
             <View style={s.empty}>
               <Image
                 source={require('../../../assets/illustrations/packs.png')}
@@ -163,7 +219,7 @@ export default function TopicScreen() {
                 resizeMode="contain"
               />
               <Text style={[s.emptyTitle, { color: t.text }]}>Nothing saved here yet</Text>
-              <Text style={[s.emptyBody, { color: t.muted }]}>
+              <Text style={[s.emptyBody, { color: t.text }]}>
                 {state.pack
                   ? 'These guides come with a bigger pack, or your download is still finishing.'
                   : 'Grab the free pack and this fills up in a minute.'}
@@ -186,29 +242,55 @@ export default function TopicScreen() {
             </Card>
           ) : undefined
         }
-        renderItem={({ item }) => (
-          <Card onPress={() => router.push(`/item/${item.id}`)} style={s.row}>
-            <View style={{ flex: 1, gap: 2 }}>
-              <Text style={{ color: t.text, fontSize: 16, fontWeight: '800', lineHeight: 21 }}>
-                {item.title}
-              </Text>
-              {!!item.summary && (
-                <Text style={{ color: t.muted, fontSize: 15, lineHeight: 21 }} numberOfLines={2}>
-                  {item.summary}
-                </Text>
-              )}
-              {item.type !== 'article' && (
-                <View style={[s.kind, { backgroundColor: t.soft }]}>
-                  <MaterialCommunityIcons name={TYPE_ICON[item.type]} size={14} color={t.accent} />
-                  <Text style={{ color: t.accent, fontSize: 12, fontWeight: '800' }}>
-                    {TYPE_LABEL[item.type]}
+        renderItem={({ item: row }) => {
+          const { item, easy } = row;
+          const manual = item.type !== 'article';
+          return (
+            <Card onPress={() => router.push(`/item/${item.id}`)} style={s.row}>
+              <View style={{ flex: 1, gap: 3 }}>
+                <Text style={[s.title, { color: t.text }]}>{plainTitle(item)}</Text>
+                {/* Manuals come with a line we wrote; article openings read like a dictionary. */}
+                {manual && !!item.summary && (
+                  <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }} numberOfLines={2}>
+                    {item.summary}
                   </Text>
-                </View>
+                )}
+                {item.type !== 'article' && (
+                  <View style={[s.kind, { backgroundColor: t.soft }]}>
+                    <MaterialCommunityIcons
+                      name={TYPE_ICON[item.type]}
+                      size={15}
+                      color={t.accent}
+                    />
+                    <Text style={{ color: t.accent, fontSize: 15, fontWeight: '800' }}>
+                      {TYPE_LABEL[item.type]}
+                    </Text>
+                  </View>
+                )}
+                {isEasy(item) && (
+                  <Text style={{ color: t.accent, fontSize: 15, fontWeight: '700' }}>
+                    Short and in simple words
+                  </Text>
+                )}
+              </View>
+              {easy ? (
+                <Pressable
+                  onPress={() => router.push(`/item/${easy.id}`)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${plainTitle(item)}, short version in simple words`}
+                  hitSlop={8}
+                  style={[s.easy, { backgroundColor: t.soft }]}
+                >
+                  <Text style={{ color: t.accent, fontSize: 15, fontWeight: '800' }}>
+                    Short version
+                  </Text>
+                </Pressable>
+              ) : (
+                <Ionicons name="chevron-forward" size={18} color={t.text} />
               )}
-            </View>
-            <Ionicons name="chevron-forward" size={18} color={t.muted} />
-          </Card>
-        )}
+            </Card>
+          );
+        }}
       />
     </>
   );
@@ -244,6 +326,17 @@ const s = StyleSheet.create({
     marginTop: 4,
   },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  title: { fontSize: 17, fontWeight: '800', lineHeight: 22 },
+  label: { fontSize: 18, fontWeight: '800' },
+  moreBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    minHeight: 46,
+    borderRadius: 23,
+  },
+  easy: { paddingHorizontal: 12, minHeight: 36, borderRadius: 18, justifyContent: 'center' },
   empty: { alignItems: 'center', gap: 10, paddingTop: 12 },
   emptyTitle: { fontSize: 22, fontWeight: '800' },
   emptyBody: {
