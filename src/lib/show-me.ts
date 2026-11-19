@@ -7,6 +7,8 @@
 import { DIAGRAMS } from './diagrams';
 
 const P = {
+  cprShout: require('../../assets/show/cpr-shout.png'),
+  layWarm: require('../../assets/show/lay-warm.png'),
   layFlat: require('../../assets/show/lay-flat.png'),
   pushA: require('../../assets/show/cpr-push-a.png'),
   pushB: require('../../assets/show/cpr-push-b.png'),
@@ -335,6 +337,9 @@ const P = {
   tourniquet: DIAGRAMS.tourniquet.image,
   recovery: DIAGRAMS.recovery.image,
 };
+/** Every picture by name, so the cards can show the same drawings under their steps. */
+export const SHOW_PICS = P;
+export type ShowPic = keyof typeof P;
 
 export type ShowStep = {
   /** A few plain words. Shown big and read aloud. */
@@ -353,6 +358,7 @@ export type ShowStep = {
 
 export const SHOW_ME: Record<string, ShowStep[]> = {
   cpr: [
+    { say: 'Shout for anyone nearby to come and help.', pics: [P.cprShout] },
     { say: 'Lay them on their back on a hard floor.', pics: [P.layFlat] },
     { say: 'Kneel beside them. Put both hands on the middle of the chest.', pics: [P.hands] },
     {
@@ -394,7 +400,7 @@ export const SHOW_ME: Record<string, ShowStep[]> = {
       say: 'Arm or leg still pouring? Tie a belt above the wound. Twist it tight with a stick.',
       pics: [P.tourniquet],
     },
-    { say: 'Lay them down and keep them warm.', pics: [P.layFlat] },
+    { say: 'Lay them down and keep them warm.', pics: [P.layWarm] },
   ],
   choking: [
     {
