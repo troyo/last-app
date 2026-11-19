@@ -103,7 +103,14 @@ export default function SkillPathScreen() {
                     >
                       {card.title}
                     </Text>
-                    <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>{step.why}</Text>
+                    <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
+                      {card.level && (
+                        <Text style={{ color: t.text, fontSize: 15, fontWeight: '800' }}>
+                          {card.level === 'basic' ? 'Basic. ' : 'Advanced. '}
+                        </Text>
+                      )}
+                      {step.why}
+                    </Text>
                   </View>
                   <Ionicons name="chevron-forward" size={20} color={t.text} />
                 </Pressable>

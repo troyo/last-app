@@ -365,7 +365,7 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'teach',
         text: 'Start a school. Every child learns to read, write and count, and every adult teaches one skill.',
-        open: { label: 'Guides on teaching', search: 'education apprenticeship' },
+        open: { label: 'Teach children to read and count', href: '/help/teach' },
       },
       {
         id: 'records',
@@ -375,42 +375,42 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'rules',
         text: 'Agree how you decide things. Hold a regular meeting, write the rules down, and settle fights in the open.',
-        open: { label: 'Guides on meetings', search: 'town meeting mediation' },
+        open: { label: 'Decide things as a group', href: '/help/meeting' },
       },
       {
         id: 'seed',
         text: 'Save your own seed every year. Bought seed runs out, and saved seed gets better suited to your land.',
-        open: { label: 'Guides on saving seed', search: 'seed saving' },
+        open: { label: 'Save seed for next year', href: '/help/save-seed' },
       },
       {
         id: 'animals',
         text: 'Breed your animals. Keep the best for breeding, and learn to use an ox, horse or donkey for heavy work.',
-        open: { label: 'Guides on farm animals', search: 'animal husbandry' },
+        open: { label: 'Keep goats for milk', href: '/help/goats' },
       },
       {
         id: 'grain',
         text: 'Grow a grain field and learn to thresh, store and grind it. Grain is what feeds a village through winter.',
-        open: { label: 'Guides on grain', search: 'threshing gristmill' },
+        open: { label: 'Grain to bread', href: '/help/grain' },
       },
       {
         id: 'cloth',
         text: 'Make cloth and leather. Old clothes wear out in a few years, so learn to spin, weave and tan.',
-        open: { label: 'Guides on cloth', search: 'spinning weaving tanning' },
+        open: { label: 'Make thread and cloth', href: '/help/cloth' },
       },
       {
         id: 'build',
         text: 'Build to last. Learn lime mortar, brick, timber frames and a roof that sheds water.',
-        open: { label: 'Guides on building', search: 'lime mortar brick timber framing' },
+        open: { label: 'Build with mud bricks', href: '/help/mud-brick' },
       },
       {
         id: 'pots',
         text: 'Make pots and charcoal. Fired clay holds water and food, and charcoal burns hot enough to work metal.',
-        open: { label: 'Guides on pottery', search: 'pottery kiln charcoal' },
+        open: { label: 'Make clay pots', href: '/help/clay-pots' },
       },
       {
         id: 'metal',
         text: 'Set up a forge. Start by reshaping scrap steel into tools, nails and blades before trying to smelt ore.',
-        open: { label: 'Guides on metalwork', search: 'blacksmith forge' },
+        open: { label: 'Simple forge: shape steel', href: '/help/forge' },
       },
       {
         id: 'mill',

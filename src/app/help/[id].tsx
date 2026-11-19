@@ -96,7 +96,26 @@ export default function QuickHelpScreen() {
           <Text style={[s.when, { color: t.text }]}>{h.when}</Text>
         )}
 
-        <Text style={[s.label, { color: t.accent, marginTop: 4 }]}>Do this now</Text>
+        {h.level && (
+          <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
+            <Text style={{ color: t.text, fontSize: 15, fontWeight: '800' }}>
+              {h.level === 'basic' ? 'Basic. ' : 'Advanced. '}
+            </Text>
+            {h.level === 'basic'
+              ? 'Anyone can start this today with what is around.'
+              : 'Takes practice, a few tools or a helper. Expect some failed tries.'}
+          </Text>
+        )}
+        {h.risky && (
+          <Card style={{ backgroundColor: t.dangerTint, flexDirection: 'row', gap: 10 }}>
+            <Ionicons name="warning" size={22} color={t.bad} />
+            <Text style={{ color: t.text, fontSize: 16, lineHeight: 23, flex: 1 }}>{h.risky}</Text>
+          </Card>
+        )}
+
+        <Text style={[s.label, { color: t.accent, marginTop: 4 }]}>
+          {h.group === 'rebuild' ? 'How to do it' : 'Do this now'}
+        </Text>
         <Steps
           steps={h.steps}
           extra={(i) => (
@@ -116,7 +135,9 @@ export default function QuickHelpScreen() {
 
         {h.next && (
           <Card style={{ paddingBottom: 6 }}>
-            <Text style={[s.label, { color: t.accent }]}>Over the next hours and days</Text>
+            <Text style={[s.label, { color: t.accent }]}>
+              {h.group === 'rebuild' ? 'After that' : 'Over the next hours and days'}
+            </Text>
             {h.nextPicture && (
               <View style={{ marginTop: 8 }}>
                 <Diagram id={h.nextPicture} />

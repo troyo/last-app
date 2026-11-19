@@ -1,3 +1,4 @@
+import { REBUILD_CARDS } from './rebuild-cards';
 import type { DiagramId } from './diagrams';
 import type { Hue } from './theme';
 
@@ -33,10 +34,14 @@ export type QuickHelp = {
   /** One extra thing worth knowing. */
   know?: string;
   /** 'outage' = do-it-yourself fixes for life with no power. 'long' = skills for the weeks and months after. Each is shown as its own group. */
-  group?: 'outage' | 'long';
+  group?: 'outage' | 'long' | 'rebuild';
+  /** How much it asks of you. Basic: anyone, today, with what is around. Advanced: practice, special tools or a helper. */
+  level?: 'basic' | 'advanced';
+  /** A short safety warning. Kept apart from the level: "Basic" never means "safe". */
+  risky?: string;
 };
 
-export const QUICK_HELP: QuickHelp[] = [
+const CARDS: QuickHelp[] = [
   {
     id: 'bleeding',
     icon: 'water',
@@ -1364,7 +1369,48 @@ export const QUICK_HELP: QuickHelp[] = [
 
 // Everyday words people type when something is going wrong, so "blood" finds Bad bleeding
 // and "dark" finds Make light. Searched along with each card's title.
+// Levels for the long-haul cards. Emergency cards carry no level: nobody
+// bleeding should be told a card is "advanced".
+const LEVELS: Record<string, 'basic' | 'advanced'> = {
+  latrine: 'basic',
+  ration: 'basic',
+  sick: 'basic',
+  garden: 'basic',
+  tooth: 'basic',
+  'keep-food': 'basic',
+  firewood: 'basic',
+  watch: 'basic',
+  chickens: 'basic',
+  mend: 'basic',
+  'find-way': 'basic',
+  death: 'basic',
+  birth: 'advanced',
+  soap: 'advanced',
+  forage: 'advanced',
+  trap: 'advanced',
+};
+
+export const QUICK_HELP: QuickHelp[] = [
+  ...CARDS.map((c) => (LEVELS[c.id] ? { ...c, level: LEVELS[c.id] } : c)),
+  ...REBUILD_CARDS,
+];
+
 const WORDS: Record<string, string> = {
+  germs: 'germ bacteria virus hygiene disease infection why wash hands boil clean sick spread',
+  'save-seed': 'seeds seed saving next year plant garden heirloom store seed',
+  grain: 'wheat flour bread corn thresh winnow grind mill bake harvest oats barley sourdough',
+  goats: 'goat milk milking dairy sheep cow cheese butter livestock animals farm',
+  charcoal: 'charcoal coal fuel hot fire forge kiln burn wood',
+  'clay-pots': 'pottery clay pot bowl jar container ceramic fire kiln',
+  rope: 'cordage string twine cord fiber fibre tie lash line',
+  cloth: 'wool spin spinning weave weaving yarn thread fabric clothes sheep knit loom',
+  tan: 'leather hide skin fur buckskin rawhide tanning deer rabbit',
+  'mud-brick': 'adobe brick mud cob house wall build building oven clay earth',
+  forge: 'blacksmith metal steel iron hammer anvil knife nail tool make tools smith',
+  teach: 'school reading writing math maths numbers kids children learn education alphabet',
+  calendar: 'date day month year time clock season records book count stores sundial',
+  meeting: 'rules vote decide leader argument fight dispute fair law council government',
+  morale: 'sad depressed depression hopeless grief stress fear lonely spirits mental health mood',
   bleeding: 'blood bleed cut gash wound stab knife gunshot shot tourniquet deep cut',
   cpr: 'not breathing no pulse heart attack heart stopped collapsed unconscious passed out drowned drowning dead unresponsive',
   choking:
