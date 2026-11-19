@@ -45,15 +45,15 @@ const TOPIC_ORDER = [
 const SHORT_TOPIC: Record<string, string> = {
   'first-aid': 'First aid',
   water: 'Water',
-  sanitation: 'Hygiene',
+  sanitation: 'Staying clean',
   food: 'Food',
   grow: 'Growing food',
   shelter: 'Shelter',
   power: 'Power',
-  prep: 'Prep & radio',
-  security: 'Community',
+  prep: 'Getting ready',
+  security: 'Staying safe',
   manuals: 'Field manuals',
-  diy: 'DIY & off-grid',
+  diy: 'Build & repair',
   books: 'Handbooks',
 };
 
@@ -119,18 +119,19 @@ export function whatPackAdds(pack: PackId, from?: PackId): Adds {
   return adds;
 }
 
-// Books people recognize, shown first when a pack has them. Anything else falls back to
-// one full manual per topic.
-const STARS = [
-  /^Survival, FM 21-76/,
-  /Home Canning/,
-  /Ranger Medic Handbook/,
-  /^Prolonged Casualty Care/,
-  /^Survival, Evasion and Recovery/,
-  /^Passive Solar Buildings/,
-  /^Wilderness Medicine/,
-  /^First Aid for Soldiers/,
-  /^Map Reading and Land Navigation/,
+// Books worth naming, with a plain name for each: "Survival, FM 21-76" means nothing to
+// someone new to this. Shown first when a pack has them; anything else falls back to one
+// full manual per topic under its own (shortened) title.
+const STARS: [RegExp, string][] = [
+  [/^Survival, FM 21-76/, 'The US Army survival manual'],
+  [/Home Canning/, 'The USDA home canning guide'],
+  [/Ranger Medic Handbook/, 'The Army Ranger medic handbook'],
+  [/^Prolonged Casualty Care/, 'Caring for the badly hurt'],
+  [/^Passive Solar Buildings/, 'Heating a home with no power'],
+  [/^Wilderness Medicine/, 'Wilderness medicine course'],
+  [/^Rigging: Rope, Knots/, 'Ropes, knots and heavy loads'],
+  [/^First Aid for Soldiers/, 'The Army first aid manual'],
+  [/^Map Reading and Land Navigation/, 'Map and compass navigation'],
 ];
 
 /** Up to three books, favoring well-known manuals and then one per topic. */
@@ -139,15 +140,14 @@ function pickHighlights(extra: Item[]): string[] {
   const pool = books.length >= 3 ? books : extra;
   const out: string[] = [];
   const usedTopics = new Set<string>();
-  const take = (i: Item) => {
-    const name = shortTitle(i.title);
+  const take = (i: Item, name = shortTitle(i.title)) => {
     if (out.length === 3 || out.includes(name) || name.length < 6 || name.length > 48) return;
     usedTopics.add(i.topic);
     out.push(name);
   };
-  for (const star of STARS) {
+  for (const [star, name] of STARS) {
     const hit = pool.find((i) => star.test(i.title));
-    if (hit) take(hit);
+    if (hit) take(hit, name);
   }
   const rank = (t: string) => {
     const r = TOPIC_ORDER.indexOf(t);

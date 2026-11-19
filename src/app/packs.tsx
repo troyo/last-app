@@ -44,8 +44,20 @@ export default function Packs() {
     initPurchases();
   }, []);
 
-  const unlock = async (key: ProductKey) => {
+  const unlock = async (key: ProductKey, pack: PackId) => {
     const r = await buy(key);
+    // Bought: offer to save it straight away, so nobody has to hunt for a second button.
+    if (r === 'bought' && !downloading) {
+      const name = pack === 'medium' ? 'Medium' : 'Large';
+      Alert.alert(
+        `${name} is yours`,
+        `Save it to your phone now so it works offline? It is about ${formatBytes(remainingBytes(pack))}, so Wi-Fi is best.`,
+        [
+          { text: 'Later', style: 'cancel' },
+          { text: 'Save now', onPress: () => choose(pack) },
+        ],
+      );
+    }
     if (r === 'offline')
       Alert.alert(
         'No connection to the App Store',
@@ -102,8 +114,10 @@ export default function Packs() {
           {onPhone ? `You have the ${onPhone.title} pack` : 'Pick your pack'}
         </Text>
         <Text style={{ color: t.text, fontSize: 16, lineHeight: 22 }}>
-          Each bigger pack includes everything in the smaller ones.
-          {Number.isFinite(free) ? ` Your phone has ${formatBytes(free)} free.` : ''}
+          {onPhone
+            ? 'Bigger packs include everything in the smaller ones, so you never lose a guide by moving up.'
+            : 'Save one while you have internet and it works anywhere after that. Bigger packs include everything in the smaller ones.'}
+          {Number.isFinite(free) ? ` Your phone has ${formatBytes(free)} of free space.` : ''}
         </Text>
       </View>
 
@@ -156,13 +170,22 @@ export default function Packs() {
                 <PriceTag pack={p.id} locked={locked} product={product} />
               </View>
 
-              <Text style={{ color: t.text, fontSize: 16, lineHeight: 22 }}>{p.summary}</Text>
+              <View style={{ gap: 2 }}>
+                {!!PACK_COPY[p.id] && (
+                  <Text style={{ color: t.accent, fontSize: 16, fontWeight: '700' }}>
+                    {PACK_COPY[p.id].goodFor}
+                  </Text>
+                )}
+                <Text style={{ color: t.text, fontSize: 16, lineHeight: 22 }}>
+                  {PACK_COPY[p.id]?.about ?? p.summary}
+                </Text>
+              </View>
 
               {adds.topics.length > 0 && (
                 <View style={{ gap: 8 }}>
                   <Text style={[s.label, { color: t.text }]}>
                     {PREVIOUS[p.id]
-                      ? `Adds ${adds.extra.toLocaleString()} guides to ${PREVIOUS_NAME[p.id]}`
+                      ? `Everything in ${PREVIOUS_NAME[p.id]}, plus ${adds.extra.toLocaleString()} more guides`
                       : 'What’s inside'}
                   </Text>
                   <Chips p={adds} max={featured ? 6 : 4} plus={!!PREVIOUS[p.id]} />
@@ -170,7 +193,7 @@ export default function Packs() {
               )}
               {featured && adds.highlights.length > 0 && (
                 <View style={{ gap: 8 }}>
-                  <Text style={[s.label, { color: t.text }]}>Books you’d get</Text>
+                  <Text style={[s.label, { color: t.text }]}>Whole books inside, like</Text>
                   <Highlights p={adds} />
                 </View>
               )}
@@ -212,21 +235,22 @@ export default function Packs() {
                       ? `Upgrade to Large · ${priceOf('upgrade')}`
                       : `Unlock ${p.title} · ${priceOf(product)}`
                   }
-                  onPress={() => unlock(product)}
+                  onPress={() => unlock(product, p.id)}
                   kind={featured ? 'primary' : 'secondary'}
                 />
               ) : (
                 <Button
-                  label={state.pack ? `Switch to ${p.title}` : `Save ${p.title} to my phone`}
+                  label={`Save ${p.title} to my phone`}
                   onPress={() => choose(p.id)}
                   disabled={downloading}
-                  kind={state.pack && !featured ? 'secondary' : 'primary'}
+                  // A pack they paid for but haven't saved yet is the main thing to do here.
+                  kind={state.pack && p.id === 'small' ? 'secondary' : 'primary'}
                 />
               )}
               {p.id === 'large' && tier === 'free' && (
                 <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
-                  Or start with Medium. Large is then just {priceOf('upgrade')} more, whenever you
-                  like.
+                  Not sure yet? Start with Medium. You can move up to Large later for just{' '}
+                  {priceOf('upgrade')} more, so you never pay twice.
                 </Text>
               )}
             </View>
@@ -237,8 +261,8 @@ export default function Packs() {
       {lastFailed.length > 0 && !downloading && (
         <Card style={{ backgroundColor: t.soft }}>
           <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
-            A few guides didn’t make it this time, probably a shaky connection. Nothing is lost. Tap
-            “Finish saving” when you have signal again.
+            A few guides didn’t save this time, most likely a shaky connection. Nothing is lost. Tap
+            “Finish saving” when your internet is back.
           </Text>
         </Card>
       )}
@@ -259,11 +283,7 @@ export default function Packs() {
       </Card>
 
       {tier !== 'large' && (
-        <Button
-          label="I already paid. Restore my purchase"
-          onPress={restorePurchase}
-          kind="quiet"
-        />
+        <Button label="Already bought a pack? Restore it" onPress={restorePurchase} kind="quiet" />
       )}
 
       {TEST_MODE && (
@@ -331,6 +351,26 @@ const PREVIOUS: Record<PackId, PackId | undefined> = {
 };
 const PREVIOUS_NAME: Record<PackId, string> = { small: '', medium: 'Small', large: 'Medium' };
 
+// Plain words for each pack: who it is for, then what is in it. (The catalog carries its own
+// summaries too; these are the ones people read here.)
+const PACK_COPY: Record<PackId, { goodFor: string; about: string }> = {
+  small: {
+    goodFor: 'For the first few days',
+    about:
+      'The must-haves: first aid, safe water, fire, shelter and a basic kit. Small enough for any phone.',
+  },
+  medium: {
+    goodFor: 'For weeks with no power or shops',
+    about:
+      'How to keep going on your own: grow and store food, find and clean water, stay clean and well, fix what breaks, and use a radio. Comes with Army and FEMA survival manuals.',
+  },
+  large: {
+    goodFor: 'For a year or more',
+    about:
+      'Our whole library. Deeper medical care for when no doctor is coming, building and repairs with hand tools, and hundreds more guides on growing, storing and cooking food.',
+  },
+};
+
 const PROMISES: {
   icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
   title: string;
@@ -338,18 +378,23 @@ const PROMISES: {
 }[] = [
   {
     icon: 'cash-check',
-    title: 'Pay once, keep it',
-    body: 'No subscription, ever. Nobody pays more than the Large price in total.',
+    title: 'Pay once, keep it for good',
+    body: 'No subscription and no renewals. Buy a pack one time and it is yours.',
   },
   {
     icon: 'wifi-off',
     title: 'Works with no signal',
-    body: 'Once saved, every guide opens with no internet, no power grid and no phone service.',
+    body: 'Once a pack is saved, every guide opens with no internet, no cell service and no power grid.',
   },
   {
     icon: 'refresh',
     title: 'Free updates',
-    body: 'When we add or improve guides, you get them at no cost.',
+    body: 'When we add new guides or improve old ones, you get them at no extra cost.',
+  },
+  {
+    icon: 'book-check',
+    title: 'From sources you can trust',
+    body: 'Guides come from the US Army, FEMA, the CDC, the USDA, the Peace Corps and other open sources. See them all under More.',
   },
 ];
 

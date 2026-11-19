@@ -14,19 +14,27 @@ export const UPGRADE_ART = {
   large: require('../../assets/illustrations/upgrade-large.png'),
 } as const;
 
+// One plain sentence on what the bigger pack is for.
+const WHY = {
+  medium:
+    'Your free pack covers the first few days. Medium covers weeks with no power or shops, with whole books like:',
+  large:
+    'Everything we have, for the long haul: deeper medical care, building and repairs, and more on food. With whole books like:',
+} as const;
+
 export const packName = (p: Pitch) => (p.target === 'medium' ? 'Medium' : 'Large');
 
-/** "Unlock 1,862 more guides" / "Go Large: 1,563 more guides" */
+/** "Get 1,862 more guides" / "Get the whole library: 1,563 more guides" */
 export function headline(p: Pitch) {
   const n = p.extra.toLocaleString();
-  return p.target === 'medium' ? `Unlock ${n} more guides` : `Go Large: ${n} more guides`;
+  return p.target === 'medium' ? `Get ${n} more guides` : `Get the whole library: ${n} more guides`;
 }
 
-/** "Medium pack · $15 one time" / "Just $15 for Medium owners" */
+/** "Medium pack · $15, pay once" / "Just $15 more for you" */
 export function priceLine(p: Pitch) {
   return p.target === 'medium'
-    ? `Medium pack · ${p.price} one time`
-    : `Just ${p.price} for Medium owners`;
+    ? `Medium pack · ${p.price}, pay once`
+    : `Just ${p.price} more for you`;
 }
 
 /**
@@ -61,6 +69,7 @@ export function UpgradeCard(props: { onNotNow?: () => void }) {
             <Text style={{ color: t.accent, fontSize: 15, fontWeight: '700' }}>{priceLine(p)}</Text>
           </View>
           <Text style={[s.h, { color: t.text }]}>{headline(p)}</Text>
+          <Text style={{ color: t.text, fontSize: 16, lineHeight: 22 }}>{WHY[p.target]}</Text>
           <Highlights p={p} />
         </View>
       </Pressable>
@@ -129,12 +138,12 @@ export function UpgradeRow(props: { count: number }) {
       <Image source={UPGRADE_ART[p.target]} style={s.thumb} resizeMode="cover" />
       <View style={{ flex: 1, gap: 2 }}>
         <Text style={{ color: t.text, fontSize: 17, fontWeight: '800', lineHeight: 22 }}>
-          {props.count.toLocaleString()} more guides on this topic
+          {props.count.toLocaleString()} more {props.count === 1 ? 'guide' : 'guides'} on this topic
         </Text>
         <Text style={{ color: t.text, fontSize: 15, lineHeight: 20 }}>
           {tier === 'free'
-            ? `In the bigger packs, from ${p.price} one time`
-            : `In Large, ${p.price} more for Medium owners`}
+            ? `They come with the bigger packs, from ${p.price}. Pay once.`
+            : `They come with Large, just ${p.price} more for you.`}
         </Text>
       </View>
       <Ionicons name="chevron-forward" size={20} color={t.accent} />
