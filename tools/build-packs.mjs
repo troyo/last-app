@@ -284,9 +284,11 @@ for (const group of sources.articles) {
 // Plain-language twins: for every hand-picked Wikipedia guide, also grab the
 // Simple English version when one exists (missing ones are skipped quietly).
 if (sources.simpleVersionsOf) {
-  const { from, wiki } = sources.simpleVersionsOf;
+  const { from, wiki, skip = [] } = sources.simpleVersionsOf;
+  // "skip" lists titles whose Simple English page is about something else
+  // (Simple English "Splinter" is a music album, not the thing in your finger).
   for (const a of [...wanted.values()]) {
-    if (a.wiki === from) want(wiki, a.title, a.tier, a.topic);
+    if (a.wiki === from && !skip.includes(a.title)) want(wiki, a.title, a.tier, a.topic);
   }
 }
 if (!QUICK) {

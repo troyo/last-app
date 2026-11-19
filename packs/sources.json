@@ -3942,6 +3942,7 @@
   ],
   "simpleVersionsOf": {
     "from": "wikipedia",
-    "wiki": "simple"
+    "wiki": "simple",
+    "skip": ["Splinter"]
   }
 }
