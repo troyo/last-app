@@ -221,8 +221,10 @@ export default function Search() {
                   <IconTile name={h.icon as IconName} {...HUES[h.hue]} size={42} />
                   <View style={{ flex: 1 }}>
                     <Text style={[s.title, { color: t.text }]}>{h.title}</Text>
-                    <Text style={{ color: t.bad, fontSize: 15, fontWeight: '700' }}>
-                      Emergency steps
+                    <Text
+                      style={{ color: h.group ? t.accent : t.bad, fontSize: 15, fontWeight: '700' }}
+                    >
+                      {h.group ? 'Step-by-step guide' : 'Emergency steps'}
                     </Text>
                   </View>
                   <Ionicons name="chevron-forward" size={18} color={t.muted} />
@@ -251,8 +253,10 @@ export default function Search() {
                     In packs you haven’t saved
                   </Text>
                   <Text style={{ color: t.text, fontSize: 15, lineHeight: 21 }}>
-                    {mine.length === 0 ? 'Nothing on this phone matches yet. ' : ''}Tap one to get
-                    its pack.
+                    {mine.length === 0 && results.help.length + results.hazards.length === 0
+                      ? 'Nothing on this phone matches yet. '
+                      : ''}
+                    Tap one to get its pack.
                   </Text>
                 </View>
               );

@@ -365,12 +365,12 @@ export const YEAR_PLAN: PlanPhase[] = [
       {
         id: 'teach',
         text: 'Start a school. Every child learns to read, write and count, and every adult teaches one skill.',
-        open: { label: 'Teach children to read and count', href: '/help/teach' },
+        open: { label: 'Teach reading and counting', href: '/help/teach' },
       },
       {
         id: 'records',
         text: 'Write things down. Keep a record of births, deaths, stores, seed and what worked.',
-        open: { label: 'Guides on paper and ink', search: 'papermaking ink' },
+        open: { label: 'Keep a calendar and records', href: '/help/calendar' },
       },
       {
         id: 'rules',

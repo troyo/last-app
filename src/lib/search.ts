@@ -120,13 +120,16 @@ export function wordsOf(query: string): string[] {
     .map((w) => (w.length > 4 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w));
 }
 
-// Short words hide inside longer ones ("ink" in "drinking", "tin" in "testing"),
-// so a word of 4 letters or fewer has to start a word in the text to count.
+// Short words hide inside longer ones ("ink" in "drinking", "tea" in "teach"),
+// so a word of 4 letters or fewer has to be a whole word in the text, give or
+// take an ending ("cut" finds "cuts", "burn" finds "burned").
 const found = (text: string, word: string): boolean => {
   if (word.length > 4) return text.includes(word);
   let at = text.indexOf(word);
   while (at !== -1) {
-    if (at === 0 || !/[a-z0-9]/.test(text[at - 1])) return true;
+    const before = at === 0 || !/[a-z0-9]/.test(text[at - 1]);
+    const rest = text.slice(at + word.length, at + word.length + 4);
+    if (before && /^(s|es|ed|ing)?([^a-z0-9]|$)/.test(rest)) return true;
     at = text.indexOf(word, at + 1);
   }
   return false;
@@ -134,7 +137,7 @@ const found = (text: string, word: string): boolean => {
 
 /** How well one typed word matches one guide (0 = not at all). */
 function wordScore(word: string, title: string, rest: string): number {
-  if (title.startsWith(word)) return 12;
+  if (title.startsWith(word) && found(title, word)) return 12;
   if (found(title, word)) return 8;
   if (found(rest, word)) return 3;
   let best = 0;
@@ -150,10 +153,13 @@ export function search(query: string, limit = 60): SearchResults {
   if (words.length === 0) return { help: [], hazards: [], guides: [], total: 0 };
   ensureIndex();
 
+  const inTitle = (h: QuickHelp) => (words.every((w) => found(h.title.toLowerCase(), w)) ? 1 : 0);
   const help = QUICK_HELP.filter((h) => {
     const hay = helpText(h).toLowerCase();
     return words.every((w) => wordScore(w, hay, '') > 0);
-  });
+  })
+    // Cards named for what was typed come first ("water" shows the water cards before Burns).
+    .sort((a, b) => inTitle(b) - inTitle(a));
 
   const hazards = HAZARDS.filter((h) => {
     const hay = `${h.title} ${h.blurb} ${h.search}`.toLowerCase();

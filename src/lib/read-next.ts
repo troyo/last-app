@@ -68,7 +68,14 @@ const NEXT: Record<string, Next> = {
   teach: { cards: ['calendar', 'meeting', 'morale'], find: 'education literacy' },
   calendar: { cards: ['garden', 'ration', 'teach'], find: 'calendar sundial' },
   meeting: { cards: ['watch', 'morale', 'calendar'], find: 'conflict resolution community' },
-  morale: { cards: ['meeting', 'death', 'sick'], find: 'grief stress' },
+  staples: { cards: ['garden', 'soil', 'save-seed'], find: 'potato bean' },
+  soil: { cards: ['garden', 'staples', 'latrine'], find: 'compost crop rotation' },
+  meat: { cards: ['keep-food', 'trap', 'tan'], find: 'smoking drying meat' },
+  well: { cards: ['find-water', 'water', 'germs'], find: 'well hand pump' },
+  lime: { cards: ['mud-brick', 'charcoal', 'latrine'], find: 'lime mortar' },
+  remedies: { cards: ['sick', 'wound', 'dehydration'], find: 'herbal medicine honey' },
+  elders: { cards: ['sick', 'death', 'morale'], find: 'pressure ulcer palliative' },
+  morale: { cards: ['meeting', 'death', 'sick'], find: 'grief mental health' },
   death: { cards: ['sick', 'latrine', 'watch'], find: 'grief' },
 };
 
