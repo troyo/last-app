@@ -86,7 +86,7 @@ export type SearchResults = {
 
 // One lowercase "haystack" per guide, built once per catalog.
 let indexedFor: Catalog | null = null;
-let index: { item: Item; title: string; rest: string }[] = [];
+let index: { item: Item; title: string; rest: string; manual: boolean }[] = [];
 
 /** Get the search index ready ahead of the first search, so typing never waits on it. */
 export const warmSearch = () => ensureIndex();
@@ -99,6 +99,7 @@ function ensureIndex() {
     item,
     title: item.title.toLowerCase(),
     rest: `${item.summary?.toLowerCase() ?? ''} ${topicTitle.get(item.topic) ?? ''}`,
+    manual: item.type === 'pdf' || !/wikipedia/i.test(item.source),
   }));
   indexedFor = cat;
 }
@@ -165,6 +166,8 @@ export function search(query: string, limit = 60): SearchResults {
       // guides from smaller packs before deep-cut ones.
       if (entry.title.length < 30) score += 1;
       if (entry.title.includes('simple words')) score += 1;
+      // Real how-to manuals (Army, Peace Corps, USDA...) beat an encyclopedia page on the same thing.
+      if (entry.manual) score += 3;
       score += (2 - PACK_ORDER.indexOf(entry.item.tier)) * 0.5 + matched * 4;
       out.push({ item: entry.item, score });
     }
