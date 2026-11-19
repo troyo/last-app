@@ -1,11 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { minutesIn, StepTimer } from '../../components/StepTimer';
 import { Bullets, Card, IconName, IconTile, Steps, Text, TitleBar } from '../../components/ui';
 import { DiagramId, DIAGRAMS } from '../../lib/diagrams';
 import { findQuickHelp } from '../../lib/quick-help';
+import { readNext } from '../../lib/read-next';
+import { useLibrary } from '../../lib/LibraryContext';
 import { noteOpened } from '../../lib/recent';
 import { hasShowMe, SHOW_ME } from '../../lib/show-me';
 import { HUES, useDark, useHues, useTheme } from '../../lib/theme';
@@ -36,6 +38,9 @@ export default function QuickHelpScreen() {
     if (id && findQuickHelp(id)) noteOpened(id);
   }, [id]);
   const dark = useDark();
+  const { version } = useLibrary();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const after = useMemo(() => readNext(id ?? ''), [id, version]);
   if (!h) return null;
   const hue = hues[h.hue];
   const show = hasShowMe(h.id) ? SHOW_ME[h.id] : null;
@@ -144,6 +149,41 @@ export default function QuickHelpScreen() {
           </Card>
         )}
 
+        {after.cards.length + after.guides.length > 0 && (
+          <Card style={{ paddingBottom: 4 }}>
+            <Text style={[s.label, { color: t.accent }]}>Read next</Text>
+            {after.cards.map((c) => (
+              <Pressable
+                key={c.id}
+                onPress={() => router.push(`/help/${c.id}`)}
+                accessibilityRole="button"
+                style={({ pressed }) => [s.nextRow, pressed && { opacity: 0.7 }]}
+              >
+                <IconTile name={c.icon as IconName} {...HUES[c.hue]} size={40} />
+                <Text style={[s.nextTitle, { color: t.text }]}>{c.title}</Text>
+                <Ionicons name="chevron-forward" size={20} color={t.text} />
+              </Pressable>
+            ))}
+            {after.guides.map((g) => (
+              <Pressable
+                key={g.id}
+                onPress={() => router.push(`/item/${g.id}`)}
+                accessibilityRole="button"
+                style={({ pressed }) => [s.nextRow, pressed && { opacity: 0.7 }]}
+              >
+                <IconTile name="book-open-variant" {...HUES.teal} size={40} />
+                <View style={{ flex: 1 }}>
+                  <Text style={[s.nextTitle, { color: t.text, flex: 0 }]} numberOfLines={2}>
+                    {g.title}
+                  </Text>
+                  <Text style={{ color: t.text, fontSize: 15 }}>Full guide</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color={t.text} />
+              </Pressable>
+            ))}
+          </Card>
+        )}
+
         <Text
           style={{
             color: t.muted,
@@ -213,6 +253,8 @@ const s = StyleSheet.create({
     letterSpacing: 0.5,
   },
   body: { fontSize: 16, lineHeight: 24 },
+  nextRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8 },
+  nextTitle: { flex: 1, fontSize: 17, fontWeight: '700', lineHeight: 22 },
   bullet: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
   dot: { width: 7, height: 7, borderRadius: 4, marginTop: 9 },
 });
