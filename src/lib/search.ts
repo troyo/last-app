@@ -88,6 +88,9 @@ export type SearchResults = {
 let indexedFor: Catalog | null = null;
 let index: { item: Item; title: string; rest: string }[] = [];
 
+/** Get the search index ready ahead of the first search, so typing never waits on it. */
+export const warmSearch = () => ensureIndex();
+
 function ensureIndex() {
   const cat = getCatalog();
   if (indexedFor === cat) return;

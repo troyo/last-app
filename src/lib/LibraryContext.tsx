@@ -14,6 +14,7 @@ import {
 } from 'react';
 import { PackId } from './catalog';
 import { initPurchases, needsUnlock } from './purchases';
+import { warmSearch } from './search';
 import {
   downloadPack,
   LibraryState,
@@ -109,7 +110,12 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Wait until the first screen is up and settled, so this never competes with a tap.
     const timer = setTimeout(checkForUpdates, 4000);
-    return () => clearTimeout(timer);
+    // Get search ready early too, well before anyone can reach the Search tab and type.
+    const warm = setTimeout(warmSearch, 1500);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(warm);
+    };
   }, [checkForUpdates]);
 
   const pause = useCallback(() => {

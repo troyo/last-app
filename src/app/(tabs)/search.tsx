@@ -9,7 +9,14 @@ import { Hazard } from '../../lib/hazards';
 import { isDownloaded } from '../../lib/library';
 import { useLibrary } from '../../lib/LibraryContext';
 import { QuickHelp } from '../../lib/quick-help';
-import { GuideHit, recentSearches, rememberSearch, search, SUGGESTED } from '../../lib/search';
+import {
+  GuideHit,
+  recentSearches,
+  rememberSearch,
+  search,
+  SUGGESTED,
+  warmSearch,
+} from '../../lib/search';
 import { HUES, TOPIC_LOOK, useTheme } from '../../lib/theme';
 
 type Row =
@@ -33,11 +40,23 @@ export default function Search() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version]);
   const [query, setQuery] = useState('');
+  // The box keeps its own letters, so fast typing is never lost while the list
+  // catches up. `seed` only changes when the words come from somewhere else
+  // (a chip, another screen), and then the box starts again from them.
+  const [seed, setSeed] = useState({ text: '', n: 0 });
+  const fill = (text: string) => {
+    setSeed((cur) => ({ text, n: cur.n + 1 }));
+    setQuery(text);
+  };
+  useEffect(() => {
+    const timer = setTimeout(warmSearch, 300);
+    return () => clearTimeout(timer);
+  }, [version]);
   const [, bump] = useState(0);
   // Other screens can open Search with words already typed in.
   const { q } = useLocalSearchParams<{ q?: string }>();
   useEffect(() => {
-    if (q) setQuery(q);
+    if (q) fill(q);
   }, [q]);
 
   // The letters show up at once; the list catches up a beat later.
@@ -72,7 +91,7 @@ export default function Search() {
   const chip = (label: string) => (
     <Pressable
       key={label}
-      onPress={() => setQuery(label)}
+      onPress={() => fill(label)}
       style={({ pressed }) => [s.chip, { backgroundColor: t.card }, pressed && { opacity: 0.7 }]}
     >
       <Text style={{ color: t.text, fontSize: 15, fontWeight: '600' }}>{label}</Text>
@@ -86,7 +105,8 @@ export default function Search() {
         <View style={[s.box, { backgroundColor: t.card, borderColor: t.border }]}>
           <Ionicons name="search" size={20} color={t.muted} />
           <TextInput
-            value={query}
+            key={seed.n}
+            defaultValue={seed.text}
             onChangeText={setQuery}
             placeholder="Try “cut”, “no water” or “knots”"
             placeholderTextColor={t.muted}
