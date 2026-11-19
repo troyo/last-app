@@ -5,6 +5,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, FadeIn, IconName, IconTile, Text } from '../../components/ui';
+import { UpgradeCard } from '../../components/UpgradeCard';
 import { hasAgreed } from '../../lib/agreement';
 import { formatBytes, itemsForPack } from '../../lib/catalog';
 import { getChecklists, progressOf } from '../../lib/checklists';
@@ -20,6 +21,7 @@ import { cardFor, learnedIn, SKILL_PATHS, todaysSkill } from '../../lib/skills';
 import { HUES, useHues, useTheme } from '../../lib/theme';
 import { currentPhase, planProgress } from '../../lib/year-plan';
 import { hasSeenWelcome } from '../../lib/welcome';
+import { isSnoozed, snooze } from '../../lib/upgrade';
 
 // Short names so six cards fit in two tidy rows.
 const SHORT: Record<string, string> = {
@@ -81,6 +83,8 @@ export default function Home() {
   // override it; it unmounts when another tab is focused.
   // Coming back also redraws Home, since checklist progress may have changed.
   const [focused, setFocused] = useState(false);
+  // "Not now" on the upgrade card puts it away for two weeks.
+  const [upgradeAway, setUpgradeAway] = useState(isSnoozed);
   useFocusEffect(
     useCallback(() => {
       setFocused(true);
@@ -570,6 +574,18 @@ export default function Home() {
             </View>
             <Ionicons name="chevron-forward" size={20} color={t.text} />
           </Card>
+
+          {/* More guides in a bigger pack. Low on the page, and easy to put away. */}
+          {ready && !downloading && !upgradeAway && (
+            <View style={{ marginTop: 30 }}>
+              <UpgradeCard
+                onNotNow={() => {
+                  snooze();
+                  setUpgradeAway(true);
+                }}
+              />
+            </View>
+          )}
 
           {ready && !downloading && (
             <View style={[s.row, { gap: 8, marginTop: 26, justifyContent: 'center' }]}>

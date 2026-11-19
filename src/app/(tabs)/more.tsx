@@ -7,6 +7,8 @@ import { Card, IconName, IconTile, Text } from '../../components/ui';
 import { formatBytes, packBytes } from '../../lib/catalog';
 import { getProfile } from '../../lib/place';
 import { useLibrary } from '../../lib/LibraryContext';
+import { useTier } from '../../lib/purchases';
+import { pitchFor } from '../../lib/upgrade';
 import { HUES, Hue, useTheme } from '../../lib/theme';
 
 // Everything you set up once and rarely touch: your packs, and the fine print.
@@ -18,6 +20,8 @@ export default function More() {
   const { state, downloading } = useLibrary();
   const profile = getProfile();
   const packName = state.pack ? state.pack[0].toUpperCase() + state.pack.slice(1) : '';
+  // A gentle nudge on the packs row: what the next pack up would add.
+  const pitch = pitchFor(useTier());
 
   const rows: { icon: IconName; hue: Hue; title: string; sub: string; to: string }[] = [
     {
@@ -26,9 +30,11 @@ export default function More() {
       title: 'My packs',
       sub: downloading
         ? 'Saving your guides…'
-        : state.pack
-          ? `${packName} pack · ${formatBytes(packBytes(state.pack))} on this phone`
-          : 'Get the free guides',
+        : state.pack && pitch && pitch.extra > 0
+          ? `${packName} pack · ${pitch.target === 'medium' ? 'Medium' : 'Large'} adds ${pitch.extra.toLocaleString()} guides`
+          : state.pack
+            ? `${packName} pack · ${formatBytes(packBytes(state.pack))} on this phone`
+            : 'Get the free guides',
       to: '/packs',
     },
     {
